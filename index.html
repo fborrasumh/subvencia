@@ -1339,7 +1339,7 @@ function wPara(tx, o = {}) {
 function wTabla(filas) {
   const nc = Math.max(...filas.map(f => f.length)), w = Math.floor(9000 / nc), bd = '<w:top w:val="single" w:sz="4" w:color="BFC9D4"/><w:left w:val="single" w:sz="4" w:color="BFC9D4"/><w:bottom w:val="single" w:sz="4" w:color="BFC9D4"/><w:right w:val="single" w:sz="4" w:color="BFC9D4"/><w:insideH w:val="single" w:sz="4" w:color="BFC9D4"/><w:insideV w:val="single" w:sz="4" w:color="BFC9D4"/>';
   const fila = (f, cab) => '<w:tr>' + Array.from({length: nc}, (_, j) => `<w:tc><w:tcPr><w:tcW w:w="${w}" w:type="dxa"/>${cab ? '<w:shd w:val="clear" w:color="auto" w:fill="EEF2F6"/>' : ''}</w:tcPr><w:p><w:pPr><w:spacing w:after="40"/></w:pPr>${wInline(f[j] ?? '', {s: 20, b: cab})}</w:p></w:tc>`).join('') + '</w:tr>';
-  return `<w:tbl><w:tblPr><w:tblW w:w="${w * nc}" w:type="dxa"/><w:tblBorders>${bd}</w:tblBorders><w:tblCellMar><w:left w:w="80" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>${'<w:gridCol w:w="' + w + '"/>'.repeat(nc)}</w:tblGrid>${filas.map((f, k) => fila(f, k === 0)).join('')}</w:tbl><w:p><w:pPr><w:spacing w:after="60"/></w:pPr></w:p>`;
+  return `<w:tbl><w:tblPr><w:tblW w:w="${w * nc}" w:type="dxa"/><w:tblBorders>${bd}</w:tblBorders><w:tblCellMar><w:left w:w="80" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>${('<w:gridCol w:w="' + w + '"/>').repeat(nc)}</w:tblGrid>${filas.map((f, k) => fila(f, k === 0)).join('')}</w:tbl><w:p><w:pPr><w:spacing w:after="60"/></w:pPr></w:p>`;
 }
 /* wordDeXml(cuerpoXml, {creador, titulo}) → Blob .docx   (para apps que montan su propio cuerpo con wPara/wTabla) */
 async function wordDeXml(cuerpo, {creador = '', titulo = ''} = {}) {
