@@ -429,6 +429,9 @@ table{border-collapse:collapse;width:100%;font-size:13.8px}th{background:var(--p
 .fa-dif{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:8px}.fa-dif>div{background:var(--papel);border-radius:10px;padding:10px 12px}.fa-dif b{font-size:12px;color:var(--acero)}.fa-dif p{white-space:pre-wrap;font-size:13.5px;margin:4px 0 0}
 .fa-sec{margin-top:14px}.fa-sec-h{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}.fa-sec textarea{width:100%;padding:10px 12px;border:1.5px solid var(--linea);border-radius:10px;font:14.5px/1.55 var(--texto);resize:vertical}
 .fa-secs{border:0!important;background:none!important;padding:2px 4px!important}
+/* ciclo 0 */
+.fa-est{border-left:5px solid #6B4FD8}.fa-est-l{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:10px}.fa-est-l>li{border:1px solid var(--linea);border-radius:12px;padding:10px 14px}.fa-est-l .fa-e-igual{opacity:.75;background:var(--papel)}.fa-est-l .fa-e-bloq{border-color:#E9C46A;background:#FFFBEF}
+.fa-e-h{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.fa-e-h .fa-chk input{width:18px;height:18px}.fa-e-sp{width:18px}.fa-est-l small{display:block;margin-top:3px}.fa-est-l details summary{cursor:pointer;font-size:13px;color:var(--acero);margin-top:6px}
 </style></head>
 <body>
 <svg style="display:none" aria-hidden="true">
@@ -1750,7 +1753,29 @@ const I18N = {
     "Extrae primero la rúbrica.": "Extrau primer la rúbrica.",
     "Puntúa primero el proyecto.": "Puntua primer el projecte.",
     "Aún sin perfil. Podéis subir el de otra app o rellenarlo aquí.": "Encara sense perfil. Podeu pujar el d'una altra app o omplir-lo ací.",
-    "Parado.": "Aturat."
+    "Parado.": "Aturat.",
+    "Aplicad o descartad primero la propuesta de estructura.": "Apliqueu o descarteu primer la proposta d'estructura.",
+    "Estructura según la convocatoria": "Estructura segons la convocatòria",
+    "Comparando el proyecto con lo que pide la convocatoria…": "Comparant el projecte amb el que demana la convocatòria…",
+    "Puntuando la nueva estructura…": "Puntuant la nova estructura…",
+    "Propuesta de estructura": "Proposta d'estructura",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material no se pueden aceptar.": "Marqueu les seccions que accepteu. El que no accepteu es queda com estava. Les seccions amb xifres que no són al vostre material no es poden acceptar.",
+    "conserva el {0} % del texto": "conserva el {0} % del text",
+    "La propuesta no usa estas secciones vuestras. Se conservarán al final salvo que las desmarquéis:": "La proposta no fa servir aquestes seccions vostres. Es conservaran al final llevat que les desmarqueu:",
+    "Aplicar {0} sección(es) aceptada(s)": "Aplicar {0} secció/ns acceptada/es",
+    "Descartar la propuesta": "Descartar la proposta",
+    "Antes de los ciclos: la estructura": "Abans dels cicles: l'estructura",
+    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: añade las secciones que faltan como guía con [COMPLETAR] y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "Si l'esborrany està incomplet o en un altre ordre, aquest pas el posa en la forma que demana la convocatòria: afegeix les seccions que falten com a guia amb [COMPLETAR] i mou el que ja teniu, sense reescriure-ho. Accepteu o descarteu cada secció.",
+    "Proponer estructura": "Proposar estructura",
+    "Saltar este paso": "Saltar aquest pas",
+    "{0} de {1} cambios aceptados por vosotros": "{0} de {1} canvis acceptats per vosaltres",
+    "Con la nueva estructura la puntuación baja: revisad las secciones aceptadas.": "Amb la nova estructura la puntuació baixa: reviseu les seccions acceptades.",
+    "Deshacer el ciclo 0": "Desfer el cicle 0",
+    "Ciclo 0: la estructura": "Cicle 0: l'estructura",
+    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden y las que faltan como guía con [COMPLETAR], moviendo lo que ya tenéis sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Abans dels cicles, la IA proposa posar el projecte en la forma que demana la convocatòria: seccions en el seu ordre i les que falten com a guia amb [COMPLETAR], movent el que ja teniu sense reescriure-ho. Accepteu o descarteu cada secció; cap secció vostra no es perd sense que ho decidiu.",
+    "sin cambios": "sense canvis",
+    "renombrada": "reanomenada",
+    "cambiada": "canviada"
   },
   "eu": {
     "title": "SubvencIA · Paziente elkarteentzako finantzaketa proiektuak",
@@ -2119,7 +2144,29 @@ const I18N = {
     "Extrae primero la rúbrica.": "Atera lehenik errubrika.",
     "Puntúa primero el proyecto.": "Puntuatu lehenik proiektua.",
     "Aún sin perfil. Podéis subir el de otra app o rellenarlo aquí.": "Oraindik profilik ez. Beste aplikazio batekoa igo dezakezue edo hemen bete.",
-    "Parado.": "Geldituta."
+    "Parado.": "Geldituta.",
+    "Aplicad o descartad primero la propuesta de estructura.": "Aplikatu edo baztertu lehenik egitura proposamena.",
+    "Estructura según la convocatoria": "Egitura deialdiaren arabera",
+    "Comparando el proyecto con lo que pide la convocatoria…": "Proiektua deialdiak eskatzen duenarekin alderatzen…",
+    "Puntuando la nueva estructura…": "Egitura berria puntuatzen…",
+    "Propuesta de estructura": "Egitura proposamena",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material no se pueden aceptar.": "Markatu onartzen dituzuen atalak. Onartzen ez duzuena lehen bezala geratzen da. Zuen materialean ez dauden zifrak dituzten atalak ezin dira onartu.",
+    "conserva el {0} % del texto": "testuaren % {0} gordetzen du",
+    "La propuesta no usa estas secciones vuestras. Se conservarán al final salvo que las desmarquéis:": "Proposamenak ez ditu zuen atal hauek erabiltzen. Amaieran gordeko dira, markatzen ez badituzue izan ezik:",
+    "Aplicar {0} sección(es) aceptada(s)": "Aplikatu onartutako {0} atal",
+    "Descartar la propuesta": "Baztertu proposamena",
+    "Antes de los ciclos: la estructura": "Zikloen aurretik: egitura",
+    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: añade las secciones que faltan como guía con [COMPLETAR] y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "Zirriborroa osatu gabe edo beste ordena batean badago, urrats honek deialdiak eskatzen duen forman jartzen du: falta diren atalak gehitzen ditu [COMPLETAR] gidarekin eta daukazuena mugitzen du, berridatzi gabe. Atal bakoitza onartu edo baztertzen duzue.",
+    "Proponer estructura": "Proposatu egitura",
+    "Saltar este paso": "Saltatu urrats hau",
+    "{0} de {1} cambios aceptados por vosotros": "zuek onartutako {0} aldaketa, {1}etik",
+    "Con la nueva estructura la puntuación baja: revisad las secciones aceptadas.": "Egitura berriarekin puntuazioa jaisten da: berrikusi onartutako atalak.",
+    "Deshacer el ciclo 0": "Desegin 0. zikloa",
+    "Ciclo 0: la estructura": "0. zikloa: egitura",
+    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden y las que faltan como guía con [COMPLETAR], moviendo lo que ya tenéis sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Zikloen aurretik, AAk proiektua deialdiak eskatzen duen forman jartzea proposatzen du: atalak beren ordenan eta falta direnak [COMPLETAR] gidarekin, daukazuena berridatzi gabe mugituz. Atal bakoitza onartu edo baztertzen duzue; zuen atalik ez da galtzen zuek erabaki gabe.",
+    "sin cambios": "aldaketarik gabe",
+    "renombrada": "izenez aldatua",
+    "cambiada": "aldatua"
   },
   "gl": {
     "title": "SubvencIA · Proxectos de financiamento para asociacións de pacientes",
@@ -2488,7 +2535,29 @@ const I18N = {
     "Extrae primero la rúbrica.": "Extrae primeiro a rúbrica.",
     "Puntúa primero el proyecto.": "Puntúa primeiro o proxecto.",
     "Aún sin perfil. Podéis subir el de otra app o rellenarlo aquí.": "Aínda sen perfil. Podedes subir o doutra app ou enchelo aquí.",
-    "Parado.": "Parado."
+    "Parado.": "Parado.",
+    "Aplicad o descartad primero la propuesta de estructura.": "Aplicade ou descartade primeiro a proposta de estrutura.",
+    "Estructura según la convocatoria": "Estrutura segundo a convocatoria",
+    "Comparando el proyecto con lo que pide la convocatoria…": "Comparando o proxecto co que pide a convocatoria…",
+    "Puntuando la nueva estructura…": "Puntuando a nova estrutura…",
+    "Propuesta de estructura": "Proposta de estrutura",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material no se pueden aceptar.": "Marcade as seccións que aceptades. O que non aceptedes queda como estaba. As seccións con cifras que non están no voso material non se poden aceptar.",
+    "conserva el {0} % del texto": "conserva o {0} % do texto",
+    "La propuesta no usa estas secciones vuestras. Se conservarán al final salvo que las desmarquéis:": "A proposta non usa estas seccións vosas. Conservaranse ao final salvo que as desmarquedes:",
+    "Aplicar {0} sección(es) aceptada(s)": "Aplicar {0} sección(s) aceptada(s)",
+    "Descartar la propuesta": "Descartar a proposta",
+    "Antes de los ciclos: la estructura": "Antes dos ciclos: a estrutura",
+    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: añade las secciones que faltan como guía con [COMPLETAR] y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "Se o borrador está incompleto ou noutra orde, este paso pono na forma que pide a convocatoria: engade as seccións que faltan como guía con [COMPLETAR] e move o que xa tedes, sen reescribilo. Aceptades ou descartades cada sección.",
+    "Proponer estructura": "Propor estrutura",
+    "Saltar este paso": "Saltar este paso",
+    "{0} de {1} cambios aceptados por vosotros": "{0} de {1} cambios aceptados por vós",
+    "Con la nueva estructura la puntuación baja: revisad las secciones aceptadas.": "Coa nova estrutura a puntuación baixa: revisade as seccións aceptadas.",
+    "Deshacer el ciclo 0": "Desfacer o ciclo 0",
+    "Ciclo 0: la estructura": "Ciclo 0: a estrutura",
+    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden y las que faltan como guía con [COMPLETAR], moviendo lo que ya tenéis sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Antes dos ciclos, a IA propón poñer o proxecto na forma que pide a convocatoria: seccións na súa orde e as que faltan como guía con [COMPLETAR], movendo o que xa tedes sen reescribilo. Aceptades ou descartades cada sección; ningunha sección vosa se perde sen que o decidades.",
+    "sin cambios": "sen cambios",
+    "renombrada": "renomeada",
+    "cambiada": "cambiada"
   },
   "en": {
     "title": "SubvencIA · Funding proposals for patient associations",
@@ -2857,7 +2926,29 @@ const I18N = {
     "Extrae primero la rúbrica.": "Extract the rubric first.",
     "Puntúa primero el proyecto.": "Score the project first.",
     "Aún sin perfil. Podéis subir el de otra app o rellenarlo aquí.": "No profile yet. You can upload the one from another app or fill it in here.",
-    "Parado.": "Stopped."
+    "Parado.": "Stopped.",
+    "Aplicad o descartad primero la propuesta de estructura.": "Apply or discard the structure proposal first.",
+    "Estructura según la convocatoria": "Structure according to the call",
+    "Comparando el proyecto con lo que pide la convocatoria…": "Comparing the project with what the call asks for…",
+    "Puntuando la nueva estructura…": "Scoring the new structure…",
+    "Propuesta de estructura": "Structure proposal",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material no se pueden aceptar.": "Tick the sections you accept. Anything you do not accept stays as it was. Sections with figures that are not in your material cannot be accepted.",
+    "conserva el {0} % del texto": "keeps {0} % of the text",
+    "La propuesta no usa estas secciones vuestras. Se conservarán al final salvo que las desmarquéis:": "The proposal does not use these sections of yours. They will be kept at the end unless you untick them:",
+    "Aplicar {0} sección(es) aceptada(s)": "Apply {0} accepted section(s)",
+    "Descartar la propuesta": "Discard the proposal",
+    "Antes de los ciclos: la estructura": "Before the cycles: the structure",
+    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: añade las secciones que faltan como guía con [COMPLETAR] y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "If the draft is incomplete or in a different order, this step puts it in the shape the call asks for: it adds the missing sections as a guide with [COMPLETAR] and moves what you already have, without rewriting it. You accept or discard each section.",
+    "Proponer estructura": "Propose a structure",
+    "Saltar este paso": "Skip this step",
+    "{0} de {1} cambios aceptados por vosotros": "{0} of {1} changes accepted by you",
+    "Con la nueva estructura la puntuación baja: revisad las secciones aceptadas.": "With the new structure the score goes down: check the accepted sections.",
+    "Deshacer el ciclo 0": "Undo cycle 0",
+    "Ciclo 0: la estructura": "Cycle 0: the structure",
+    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden y las que faltan como guía con [COMPLETAR], moviendo lo que ya tenéis sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Before the cycles, the AI proposes putting the project in the shape the call asks for: sections in its order and the missing ones as a guide with [COMPLETAR], moving what you already have without rewriting it. You accept or discard each section; none of your sections is lost unless you decide so.",
+    "sin cambios": "unchanged",
+    "renombrada": "renamed",
+    "cambiada": "changed"
   },
   "pt": {
     "title": "SubvencIA · Projetos de financiamento para associações de doentes",
@@ -3226,7 +3317,29 @@ const I18N = {
     "Extrae primero la rúbrica.": "Extraia primeiro a grelha.",
     "Puntúa primero el proyecto.": "Pontue primeiro o projeto.",
     "Aún sin perfil. Podéis subir el de otra app o rellenarlo aquí.": "Ainda sem perfil. Podem carregar o de outra app ou preenchê-lo aqui.",
-    "Parado.": "Parado."
+    "Parado.": "Parado.",
+    "Aplicad o descartad primero la propuesta de estructura.": "Apliquem ou descartem primeiro a proposta de estrutura.",
+    "Estructura según la convocatoria": "Estrutura segundo o concurso",
+    "Comparando el proyecto con lo que pide la convocatoria…": "A comparar o projeto com o que o concurso pede…",
+    "Puntuando la nueva estructura…": "A pontuar a nova estrutura…",
+    "Propuesta de estructura": "Proposta de estrutura",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material no se pueden aceptar.": "Marquem as secções que aceitam. O que não aceitarem fica como estava. As secções com números que não estão no vosso material não podem ser aceites.",
+    "conserva el {0} % del texto": "mantém {0} % do texto",
+    "La propuesta no usa estas secciones vuestras. Se conservarán al final salvo que las desmarquéis:": "A proposta não usa estas secções vossas. Serão mantidas no fim, a não ser que as desmarquem:",
+    "Aplicar {0} sección(es) aceptada(s)": "Aplicar {0} secção(ões) aceite(s)",
+    "Descartar la propuesta": "Descartar a proposta",
+    "Antes de los ciclos: la estructura": "Antes dos ciclos: a estrutura",
+    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: añade las secciones que faltan como guía con [COMPLETAR] y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "Se o rascunho estiver incompleto ou noutra ordem, este passo põe-no na forma que o concurso pede: acrescenta as secções em falta como guia com [COMPLETAR] e move o que já têm, sem o reescrever. Aceitam ou descartam cada secção.",
+    "Proponer estructura": "Propor estrutura",
+    "Saltar este paso": "Saltar este passo",
+    "{0} de {1} cambios aceptados por vosotros": "{0} de {1} alterações aceites por vós",
+    "Con la nueva estructura la puntuación baja: revisad las secciones aceptadas.": "Com a nova estrutura a pontuação desce: revejam as secções aceites.",
+    "Deshacer el ciclo 0": "Desfazer o ciclo 0",
+    "Ciclo 0: la estructura": "Ciclo 0: a estrutura",
+    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden y las que faltan como guía con [COMPLETAR], moviendo lo que ya tenéis sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Antes dos ciclos, a IA propõe pôr o projeto na forma que o concurso pede: secções na sua ordem e as que faltam como guia com [COMPLETAR], movendo o que já têm sem o reescrever. Aceitam ou descartam cada secção; nenhuma secção vossa se perde sem que o decidam.",
+    "sin cambios": "sem alterações",
+    "renombrada": "renomeada",
+    "cambiada": "alterada"
   }
 };
 
@@ -3322,6 +3435,8 @@ function ejDe(x) {
     ia: [
       {convocatoria: x.conv, puntuacion_maxima: 100, criterios: x.crit.map(([nombre, cita, mira], i) => ({nombre, peso: [30, 25, 25, 20][i], cita, mira})), requisitos: x.req.map(([texto, cita]) => ({texto, cita})), dudas: x.dudas},
       E(c, e0),
+      {resumen: x.est[0], secciones: [...seccionesDe(x.proy).map((sc, i) => ({titulo: sc.t, origen: sc.t, texto: i === 3 ? sc.x + ' ' + x.est[2] : sc.x, motivo: x.est[1][i]})), {titulo: x.est[3], origen: 'NUEVA', texto: x.est[4], motivo: x.est[1][4]}]},
+      E(c, e0),
       {hipotesis: x.c1[0], seccion: x.secs[0], texto: x.c1[1]}, ev([a1]),
       {hipotesis: x.c2[0], seccion: x.secs[1], texto: x.c2[1]},
       {hipotesis: x.c3[0], seccion: x.secs[1], texto: x.c3[1]}, ev([a1, b3]),
@@ -3333,6 +3448,7 @@ function ejDe(x) {
 const EJ_P = (nombre, ambito, territorio) => ({nombre, ambito, territorio, web: 'https://www.dulcevida-ejemplo.org', color1: '#1F6FB2', color2: '#F2A541'});
 const EJ = {
 es: ejDe({
+  est: ['Se mantiene el orden de las bases y se añade la sección de evaluación que piden los indicadores.', ['Criterio a): necesidad y población destinataria', 'Criterio b): objetivos e indicadores', 'Criterio c): actividades y cronograma', 'Criterio d): presupuesto detallado', 'Criterio b): fuente de verificación de los indicadores'], 'Materiales: 3.500 euros. [COMPLETAR: resto de partidas].', '5. Evaluación y seguimiento', 'Cómo se medirá cada objetivo: [COMPLETAR: indicador y fuente de verificación de cada objetivo]. Quién hará el seguimiento: [COMPLETAR: persona o equipo responsable]. Cuándo: [COMPLETAR: momentos de medición].'],
   perfil: EJ_P('Asociación Dulce Vida (ejemplo ficticio)', 'Diabetes', 'Elche y comarca'),
   basesNombre: 'Bases ayudas 2027.pdf', proyNombre: 'Proyecto Escuela de pies sanos.docx', apoyoNombre: 'Memoria 2026.docx',
   bases: 'Convocatoria de ayudas 2027 para proyectos de asociaciones de pacientes (ejemplo ficticio)\n\n1. Objeto. Financiar proyectos que mejoren la calidad de vida de pacientes y familias.\n2. Beneficiarias. Asociaciones de pacientes sin ánimo de lucro inscritas en el registro autonómico.\n3. Cuantía. La ayuda máxima por proyecto será de 15.000 euros.\n4. Plazo. Las solicitudes se presentarán hasta el 31 de marzo de 2027.\n5. Criterios de valoración, hasta un máximo de 100 puntos:\na) Necesidad y población destinataria, hasta 30 puntos.\nb) Objetivos e indicadores medibles, hasta 25 puntos.\nc) Actividades y cronograma, hasta 25 puntos.\nd) Presupuesto detallado y cofinanciación, hasta 20 puntos.\n6. La memoria del proyecto no superará las 10 páginas.',
@@ -3358,6 +3474,7 @@ es: ejDe({
   ev5: ['Talleres mensuales de cuidado de los pies, de abril a noviembre', 'Nada: cumple todos los elementos.']
 }),
 ca: ejDe({
+  est: ['Es manté l\'ordre de les bases i s\'afegeix la secció d\'avaluació que demanen els indicadors.', ['Criteri a): necessitat i població destinatària', 'Criteri b): objectius i indicadors', 'Criteri c): activitats i cronograma', 'Criteri d): pressupost detallat', 'Criteri b): font de verificació dels indicadors'], 'Materials: 3.500 euros. [COMPLETAR: resta de partides].', '5. Avaluació i seguiment', 'Com es mesurarà cada objectiu: [COMPLETAR: indicador i font de verificació de cada objectiu]. Qui en farà el seguiment: [COMPLETAR: persona o equip responsable]. Quan: [COMPLETAR: moments de mesura].'],
   perfil: EJ_P('Associació Dolça Vida (exemple fictici)', 'Diabetis', 'Elx i comarca'),
   basesNombre: 'Bases ajudes 2027.pdf', proyNombre: 'Projecte Escola de peus sans.docx', apoyoNombre: 'Memòria 2026.docx',
   bases: 'Convocatòria d\'ajudes 2027 per a projectes d\'associacions de pacients (exemple fictici)\n\n1. Objecte. Finançar projectes que milloren la qualitat de vida de pacients i famílies.\n2. Beneficiàries. Associacions de pacients sense ànim de lucre inscrites en el registre autonòmic.\n3. Quantia. L\'ajuda màxima per projecte serà de 15.000 euros.\n4. Termini. Les sol·licituds es presentaran fins al 31 de març de 2027.\n5. Criteris de valoració, fins a un màxim de 100 punts:\na) Necessitat i població destinatària, fins a 30 punts.\nb) Objectius i indicadors mesurables, fins a 25 punts.\nc) Activitats i cronograma, fins a 25 punts.\nd) Pressupost detallat i cofinançament, fins a 20 punts.\n6. La memòria del projecte no superarà les 10 pàgines.',
@@ -3383,6 +3500,7 @@ ca: ejDe({
   ev5: ['Tallers mensuals de cura dels peus, d\'abril a novembre', 'Res: compleix tots els elements.']
 }),
 eu: ejDe({
+  est: ['Oinarrien ordena mantentzen da eta adierazleek eskatzen duten ebaluazio atala gehitzen da.', ['a) irizpidea: beharra eta xede-biztanleria', 'b) irizpidea: helburuak eta adierazleak', 'c) irizpidea: jarduerak eta kronograma', 'd) irizpidea: aurrekontu zehatza', 'b) irizpidea: adierazleen egiaztatze iturria'], 'Materialak: 3.500 euro. [COMPLETAR: gainerako partidak].', '5. Ebaluazioa eta jarraipena', 'Nola neurtuko den helburu bakoitza: [COMPLETAR: helburu bakoitzaren adierazlea eta egiaztatze iturria]. Nork egingo duen jarraipena: [COMPLETAR: pertsona edo talde arduraduna]. Noiz: [COMPLETAR: neurketa uneak].'],
   perfil: EJ_P('Bizitza Gozoa Elkartea (adibide asmatua)', 'Diabetesa', 'Elx eta eskualdea'),
   basesNombre: '2027ko laguntzen oinarriak.pdf', proyNombre: 'Oin osasuntsuen eskola proiektua.docx', apoyoNombre: '2026ko memoria.docx',
   bases: 'Paziente elkarteen proiektuetarako 2027ko laguntzen deialdia (adibide asmatua)\n\n1. Xedea. Pazienteen eta familien bizi kalitatea hobetzen duten proiektuak finantzatzea.\n2. Onuradunak. Erregistro autonomikoan inskribatutako irabazi asmorik gabeko paziente elkarteak.\n3. Zenbatekoa. Proiektu bakoitzeko gehieneko laguntza 15.000 eurokoa izango da.\n4. Epea. Eskaerak 2027ko martxoaren 31ra arte aurkeztuko dira.\n5. Balorazio irizpideak, gehienez 100 puntu:\na) Beharra eta xede-biztanleria, gehienez 30 puntu.\nb) Helburuak eta adierazle neurgarriak, gehienez 25 puntu.\nc) Jarduerak eta kronograma, gehienez 25 puntu.\nd) Aurrekontu zehatza eta kofinantzaketa, gehienez 20 puntu.\n6. Proiektuaren memoriak ez ditu 10 orrialde gaindituko.',
@@ -3408,6 +3526,7 @@ eu: ejDe({
   ev5: ['Oinen zaintzari buruzko hileroko tailerrak, apiriletik azarora', 'Ezer ez: elementu guztiak betetzen ditu.']
 }),
 gl: ejDe({
+  est: ['Mantense a orde das bases e engádese a sección de avaliación que piden os indicadores.', ['Criterio a): necesidade e poboación destinataria', 'Criterio b): obxectivos e indicadores', 'Criterio c): actividades e cronograma', 'Criterio d): orzamento detallado', 'Criterio b): fonte de verificación dos indicadores'], 'Materiais: 3.500 euros. [COMPLETAR: resto de partidas].', '5. Avaliación e seguimento', 'Como se medirá cada obxectivo: [COMPLETAR: indicador e fonte de verificación de cada obxectivo]. Quen fará o seguimento: [COMPLETAR: persoa ou equipo responsable]. Cando: [COMPLETAR: momentos de medición].'],
   perfil: EJ_P('Asociación Vida Doce (exemplo ficticio)', 'Diabetes', 'Elche e comarca'),
   basesNombre: 'Bases axudas 2027.pdf', proyNombre: 'Proxecto Escola de pés sans.docx', apoyoNombre: 'Memoria 2026.docx',
   bases: 'Convocatoria de axudas 2027 para proxectos de asociacións de pacientes (exemplo ficticio)\n\n1. Obxecto. Financiar proxectos que melloren a calidade de vida de pacientes e familias.\n2. Beneficiarias. Asociacións de pacientes sen ánimo de lucro inscritas no rexistro autonómico.\n3. Contía. A axuda máxima por proxecto será de 15.000 euros.\n4. Prazo. As solicitudes presentaranse ata o 31 de marzo de 2027.\n5. Criterios de valoración, ata un máximo de 100 puntos:\na) Necesidade e poboación destinataria, ata 30 puntos.\nb) Obxectivos e indicadores medibles, ata 25 puntos.\nc) Actividades e cronograma, ata 25 puntos.\nd) Orzamento detallado e cofinanciamento, ata 20 puntos.\n6. A memoria do proxecto non superará as 10 páxinas.',
@@ -3433,6 +3552,7 @@ gl: ejDe({
   ev5: ['Obradoiros mensuais de coidado dos pés, de abril a novembro', 'Nada: cumpre todos os elementos.']
 }),
 en: ejDe({
+  est: ['The order of the rules is kept and the evaluation section that the indicators require is added.', ['Criterion a): need and target population', 'Criterion b): objectives and indicators', 'Criterion c): activities and timeline', 'Criterion d): detailed budget', 'Criterion b): means of verification for the indicators'], 'Materials: 3,500 euros. [COMPLETAR: other budget lines].', '5. Evaluation and monitoring', 'How each objective will be measured: [COMPLETAR: indicator and means of verification for each objective]. Who will monitor it: [COMPLETAR: person or team responsible]. When: [COMPLETAR: measurement points].'],
   perfil: EJ_P('Sweet Life Association (fictitious example)', 'Diabetes', 'Elche and district'),
   basesNombre: '2027 grant rules.pdf', proyNombre: 'Healthy Feet School project.docx', apoyoNombre: '2026 annual report.docx',
   bases: '2027 call for grants for patient association projects (fictitious example)\n\n1. Purpose. To fund projects that improve the quality of life of patients and families.\n2. Eligible applicants. Non-profit patient associations listed in the regional register.\n3. Amount. The maximum grant per project will be 15,000 euros.\n4. Deadline. Applications must be submitted by 31 March 2027.\n5. Assessment criteria, up to a maximum of 100 points:\na) Need and target population, up to 30 points.\nb) Objectives and measurable indicators, up to 25 points.\nc) Activities and timeline, up to 25 points.\nd) Detailed budget and co-funding, up to 20 points.\n6. The project description must not exceed 10 pages.',
@@ -3458,6 +3578,7 @@ en: ejDe({
   ev5: ['Monthly foot care workshops, from April to November', 'Nothing: it meets every element.']
 }),
 pt: ejDe({
+  est: ['Mantém-se a ordem do regulamento e acrescenta-se a secção de avaliação que os indicadores exigem.', ['Critério a): necessidade e população-alvo', 'Critério b): objetivos e indicadores', 'Critério c): atividades e cronograma', 'Critério d): orçamento detalhado', 'Critério b): fonte de verificação dos indicadores'], 'Materiais: 3.500 euros. [COMPLETAR: restantes rubricas].', '5. Avaliação e acompanhamento', 'Como será medido cada objetivo: [COMPLETAR: indicador e fonte de verificação de cada objetivo]. Quem fará o acompanhamento: [COMPLETAR: pessoa ou equipa responsável]. Quando: [COMPLETAR: momentos de medição].'],
   perfil: EJ_P('Associação Vida Doce (exemplo fictício)', 'Diabetes', 'Elche e região'),
   basesNombre: 'Regulamento apoios 2027.pdf', proyNombre: 'Projeto Escola de pés saudáveis.docx', apoyoNombre: 'Relatório 2026.docx',
   bases: 'Concurso de apoios 2027 para projetos de associações de doentes (exemplo fictício)\n\n1. Objeto. Financiar projetos que melhorem a qualidade de vida de doentes e famílias.\n2. Beneficiárias. Associações de doentes sem fins lucrativos inscritas no registo regional.\n3. Montante. O apoio máximo por projeto será de 15.000 euros.\n4. Prazo. As candidaturas serão apresentadas até 31 de março de 2027.\n5. Critérios de avaliação, até um máximo de 100 pontos:\na) Necessidade e população-alvo, até 30 pontos.\nb) Objetivos e indicadores mensuráveis, até 25 pontos.\nc) Atividades e cronograma, até 25 pontos.\nd) Orçamento detalhado e cofinanciamento, até 20 pontos.\n6. A memória do projeto não excederá 10 páginas.',
@@ -3497,12 +3618,20 @@ const GLOS = [
   ['¿Qué hace?', 'Lee la convocatoria, extrae cómo se puntuará (criterios, puntos y requisitos), evalúa vuestro proyecto y lo mejora sección a sección en ciclos medibles.'],
   ['La rúbrica', 'Cada criterio lleva sus puntos y la cita literal de las bases que los fija; el código comprueba que la cita existe. Revisadla y corregidla antes de mejorar.'],
   ['Cómo se puntúa', 'Para cada criterio, la IA da un nivel de 0 a 4 según los elementos que mira la rúbrica, con una cita literal de vuestro proyecto. El código comprueba la cita (sin ella, el nivel no pasa de 1) y suma los puntos con los pesos de las bases.'],
+  ['Ciclo 0: la estructura', 'Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden y las que faltan como guía con [COMPLETAR], moviendo lo que ya tenéis sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.'],
   ['El bucle de mejora', 'En cada ciclo: se elige el criterio con más margen, se formula una hipótesis, se reescribe solo su sección y se vuelve a puntuar. Si la puntuación sube, se conserva; si no, se deshace. Un criterio que falla dos veces seguidas se aparca.'],
   ['Nada inventado', 'Un cambio con cifras que no están en las bases, el proyecto o vuestros documentos se rechaza. Lo que falta se marca con [COMPLETAR] para que lo rellenéis vosotros.'],
   ['Lo que no garantiza', 'La puntuación es una simulación: orienta, pero no garantiza la del tribunal. Revisad siempre el proyecto y no prometáis nada que la asociación no pueda cumplir.'],
   ['Privacidad', 'Todo se guarda solo en este navegador. Al usar la IA, las bases, el proyecto y vuestros documentos salen hacia vuestro proveedor con correos, DNI, teléfonos e IBAN enmascarados.'],
   ['Tu clave de IA', 'Funciona con OpenAI, Google Gemini o Anthropic Claude. Cada ciclo hace dos llamadas; 10 ciclos con un modelo económico cuestan céntimos.']
 ];
+
+/* cifras que no están en el material. Corrige numerosNuevos de Forja, que leía «3.500» como 3,5 (y lo ignoraba por pequeño):
+   aquí «3.500», «3,500» y «3500» son la misma cifra; los decimales («2,5») se respetan. Se ignoran las cifras de 0 a 12. */
+const CIFRA_RX = /\d{1,3}(?:[.,]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?/g;
+function cifraNorm(x) { const m = x.match(/^(\d{1,3}(?:[.,]\d{3})+)([.,]\d+)?$/); if (m) return m[1].replace(/[.,]/g, '') + (m[2] ? '.' + m[2].slice(1) : ''); return x.replace(',', '.'); }
+const cifrasDe = tx => new Set((String(tx).match(CIFRA_RX) || []).map(cifraNorm));
+function cifrasNuevas(texto, mat) { const m = cifrasDe(mat); return [...new Set((String(texto).match(CIFRA_RX) || []))].filter(x => { const n = cifraNorm(x); return !m.has(n) && parseFloat(n) > 12; }); }
 
 let S = {perfil: perfilVacio(), bases: [], proy: null, apoyo: [], rub: null, secs0: null, secs: null, ev0: null, ev: null, evVieja: false, ciclos: [], vers: [], fallos: {}, conf: {n: 5, obj: 90}, esEjemplo: false};
 PII.unshift(['IBAN', /\b[A-Z]{2}\d{2}(?:\s?\d{4}){4,7}(?:\s?\d{1,4})?\b/g]);
@@ -3587,7 +3716,7 @@ async function extraeRubrica() {
   if (busy || !listo()) return; const b = basesTx(); if (wc(b) < 20) return toast(t('Sube primero las bases de la convocatoria.'));
   const sc = scrub(b.slice(0, MAX_BASES)); if (!(await pideEnvio('bases', sc.t, sc.n))) return;
   busy = true; estado('rubEstado', t('Leyendo las bases y extrayendo la rúbrica…'));
-  try { const raw = await pide([{role: 'system', content: SYS}, {role: 'user', content: PROMPT_RUB(sc.t)}], 6000); const r = procesaRubrica(raw, b); if (!r.crits.length) throw new Error(t('No se encontraron criterios con puntos en las bases. Revisa que el documento incluya los criterios de valoración.')); S.rub = r; S.ev = S.ev0 = null; S.ciclos = []; S.vers = []; S.fallos = {}; S.esEjemplo = !!COLA; await guardaYa(); }
+  try { const raw = await pide([{role: 'system', content: SYS}, {role: 'user', content: PROMPT_RUB(sc.t)}], 6000); const r = procesaRubrica(raw, b); if (!r.crits.length) throw new Error(t('No se encontraron criterios con puntos en las bases. Revisa que el documento incluya los criterios de valoración.')); S.rub = r; S.ev = S.ev0 = null; S.ciclos = []; S.vers = []; S.fallos = {}; S.prop0 = S.pre0 = S.c0 = null; S.esEjemplo = !!COLA; await guardaYa(); }
   catch (e) { estado('rubEstado', e.message); toast(e.message, 8000); throw e; }
   finally { busy = false; if (step === 3) pintaRubrica(); }
 }
@@ -3637,7 +3766,7 @@ async function puntuaInicial() {
   try {
     const ev = await evalua(S.secs); if (!ev) return;
     S.ev = ev; S.evVieja = false; if (!S.ev0) { S.ev0 = ev; S.secs0 = JSON.parse(JSON.stringify(S.secs)); }
-    S.vers.push({n: S.ciclos.length, total: puntua(ev).total, tipo: S.vers.length ? 'manual' : 'inicial'}); await guardaYa();
+    S.vers.push({n: ciclosN().length, total: puntua(ev).total, tipo: S.vers.length ? 'manual' : 'inicial'}); await guardaYa();
   } catch (e) { estado('mejEstado', e.message); toast(e.message, 8000); throw e; }
   finally { busy = false; if (step === 4) pintaMejora(); if (step === 5) pintaFinal(); }
 }
@@ -3682,12 +3811,12 @@ function aplicaCambio(raw) {
   const antes = nueva ? '' : secs[i].x;
   if (!nuevo || norm(nuevo) === norm(antes)) return {hip, tit: secs[i].t, antes, despues: nuevo, err: {tipo: 'igual'}};
   if (!nueva && wc(nuevo) < wc(antes) * 0.5) return {hip, tit: secs[i].t, antes, despues: nuevo, err: {tipo: 'corta'}};
-  const cif = numerosNuevos(nuevo, materialTx() + '\n' + textoProy()); if (cif.length) return {hip, tit: secs[i].t, antes, despues: nuevo, err: {tipo: 'cifras', val: cif.join(', ')}};
+  const cif = cifrasNuevas(nuevo, materialTx() + '\n' + textoProy()); if (cif.length) return {hip, tit: secs[i].t, antes, despues: nuevo, err: {tipo: 'cifras', val: cif.join(', ')}};
   secs[i].x = nuevo; return {hip, tit: secs[i].t, antes, despues: nuevo, nueva, secs};
 }
 async function ciclo() {
   const c = eligeCriterio(); if (!c) return 'sin';
-  const e = S.ev.c[c.id], antes = puntua(S.ev).total, n = S.ciclos.length + 1;
+  const e = S.ev.c[c.id], antes = puntua(S.ev).total, n = ciclosN().length + 1;
   const previos = S.ciclos.filter(x => x.crit === c.id && x.dec !== 'ok').map(x => `- ${x.hip} → ${motivoTx(x)}`).join('\n');
   const basesV = c.ok ? ventanas(basesTx(), [c.cita], 500, 1500) : '';
   const sc = scrub(proyParaIA(S.secs)), ap = scrub(apoyoTx().slice(0, 9000)), pf = scrub(JSON.stringify(perfilParaIA(S.perfil)));
@@ -3705,7 +3834,7 @@ async function ciclo() {
   S.ciclos.push(reg); await guardaYa(); return reg.dec;
 }
 async function bucle() {
-  if (busy || !S.ev || !listo()) return; busy = true; PARAR = false; const n0 = S.ciclos.length; let fin = '';
+  if (busy || !S.ev || !listo()) return; if (S.prop0) return toast(t('Aplicad o descartad primero la propuesta de estructura.')); busy = true; PARAR = false; const n0 = S.ciclos.length; let fin = '';
   try {
     while (!PARAR && S.ciclos.length - n0 < S.conf.n) {
       if (puntua(S.ev).pct >= S.conf.obj - 1e-9) { fin = t('Objetivo alcanzado.'); break; }
@@ -3718,14 +3847,130 @@ async function bucle() {
   } catch (e) { estado('mejEstado', e.message); toast(e.message, 8000); if (COLA) throw e; }
   finally { busy = false; if (step === 4) pintaMejora(); }
 }
-const motivoTx = x => x.dec === 'ok' ? t('conservado') : !x.mot ? '' : {nosube: t('no sube la puntuación: se deshace'), cifras: t('rechazado: cifras que no están en vuestro material ({0})', x.mot.val), igual: t('rechazado: no cambiaba nada'), corta: t('rechazado: recortaba demasiado la sección'), sinsec: t('rechazado: la sección «{0}» no existe', x.mot.val)}[x.mot.tipo] || '';
+
+/* ── ciclo 0 · estructura según la convocatoria, con aprobación sección a sección ──
+   La IA propone la estructura completa (secciones en el orden que piden las bases, las que faltan como guía con [COMPLETAR]);
+   el código compara cada sección con la original (igual, renombrada, cambiada, nueva; cuánto texto conserva; cifras nuevas)
+   y la asociación acepta o descarta cada una. Ninguna sección original se pierde sin querer. Después se puntúa y queda en el
+   historial como ciclo 0; se puede deshacer mientras no haya ciclos de mejora. */
+const ciclosN = () => S.ciclos.filter(c => c.n > 0);
+const nomCiclo = c => c.tipo === 'estructura' ? t('Estructura según la convocatoria') : c.nom;
+const PROMPT_EST = (rub, proy, bases, apoyo, perfil) => `Pon este PROYECTO en la forma que pide la CONVOCATORIA, antes de mejorarlo criterio a criterio.
+
+RÚBRICA:
+${rub.crits.map(c => `- ${c.nombre} (${c.peso} puntos). Mira: ${c.mira.join('; ') || '—'}`).join('\n')}
+REQUISITOS: ${rub.req.map(r => r.texto).join(' · ') || '—'}
+
+BASES (para ver si piden un modelo de memoria, un orden o unos apartados concretos):
+${bases}
+
+PROYECTO ACTUAL (cada sección empieza por ###):
+${proy}
+
+DATOS DE LA ASOCIACIÓN (únicas cifras y hechos que puedes usar, además de los del proyecto y las bases):
+${apoyo || '(no hay documentos)'}
+Perfil: ${perfil}
+
+REGLAS
+- Ordena y titula las secciones como pidan las bases; si no piden un modelo, sigue el orden de los criterios de la rúbrica. Numera los títulos.
+- Añade una sección por cada cosa que la rúbrica o los requisitos piden y el proyecto no tiene.
+- Lo que ya está escrito NO se reescribe: se mueve a su sección tal cual. Solo puedes añadir frases cortas para enlazar.
+- Las secciones nuevas son una guía para la asociación: qué tiene que poner, con [COMPLETAR: qué dato falta], con la palabra COMPLETAR tal cual. No inventes cifras, fechas, importes, nombres ni resultados.
+- No pierdas contenido: todo el texto actual debe acabar en alguna sección.
+
+Devuelve SOLO este JSON:
+{"resumen":"una o dos frases: qué cambia en la estructura y por qué",
+ "secciones":[{"titulo":"título numerado de la sección","origen":"título EXACTO de la sección actual de la que sale el texto, o NUEVA","texto":"texto completo de la sección, sin el título","motivo":"qué criterio o requisito de las bases atiende, en pocas palabras"}]}
+${INSTR_IDIOMA()}`;
+function procesaEstructura(raw) {
+  const secs = S.secs, mat = materialTx() + '\n' + textoProy(), usados = new Set();
+  const items = (raw.secciones || []).map(x => {
+    const tit = String(x.titulo || '').trim(), texto = String(x.texto || '').replace(/\r/g, '').trim(), og = String(x.origen || '').trim();
+    const o = !og || /^(NUEVA|NEW|NOVA|BERRIA|NOVO)$/i.test(og) ? -1 : buscaSec(secs, og); if (o >= 0) usados.add(o);
+    const orig = o >= 0 ? secs[o] : null, igualTx = orig && norm(orig.x) === norm(texto), igualT = orig && normTit(orig.t) === normTit(tit);
+    const estado = !orig ? 'nueva' : igualTx && igualT ? 'igual' : igualTx ? 'renombrada' : 'cambio';
+    const pal = orig ? [...new Set(norm(orig.x).split(' ').filter(w => w.length > 3))] : [], nt = new Set(norm(texto).split(' '));
+    const conserva = pal.length ? Math.round(pal.filter(w => nt.has(w)).length / pal.length * 100) : null;
+    const cif = cifrasNuevas(texto, mat);
+    return {tit, texto, motivo: String(x.motivo || '').trim(), o, estado, conserva, cif, acepta: !cif.length && estado !== 'igual'};
+  }).filter(x => x.tit && (x.texto || x.o >= 0));
+  return {resumen: String(raw.resumen || '').trim(), items, huerf: secs.map((_, i) => i).filter(i => !usados.has(i)).map(i => ({i, conserva: true}))};
+}
+async function proponeEstructura() {
+  if (busy || !S.ev || !listo()) return; busy = true; estado('estEstado', t('Comparando el proyecto con lo que pide la convocatoria…')); pintaMejora();
+  try {
+    const sc = scrub(proyParaIA(S.secs)), ap = scrub(apoyoTx().slice(0, 9000)), pf = scrub(JSON.stringify(perfilParaIA(S.perfil))), bs = scrub(basesTx().slice(0, 20000));
+    if (!(await pideEnvio('proy', sc.t, sc.n + ap.n))) return;
+    const raw = await pide([{role: 'system', content: SYS}, {role: 'user', content: PROMPT_EST(S.rub, sc.t, bs.t, ap.t, pf.t)}], 7000);
+    const P = procesaEstructura(raw); if (!P.items.length) throw new Error(t('La IA no devolvió una respuesta con el formato esperado. Inténtalo de nuevo.'));
+    S.prop0 = P; ESTADO.estEstado = ''; await guardaYa();
+  } catch (e) { estado('estEstado', e.message); toast(e.message, 8000); if (COLA) throw e; }
+  finally { busy = false; if (step === 4) pintaMejora(); }
+}
+async function aplicaEstructura() {
+  const P = S.prop0; if (!P || busy) return;
+  const orig = S.secs, out = [], puestos = new Set();
+  P.items.forEach(x => {
+    if (x.acepta && x.estado !== 'igual') { out.push({t: x.tit, x: x.texto}); if (x.o >= 0) puestos.add(x.o); }
+    else if (x.o >= 0 && !puestos.has(x.o)) { out.push({...orig[x.o]}); puestos.add(x.o); }
+  });
+  P.huerf.forEach(h => { if (h.conserva && !puestos.has(h.i)) { out.push({...orig[h.i]}); puestos.add(h.i); } });
+  const acept = P.items.filter(x => x.acepta && x.estado !== 'igual'), cambiables = P.items.filter(x => x.estado !== 'igual');
+  if (!acept.length && P.huerf.every(h => h.conserva)) { S.prop0 = null; S.c0 = 'saltado'; await guardaYa(); return pintaMejora(); }
+  busy = true; estado('estEstado', t('Puntuando la nueva estructura…')); pintaMejora();
+  try {
+    const ev = await evalua(out); if (!ev) return;
+    const tA = puntua(S.ev).total, tD = puntua(ev).total;
+    S.pre0 = {secs: S.secs, ev: S.ev}; S.secs = out; S.ev = ev; S.prop0 = null; S.c0 = 'hecho';
+    S.ciclos.push({n: 0, tipo: 'estructura', crit: '', nom: '', hip: P.resumen, sec: acept.map(x => x.tit).join(' · '), antes: '', despues: '', tA, tD, dec: 'ok', acept: acept.length, total: cambiables.length});
+    S.vers.push({n: 0, total: tD, tipo: 'estructura'}); ESTADO.estEstado = ''; await guardaYa();
+  } catch (e) { estado('estEstado', e.message); toast(e.message, 8000); if (COLA) throw e; }
+  finally { busy = false; if (step === 4) pintaMejora(); }
+}
+async function deshazEstructura() {
+  if (!S.pre0 || ciclosN().length) return;
+  S.secs = S.pre0.secs; S.ev = S.pre0.ev; S.pre0 = null; S.c0 = null;
+  S.ciclos = S.ciclos.filter(c => c.tipo !== 'estructura'); S.vers = S.vers.filter(v => v.tipo !== 'estructura'); await guardaYa(); pintaMejora();
+}
+const ESTADO_EST = {igual: 'sin cambios', renombrada: 'renombrada', cambio: 'cambiada', nueva: 'nueva'};
+function tarjetaEstructura() {
+  if (S.esEjemplo && !S.prop0) return '';
+  if (S.prop0) {
+    const P = S.prop0, n = P.items.filter(x => x.acepta && x.estado !== 'igual').length;
+    return `<div class="card fa-est"><h3 class="fa-h3"><svg class="i"><use href="#i-grid"/></svg> ${esc(t('Propuesta de estructura'))}</h3><p>${esc(P.resumen)}</p>
+      <p class="help" style="margin-top:0">${esc(t('Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material no se pueden aceptar.'))}</p>
+      <ol class="fa-est-l">${P.items.map((x, i) => { const og = x.o >= 0 ? S.secs[x.o] : null, bloq = x.cif.length > 0; return `<li class="fa-e-${x.estado}${bloq ? ' fa-e-bloq' : ''}"><div class="fa-e-h">${x.estado === 'igual' ? '<span class="fa-e-sp"></span>' : `<label class="fa-chk"><input type="checkbox" data-est="${i}"${x.acepta ? ' checked' : ''}${bloq ? ' disabled' : ''}> </label>`}<b>${esc(x.tit)}</b>${chip(x.estado === 'nueva' ? 'ok' : x.estado === 'igual' ? '' : 'aviso', t(ESTADO_EST[x.estado]))}${x.conserva != null && x.estado === 'cambio' ? chip('', t('conserva el {0} % del texto', x.conserva)) : ''}${huecos(x.texto) ? chip('aviso', t('{0} por completar', huecos(x.texto))) : ''}</div>
+        ${x.motivo ? `<small class="muted">${esc(x.motivo)}</small>` : ''}${bloq ? `<div class="aviso">${esc(t('Cifras que no están en vuestro material: {0}. Comprobadlas o quitadlas.', x.cif.join(', ')))}</div>` : ''}
+        ${x.estado === 'igual' ? '' : `<details${x.estado === 'nueva' ? ' open' : ''}><summary>${esc(t('Ver el cambio'))}</summary><div class="fa-dif">${og ? `<div><b>${esc(t('Antes'))} · ${esc(titSec(og))}</b><p>${esc(og.x)}</p></div>` : ''}<div><b>${esc(t('Después'))}</b><p>${esc(x.texto)}</p></div></div></details>`}</li>`; }).join('')}</ol>
+      ${P.huerf.length ? `<div class="aviso">${esc(t('La propuesta no usa estas secciones vuestras. Se conservarán al final salvo que las desmarquéis:'))}<ul class="fa-ul" style="margin-top:6px">${P.huerf.map((h, k) => `<li><label class="fa-chk"><input type="checkbox" data-huerf="${k}"${h.conserva ? ' checked' : ''}> ${esc(titSec(S.secs[h.i]))}</label></li>`).join('')}</ul></div>` : ''}
+      <div class="actions"><button class="btn btn-primary" id="btnEstOk" type="button"${busy ? ' disabled' : ''}><svg class="i"><use href="#i-check"/></svg>${esc(t('Aplicar {0} sección(es) aceptada(s)', n))}</button><button class="btn btn-ghost" id="btnEstNo" type="button"${busy ? ' disabled' : ''}>${esc(t('Descartar la propuesta'))}</button></div><p class="help" id="estEstado" role="status">${ESTADO.estEstado ? estadoHTML(ESTADO.estEstado) : ''}</p></div>`;
+  }
+  if (S.c0 || ciclosN().length) return '';
+  return `<div class="card fa-est"><h3 class="fa-h3"><svg class="i"><use href="#i-grid"/></svg> ${esc(t('Antes de los ciclos: la estructura'))}</h3><p>${esc(t('Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: añade las secciones que faltan como guía con [COMPLETAR] y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.'))}</p>
+    <div class="actions"><button class="btn btn-primary" id="btnEst" type="button"${busy ? ' disabled' : ''}><svg class="i"><use href="#i-grid"/></svg>${esc(t('Proponer estructura'))}</button><button class="btn btn-ghost" id="btnEstSalta" type="button"${busy ? ' disabled' : ''}>${esc(t('Saltar este paso'))}</button></div><p class="help" id="estEstado" role="status">${ESTADO.estEstado ? estadoHTML(ESTADO.estEstado) : ''}</p></div>`;
+}
+$('mejora').addEventListener('change', e => {
+  const a = e.target.closest('[data-est]'), h = e.target.closest('[data-huerf]'); if (!S.prop0 || (!a && !h)) return;
+  if (a) S.prop0.items[+a.dataset.est].acepta = a.checked; else S.prop0.huerf[+h.dataset.huerf].conserva = h.checked;
+  guarda(); const n = S.prop0.items.filter(x => x.acepta && x.estado !== 'igual').length; $('btnEstOk').lastChild.textContent = t('Aplicar {0} sección(es) aceptada(s)', n);
+});
+$('mejora').addEventListener('click', e => {
+  const id = e.target.closest('button')?.id; if (!id) return;
+  if (id === 'btnEst') proponeEstructura();
+  else if (id === 'btnEstSalta') { S.c0 = 'saltado'; guarda(); pintaMejora(); }
+  else if (id === 'btnEstOk') aplicaEstructura();
+  else if (id === 'btnEstNo') { S.prop0 = null; S.c0 = 'saltado'; guarda(); pintaMejora(); }
+  else if (id === 'btnDeshaz0') deshazEstructura();
+});
+
+const motivoTx = x => x.tipo === 'estructura' ? t('{0} de {1} cambios aceptados por vosotros', x.acept, x.total) : x.dec === 'ok' ? t('conservado') : !x.mot ? '' : {nosube: t('no sube la puntuación: se deshace'), cifras: t('rechazado: cifras que no están en vuestro material ({0})', x.mot.val), igual: t('rechazado: no cambiaba nada'), corta: t('rechazado: recortaba demasiado la sección'), sinsec: t('rechazado: la sección «{0}» no existe', x.mot.val)}[x.mot.tipo] || '';
 
 /* ── ejemplo sin clave: mismas funciones, respuestas de la IA precalculadas ── */
 async function aplicaEjemplo() {
   const e = EJ[LANG] || EJ.es;
-  S = {perfil: perfilLimpio(e.perfil), bases: [{nombre: e.basesNombre, texto: e.bases}], proy: {nombre: e.proyNombre, texto: e.proy}, apoyo: [{nombre: e.apoyoNombre, texto: e.apoyo}], rub: null, secs0: null, secs: seccionesDe(e.proy), ev0: null, ev: null, evVieja: false, ciclos: [], vers: [], fallos: {}, conf: {n: 5, obj: 90}, esEjemplo: true};
+  S = {perfil: perfilLimpio(e.perfil), bases: [{nombre: e.basesNombre, texto: e.bases}], proy: {nombre: e.proyNombre, texto: e.proy}, apoyo: [{nombre: e.apoyoNombre, texto: e.apoyo}], rub: null, secs0: null, secs: seccionesDe(e.proy), ev0: null, ev: null, evVieja: false, ciclos: [], vers: [], fallos: {}, prop0: null, pre0: null, c0: null, conf: {n: 5, obj: 90}, esEjemplo: true};
   COLA = JSON.parse(JSON.stringify(e.ia));
-  try { await extraeRubrica(); await puntuaInicial(); await bucle(); } finally { COLA = null; S.esEjemplo = true; await guardaYa(); }
+  try { await extraeRubrica(); await puntuaInicial(); await proponeEstructura(); await aplicaEstructura(); await bucle(); } finally { COLA = null; S.esEjemplo = true; await guardaYa(); }
 }
 window.addEventListener('langchange', async () => { if (S.esEjemplo && !busy) { await aplicaEjemplo(); RENDER[step]?.(); } });
 
@@ -3734,7 +3979,7 @@ const ESTADO = {};
 const estadoHTML = tx => /…$/.test(tx) ? `<span class="spin"></span> ${esc(tx)}` : esc(tx);
 function estado(id, tx) { ESTADO[id] = tx; const el = $(id); if (el) el.innerHTML = estadoHTML(tx); }
 function pintaInicio() { $('inicioProj').innerHTML = S.rub && !S.esEjemplo ? `${esc(t('Tienes un proyecto en marcha en este navegador.'))} <button class="btn btn-ghost btn-sm" id="btnCont" type="button">${esc(t('Seguir'))}</button>` : ''; }
-$('btnStart').onclick = () => { if (S.esEjemplo) { S = {...S, perfil: perfilVacio(), bases: [], proy: null, apoyo: [], rub: null, secs0: null, secs: null, ev0: null, ev: null, ciclos: [], vers: [], fallos: {}, esEjemplo: false}; guarda(); } go(1); };
+$('btnStart').onclick = () => { if (S.esEjemplo) { S = {...S, perfil: perfilVacio(), bases: [], proy: null, apoyo: [], rub: null, secs0: null, secs: null, ev0: null, ev: null, ciclos: [], vers: [], fallos: {}, prop0: null, pre0: null, c0: null, esEjemplo: false}; guarda(); } go(1); };
 $('btnEjemplo').onclick = async () => { if (busy) return; toast(t('Ejemplo de demostración, sin usar la IA')); await aplicaEjemplo(); go(4); };
 document.addEventListener('click', e => { if (e.target.closest('#btnCont')) go(S.ev ? 4 : 3); });
 
@@ -3746,8 +3991,8 @@ async function lee(files) {
   return out;
 }
 const sueltaEn = (id, fn) => { const dz = document.querySelector(`label[for="${id}"]`); ['dragenter', 'dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('fa-sobre'); })); ['dragleave', 'drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('fa-sobre'); })); dz.addEventListener('drop', e => fn([...e.dataTransfer.files])); $(id).onchange = e => { fn([...e.target.files]); e.target.value = ''; }; };
-function nuevasBases() { S.rub = null; S.ev = S.ev0 = null; S.ciclos = []; S.vers = []; S.fallos = {}; S.esEjemplo = false; }
-function nuevoProyecto(p) { S.proy = p; S.secs = p ? seccionesDe(p.texto) : null; S.secs0 = null; S.ev = S.ev0 = null; S.ciclos = []; S.vers = []; S.fallos = {}; S.esEjemplo = false; }
+function nuevasBases() { S.rub = null; S.ev = S.ev0 = null; S.ciclos = []; S.vers = []; S.fallos = {}; S.prop0 = S.pre0 = S.c0 = null; S.esEjemplo = false; }
+function nuevoProyecto(p) { S.proy = p; S.secs = p ? seccionesDe(p.texto) : null; S.secs0 = null; S.ev = S.ev0 = null; S.ciclos = []; S.vers = []; S.fallos = {}; S.prop0 = S.pre0 = S.c0 = null; S.esEjemplo = false; }
 sueltaEn('fileBases', async fs => { const x = await lee(fs); if (x.length) { S.bases.push(...x); nuevasBases(); await guardaYa(); pintaBases(); } });
 sueltaEn('fileProy', async fs => { const x = await lee(fs.slice(0, 1)); if (x.length) { nuevoProyecto(x[0]); await guardaYa(); pintaProyecto(); } });
 sueltaEn('fileApoyo', async fs => { const x = await lee(fs); if (x.length) { S.apoyo.push(...x); S.esEjemplo = false; await guardaYa(); pintaProyecto(); } });
@@ -3808,14 +4053,15 @@ function pintaMejora() {
   const el = $('mejora');
   if (!S.rub || !S.secs) { el.innerHTML = `<div class="card"><p class="empty">${esc(t('Primero necesitas la rúbrica (paso 3) y el proyecto (paso 2).'))}</p></div>`; return; }
   if (!S.ev) { el.innerHTML = `<div class="card fa-centro"><p>${esc(t('Primero se puntúa el proyecto tal como está: será la versión inicial.'))}</p><div class="actions"><button class="btn btn-primary btn-big" id="btnPunt" type="button"><svg class="i"><use href="#i-scale"/></svg>${esc(t('Puntuar el proyecto'))}</button></div><p class="help" id="mejEstado" role="status"></p></div>`; $('btnPunt').onclick = () => puntuaInicial().catch(() => {}); return; }
-  const P = puntua(S.ev), P0 = puntua(S.ev0), ok = S.ciclos.filter(c => c.dec === 'ok').length, tok = Math.round((textoProy().length * 2 + 6000) / 4 / 1000);
-  el.innerHTML = `<div class="card fa-marcador"><div><p class="fa-kicker">${esc(t('Puntuación simulada'))}</p><p class="fa-num">${f1(P.total)} <small>/ ${f1(P.max)}</small></p><p class="fa-resumen">${chip(P.pct >= S.conf.obj ? 'ok' : '', t('{0} % · objetivo {1} %', Math.round(P.pct), S.conf.obj))} ${S.ciclos.length ? esc(t('Inicial: {0} · {1} ciclo(s), {2} conservado(s)', f1(P0.total), S.ciclos.length, ok)) : ''}${S.esEjemplo ? ' ' + chip('', t('Ejemplo')) : ''}</p>${S.evVieja ? `<div class="aviso">${esc(t('Habéis cambiado la rúbrica o el texto: volved a puntuar antes de seguir.'))}</div>` : ''}</div>${grafica()}</div>
+  const P = puntua(S.ev), P0 = puntua(S.ev0), ok = ciclosN().filter(c => c.dec === 'ok').length, tok = Math.round((textoProy().length * 2 + 6000) / 4 / 1000);
+  el.innerHTML = `<div class="card fa-marcador"><div><p class="fa-kicker">${esc(t('Puntuación simulada'))}</p><p class="fa-num">${f1(P.total)} <small>/ ${f1(P.max)}</small></p><p class="fa-resumen">${chip(P.pct >= S.conf.obj ? 'ok' : '', t('{0} % · objetivo {1} %', Math.round(P.pct), S.conf.obj))} ${S.ciclos.length ? esc(t('Inicial: {0} · {1} ciclo(s), {2} conservado(s)', f1(P0.total), ciclosN().length, ok)) : ''}${S.esEjemplo ? ' ' + chip('', t('Ejemplo')) : ''}</p>${S.evVieja ? `<div class="aviso">${esc(t('Habéis cambiado la rúbrica o el texto: volved a puntuar antes de seguir.'))}</div>` : ''}</div>${grafica()}</div>
+  ${tarjetaEstructura()}
   <div class="card"><h3 class="fa-h3"><svg class="i"><use href="#i-sparkles"/></svg> ${esc(t('Mejorar'))}</h3>
     <div class="fa-ctrl"><div class="field"><label for="selN">${esc(t('Ciclos'))}</label><select id="selN">${[3, 5, 8, 10].map(n => `<option${n === S.conf.n ? ' selected' : ''}>${n}</option>`).join('')}</select></div><div class="field"><label for="selObj">${esc(t('Objetivo'))}</label><select id="selObj">${[80, 90, 95, 100].map(n => `<option value="${n}"${n === S.conf.obj ? ' selected' : ''}>${n} %</option>`).join('')}</select></div>
     <div class="actions" style="margin:0"><button class="btn btn-primary${busy ? ' hidden' : ''}" id="btnMejora" type="button"><svg class="i"><use href="#i-play"/></svg>${esc(t('Mejorar'))}</button><button class="btn btn-ghost${busy ? '' : ' hidden'}" id="btnParar" type="button">${esc(t('Parar'))}</button><button class="btn btn-ghost" id="btnRepunt" type="button"${busy ? ' disabled' : ''}><svg class="i"><use href="#i-scale"/></svg>${esc(t('Volver a puntuar'))}</button></div></div>
     <p class="help">${esc(t('Cada ciclo hace 2 llamadas a la IA (unos {0} mil tokens). Podéis parar en cualquier momento: lo conseguido se guarda.', tok))}</p><p class="help" id="mejEstado" role="status" aria-live="polite">${ESTADO.mejEstado && (busy || !/…$/.test(ESTADO.mejEstado)) ? estadoHTML(ESTADO.mejEstado) : ''}</p></div>
   <div class="card"><h3 class="fa-h3"><svg class="i"><use href="#i-scale"/></svg> ${esc(t('Por criterio'))}</h3>${barras(S.ev)}</div>
-  ${S.ciclos.length ? `<div class="card"><h3 class="fa-h3"><svg class="i"><use href="#i-clock"/></svg> ${esc(t('Historial de ciclos'))}</h3><ol class="fa-ciclos">${S.ciclos.slice().reverse().map(c => `<li class="fa-c-${c.dec}"><div class="fa-c-h"><b>${esc(t('Ciclo {0}', c.n))} · ${esc(c.nom)}</b><span>${c.dec === 'rech' ? '✗' : c.dec === 'ok' ? '✓' : '↺'} ${c.dec === 'rech' ? '' : `${f1(c.tA)} → ${f1(c.tD)}`}</span></div><p>${esc(c.hip)}</p><small class="muted">${esc(t('Sección: {0}', c.sec ? c.sec : t('Presentación')))}${c.nueva ? ' (' + esc(t('nueva')) + ')' : ''} · ${esc(motivoTx(c))}</small>${c.despues ? `<details><summary>${esc(t('Ver el cambio'))}</summary><div class="fa-dif">${c.antes ? `<div><b>${esc(t('Antes'))}</b><p>${esc(c.antes)}</p></div>` : ''}<div><b>${esc(t('Después'))}</b><p>${esc(c.despues)}</p></div></div></details>` : ''}</li>`).join('')}</ol></div>` : ''}`;
+  ${S.ciclos.length ? `<div class="card"><h3 class="fa-h3"><svg class="i"><use href="#i-clock"/></svg> ${esc(t('Historial de ciclos'))}</h3><ol class="fa-ciclos">${S.ciclos.slice().reverse().map(c => `<li class="fa-c-${c.dec}"><div class="fa-c-h"><b>${esc(t('Ciclo {0}', c.n))} · ${esc(nomCiclo(c))}</b><span>${c.dec === 'rech' ? '✗' : c.dec === 'ok' ? '✓' : '↺'} ${c.dec === 'rech' ? '' : `${f1(c.tA)} → ${f1(c.tD)}`}</span></div><p>${esc(c.hip)}</p><small class="muted">${c.tipo === 'estructura' ? esc(motivoTx(c)) + (c.sec ? ': ' + esc(c.sec) : '') : esc(t('Sección: {0}', c.sec ? c.sec : t('Presentación'))) + (c.nueva ? ' (' + esc(t('nueva')) + ')' : '') + ' · ' + esc(motivoTx(c))}</small>${c.tipo === 'estructura' && c.tD < c.tA - 0.001 ? `<div class="aviso">${esc(t('Con la nueva estructura la puntuación baja: revisad las secciones aceptadas.'))}</div>` : ''}${c.tipo === 'estructura' && S.pre0 && !ciclosN().length && !S.esEjemplo ? `<div class="actions" style="margin-top:6px"><button class="btn btn-ghost btn-sm" id="btnDeshaz0" type="button"><svg class="i"><use href="#i-left"/></svg>${esc(t('Deshacer el ciclo 0'))}</button></div>` : ''}${c.despues ? `<details><summary>${esc(t('Ver el cambio'))}</summary><div class="fa-dif">${c.antes ? `<div><b>${esc(t('Antes'))}</b><p>${esc(c.antes)}</p></div>` : ''}<div><b>${esc(t('Después'))}</b><p>${esc(c.despues)}</p></div></div></details>` : ''}</li>`).join('')}</ol></div>` : ''}`;
   $('selN').onchange = e => { S.conf.n = +e.target.value; guarda(); }; $('selObj').onchange = e => { S.conf.obj = +e.target.value; guarda(); pintaMejora(); };
   $('btnMejora').onclick = () => { if (S.esEjemplo) return toast(t('Esto es el ejemplo: sube vuestras bases y proyecto para mejorarlo.')); if (S.evVieja) return toast(t('Volved a puntuar antes de seguir.')); bucle(); pintaMejora(); };
   $('btnParar').onclick = () => { PARAR = true; estado('mejEstado', t('Parando al terminar este ciclo…')); };
@@ -3846,10 +4092,10 @@ async function wordProyecto() {
 }
 async function wordInforme() {
   const P = puntua(S.ev), P0 = puntua(S.ev0), R = S.rub, L = [];
-  L.push(`## ${t('Resumen')}`, t('De {0} a {1} puntos de {2} en {3} ciclo(s); {4} cambio(s) conservado(s).', f1(P0.total), f1(P.total), f1(P.max), S.ciclos.length, S.ciclos.filter(c => c.dec === 'ok').length));
+  L.push(`## ${t('Resumen')}`, t('De {0} a {1} puntos de {2} en {3} ciclo(s); {4} cambio(s) conservado(s).', f1(P0.total), f1(P.total), f1(P.max), ciclosN().length, ciclosN().filter(c => c.dec === 'ok').length));
   L.push('', `## ${t('Rúbrica')}`, `| ${t('Criterio')} | ${t('Puntos')} | ${t('Qué mira el tribunal')} | ${t('Cita de las bases')} |`, '|---|---|---|---|', ...R.crits.map(c => `| ${celda(c.nombre)} | ${f1(c.peso)} | ${celda(c.mira.join('; '))} | ${c.mano ? t('añadido a mano') : (c.ok ? '✓ ' : '⚠ ') + celda(c.cita)} |`));
   L.push('', `## ${t('Puntuación por criterio')}`, `| ${t('Criterio')} | ${t('Inicial')} | ${t('Final')} | ${t('Máximo')} |`, '|---|---|---|---|', ...P.por.map((p, i) => `| ${celda(R.crits[i].nombre)} | ${f1(P0.por[i]?.pts ?? 0)} | ${f1(p.pts)} | ${f1(p.max)} |`), `| **${t('Total')}** | ${f1(P0.total)} | **${f1(P.total)}** | ${f1(P.max)} |`);
-  if (S.ciclos.length) { L.push('', `## ${t('Historial de ciclos')}`, `| ${t('Ciclo')} | ${t('Criterio')} | ${t('Sección')} | ${t('Antes')} | ${t('Después')} | ${t('Decisión')} |`, '|---|---|---|---|---|---|', ...S.ciclos.map(c => `| ${c.n} | ${celda(c.nom)} | ${celda(c.sec || t('Presentación'))} | ${f1(c.tA)} | ${c.dec === 'rech' ? '—' : f1(c.tD)} | ${celda(motivoTx(c))} |`)); L.push('', `### ${t('Hipótesis')}`, ...S.ciclos.map(c => `- **${t('Ciclo {0}', c.n)}:** ${c.hip}`)); }
+  if (S.ciclos.length) { L.push('', `## ${t('Historial de ciclos')}`, `| ${t('Ciclo')} | ${t('Criterio')} | ${t('Sección')} | ${t('Antes')} | ${t('Después')} | ${t('Decisión')} |`, '|---|---|---|---|---|---|', ...S.ciclos.map(c => `| ${c.n} | ${celda(nomCiclo(c))} | ${celda(c.sec || t('Presentación'))} | ${f1(c.tA)} | ${c.dec === 'rech' ? '—' : f1(c.tD)} | ${celda(motivoTx(c))} |`)); L.push('', `### ${t('Hipótesis')}`, ...S.ciclos.map(c => `- **${t('Ciclo {0}', c.n)} · ${nomCiclo(c)}:** ${c.hip}`)); }
   if (R.req.length) L.push('', `## ${t('Requisitos que hay que cumplir')}`, ...R.req.map(r => `- ${r.ok ? '✓' : '⚠'} ${r.texto}`));
   if (R.dudas.length) L.push('', `## ${t('Dudas para consultar al organismo')}`, ...R.dudas.map(d => `- ${d}`));
   try { dl('informe-ciclos.docx', await wordDeMarkdown(L.join('\n'), {titulo: t('Informe de ciclos'), subtitulo: [S.perfil.nombre, R.conv].filter(Boolean).join(' · '), pie: t('Generado con {0}. La puntuación la suma el código con los pesos de las bases; los niveles los propone la IA y es una simulación.', APP_NAME)})); } catch (e) { toast(e.message, 7000); }

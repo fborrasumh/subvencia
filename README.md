@@ -11,8 +11,9 @@ Proyectos de financiación de asociaciones de pacientes, mejorados frente a la r
 1. **La convocatoria.** Se suben las bases (Word, PDF o texto) o se pega su texto.
 2. **El proyecto.** Se sube el borrador o el esquema y, si se quiere, documentos de la asociación (memoria, presupuesto…) y el perfil común. El código divide el proyecto en secciones por sus títulos.
 3. **La rúbrica.** La IA extrae los criterios de valoración con sus puntos, qué mira el tribunal en cada uno, los requisitos de admisión y las dudas que conviene consultar. Se puede corregir a mano.
-4. **La mejora por ciclos**, con la lógica de *autoresearch*: se evalúa el proyecto; se elige el criterio con más margen; la IA formula una hipótesis y reescribe solo esa sección; se vuelve a evaluar y el cambio se conserva solo si la puntuación sube. Se repite hasta el objetivo o el número de ciclos (3 a 10).
-5. **El resultado.** Comparación inicial-final por criterio, el proyecto sección a sección (editable) y descargas en Word: el proyecto mejorado y el informe de ciclos (rúbrica, puntuaciones, cada ciclo con su hipótesis y su decisión, requisitos y dudas). La rúbrica también en CSV.
+4. **Ciclo 0: la estructura** (opcional). Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en el orden de las bases y las que faltan como guía con `[COMPLETAR]`, moviendo lo que ya está escrito sin reescribirlo. El código compara cada sección propuesta con la original (sin cambios, renombrada, cambiada o nueva; qué parte del texto conserva; cifras nuevas) y **la asociación acepta o descarta cada sección**. Una sección con cifras que no están en el material no se puede aceptar, y las secciones originales que la propuesta no usa se conservan al final salvo que se desmarquen. Se puntúa antes y después, queda en el historial como ciclo 0 y se puede deshacer mientras no haya ciclos de mejora.
+5. **La mejora por ciclos**, con la lógica de *autoresearch*: se evalúa el proyecto; se elige el criterio con más margen; la IA formula una hipótesis y reescribe solo esa sección; se vuelve a evaluar y el cambio se conserva solo si la puntuación sube. Se repite hasta el objetivo o el número de ciclos (3 a 10).
+6. **El resultado.** Comparación inicial-final por criterio, el proyecto sección a sección (editable) y descargas en Word: el proyecto mejorado y el informe de ciclos (rúbrica, puntuaciones, cada ciclo con su hipótesis y su decisión, requisitos y dudas). La rúbrica también en CSV.
 
 ## Qué comprueba el código (la IA propone, el código comprueba)
 
@@ -20,6 +21,7 @@ Proyectos de financiación de asociaciones de pacientes, mejorados frente a la r
 - **Puntuación:** la IA da a cada criterio un nivel de 0 a 4 según los elementos que mira la rúbrica, con una cita literal del proyecto. Si la cita no está en el proyecto, el nivel no pasa de 1. **La suma la hace el código** con los pesos de las bases: puntos = peso × nivel / 4.
 - **Ciclos:** un cambio se rechaza, sin llegar a puntuarse, si introduce cifras que no están en las bases, el proyecto, los documentos de la asociación o el perfil; si no cambia nada; si recorta la sección a menos de la mitad; o si apunta a una sección que no existe. Se conserva solo si la puntuación sube; si no, se deshace. Un criterio que falla dos veces seguidas se aparca, y el siguiente intento sobre un criterio conoce los intentos fallidos anteriores.
 - **Nada inventado:** lo que falta se marca `[COMPLETAR: …]` y se cuenta.
+- **Cifras con separador de miles:** «3.500», «3,500» y «3500» se tratan como la misma cifra, así que un importe inventado no se cuela por llevar punto de miles.
 
 Este diseño busca que el ruido de la IA al puntuar no se confunda con mejora: los niveles se atan a elementos concretos y a citas comprobables, y los cambios que se inventan datos no entran aunque «puntúen».
 
