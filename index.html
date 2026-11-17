@@ -536,16 +536,17 @@ table{border-collapse:collapse;width:100%;font-size:13.8px}th{background:var(--p
   <header class="sh" style="--c:#1F6FB2"><div class="sh-ico"><svg class="i"><use href="#i-pencil"/></svg></div><div><p class="sh-step" data-i18n="v.paso2">Paso 2 de 5</p><h2 data-i18n="v.proy">Vuestro proyecto</h2><p class="sh-lede" data-i18n="v.proy.lede">El borrador o el esquema que tengáis, aunque esté incompleto. Si separáis las secciones con títulos, la mejora será más precisa.</p></div></header>
   <div class="card">
     <h3 class="fa-h3"><svg class="i"><use href="#i-pencil"/></svg> <span data-i18n="v.proyDoc">Borrador del proyecto</span></h3>
-    <label class="fa-drop" for="fileProy"><svg class="i"><use href="#i-upload"/></svg><b data-i18n="v.dropProy">Arrastra aquí el proyecto o pulsa para elegirlo</b><span data-i18n="v.dropFmt">Word, PDF o texto</span></label>
-    <input type="file" id="fileProy" hidden accept=".docx,.pdf,.txt,.md">
+    <label class="fa-drop" for="fileProy"><svg class="i"><use href="#i-upload"/></svg><b data-i18n="v.dropProy">Arrastra aquí el proyecto y, si queréis, otros ficheros o pulsa para elegirlos</b><span data-i18n="v.dropFmtHoja">Word, PDF, texto u hoja de cálculo (.xlsx, .ods, .csv)</span></label>
+    <input type="file" id="fileProy" multiple hidden accept=".docx,.pdf,.txt,.md,.xlsx,.ods,.csv">
+    <p class="help" data-i18n="v.proy.varios">El primer documento de texto es el borrador. Lo demás (la hoja de cálculo del presupuesto, el cronograma, la memoria…) pasa a «Datos de la asociación» y la IA lo usa como material.</p>
     <ul class="fa-files" id="proyList"></ul>
     <details class="fa-det"><summary data-i18n="v.pegar">O pegad el texto</summary><div class="field"><textarea id="proyPega" rows="6"></textarea></div><div class="actions"><button class="btn btn-ghost btn-sm" type="button" id="btnProyPega" data-i18n="v.usarTexto">Usar este texto</button></div></details>
   </div>
   <div class="card">
     <h3 class="fa-h3"><svg class="i"><use href="#i-folder"/></svg> <span data-i18n="v.apoyo">Datos de la asociación (opcional)</span></h3>
     <p class="help" style="margin-top:0" data-i18n="v.apoyo.ayuda">Memoria anual, presupuesto, encuestas… SubvencIA solo tomará los hechos y datos de la asociación de aquí o del proyecto; lo que la asociación puede decidir (sesiones, plazas, calendario…) lo propondrá para que lo reviséis.</p>
-    <label class="fa-drop" for="fileApoyo"><svg class="i"><use href="#i-upload"/></svg><b data-i18n="v.dropApoyo">Arrastra aquí otros documentos o pulsa para elegirlos</b><span data-i18n="v.dropFmt">Word, PDF o texto</span></label>
-    <input type="file" id="fileApoyo" multiple hidden accept=".docx,.pdf,.txt,.md,.csv">
+    <label class="fa-drop" for="fileApoyo"><svg class="i"><use href="#i-upload"/></svg><b data-i18n="v.dropApoyo">Arrastra aquí otros documentos o pulsa para elegirlos</b><span data-i18n="v.dropFmtHoja">Word, PDF, texto u hoja de cálculo (.xlsx, .ods, .csv)</span></label>
+    <input type="file" id="fileApoyo" multiple hidden accept=".docx,.pdf,.txt,.md,.csv,.xlsx,.ods">
     <ul class="fa-files" id="apoyoList"></ul>
   </div>
   <div class="card">
@@ -859,7 +860,33 @@ async function extrae(file) {
     if (t.replace(/\s/g, '').length < 80) { const imgs = []; for (let i = 1; i <= Math.min(doc.numPages, 6); i++) { const pg = await doc.getPage(i), vp = pg.getViewport({scale: 1.4}), c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height; await pg.render({canvasContext: c.getContext('2d'), viewport: vp}).promise; imgs.push({nombre: `${n} · página ${i}`, data: await reduceImg(c.toDataURL('image/jpeg', .85))}); } return {tipo: 'texto', nombre: n, texto: '', imgs, incr: 0, aviso: 'PDF sin texto: se envían las primeras páginas como imágenes.'}; }
     return {tipo: 'texto', nombre: n, texto: t, imgs: [], incr: 0, aviso: 'En los PDF no se detectan las imágenes incrustadas.'};
   }
+  if (ext === 'xlsx' || ext === 'ods') return {tipo: 'texto', nombre: n, texto: await hojaTexto(file, ext), imgs: [], incr: 0};
+  if (ext === 'xls') throw new Error(t('Las hojas .xls antiguas no se pueden leer: guardadla como .xlsx o .csv.'));
   throw new Error(t('Formato no admitido (usa Word, PDF, PowerPoint, texto, imágenes, audio o vídeo)'));
+}
+/* hojas de cálculo (.xlsx y .ods) a texto, hoja por hoja y fila por fila, con JSZip; se lee el valor calculado de las fórmulas */
+const MAXFILAS = 400;
+const celdaNum = v => { const x = +v; return v !== '' && Number.isFinite(x) && !Number.isInteger(x) ? String(Math.round(x * 100) / 100) : String(v); };
+const colDe = r => [...String(r).replace(/\d+/g, '')].reduce((a, ch) => a * 26 + ch.charCodeAt(0) - 64, 0) - 1;
+async function hojaTexto(file, ext) {
+  await cargaLib([LIB.jszip]); const z = await JSZip.loadAsync(await file.arrayBuffer()), hojas = [];
+  const pon = (nom, filas) => { const l = filas.map(f => f.map(c => String(c ?? '').trim()).join(' | ').replace(/( \|\s*)+$/, '')).filter(f => f.replace(/[|\s]/g, '')); if (l.length) hojas.push(`## Hoja: ${xmlDec(nom)}\n${l.slice(0, MAXFILAS).join('\n')}`); };
+  if (ext === 'ods') {
+    const x = await z.file('content.xml')?.async('string'); if (!x) throw new Error(t('Formato no admitido (usa Word, PDF, PowerPoint, texto, imágenes, audio o vídeo)'));
+    for (const [, nom, cuerpo] of x.matchAll(/<table:table [^>]*?table:name="([^"]*)"[^>]*>([\s\S]*?)<\/table:table>/g))
+      pon(nom, [...cuerpo.matchAll(/<table:table-row[^>]*>([\s\S]*?)<\/table:table-row>/g)].map(([, f]) => [...f.matchAll(/<table:table-cell([^>]*?)(?:\/>|>([\s\S]*?)<\/table:table-cell>)/g)].flatMap(([, at, c]) => { const v = at.match(/office:value="([^"]*)"/), rep = Math.min(50, +(at.match(/number-columns-repeated="(\d+)"/) || [])[1] || 1); return Array(rep).fill(v ? celdaNum(v[1]) : xmlDec((c || '').replace(/<\/text:p>/g, ' ').replace(/<[^>]+>/g, ''))); })));
+  } else {
+    const ssF = z.file('xl/sharedStrings.xml'), ss = ssF ? [...(await ssF.async('string')).matchAll(/<si>([\s\S]*?)<\/si>/g)].map(m => xmlDec([...m[1].matchAll(/<t[^>]*>([^<]*)<\/t>/g)].map(x => x[1]).join(''))) : [];
+    const wb = await z.file('xl/workbook.xml').async('string'), rels = await z.file('xl/_rels/workbook.xml.rels').async('string');
+    for (const [, nom, rid] of wb.matchAll(/<sheet [^>]*?name="([^"]*)"[^>]*?r:id="([^"]*)"/g)) {
+      const tg = rels.match(new RegExp(`Id="${rid}"[^>]*?Target="([^"]*)"`)) || rels.match(new RegExp(`Target="([^"]*)"[^>]*?Id="${rid}"`)), f = tg && z.file('xl/' + tg[1].replace(/^\/?xl\//, '')); if (!f) continue;
+      pon(nom, [...(await f.async('string')).matchAll(/<row[^>]*>([\s\S]*?)<\/row>/g)].map(([, r]) => { const fila = []; for (const [, at, c = ''] of r.matchAll(/<c ([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)) {
+        const ty = (at.match(/\bt="(\w+)"/) || [])[1], v = (c.match(/<v>([^<]*)<\/v>/) || [])[1], ref = (at.match(/\br="([A-Z]+)\d+"/) || [])[1];
+        fila[ref ? colDe(ref) : fila.length] = ty === 's' ? ss[+v] ?? '' : ty === 'inlineStr' ? xmlDec([...c.matchAll(/<t[^>]*>([^<]*)<\/t>/g)].map(x => x[1]).join('')) : ty === 'str' || ty === 'e' ? xmlDec(v ?? '') : ty === 'b' ? (v === '1' ? 'VERDADERO' : 'FALSO') : v == null ? '' : celdaNum(v);
+      } return [...fila]; }));
+    }
+  }
+  return hojas.join('\n\n');
 }
 
 /* ── navegación Forja: barra superior, stepper, barra inferior, ventanas, ayuda y ajustes de IA ─────────────
@@ -1607,7 +1634,11 @@ const I18N = {
     "v.proy": "El vostre projecte",
     "v.proy.lede": "L'esborrany o l'esquema que tingueu, encara que estiga incomplet. Si separeu les seccions amb títols, la millora serà més precisa.",
     "v.proyDoc": "Esborrany del projecte",
-    "v.dropProy": "Arrossega ací el projecte o prem per triar-lo",
+    "v.dropProy": "Arrossega ací el projecte i, si voleu, altres fitxers o prem per triar-los",
+    "v.dropFmtHoja": "Word, PDF, text o full de càlcul (.xlsx, .ods, .csv)",
+    "v.proy.varios": "El primer document de text és l'esborrany. La resta (el full de càlcul del pressupost, el cronograma, la memòria…) passa a «Dades de l'associació» i la IA l'utilitza com a material.",
+    "{0} fichero(s) añadido(s) a los datos de la asociación: la IA los usará como material.": "{0} fitxer(s) afegit(s) a les dades de l'associació: la IA els utilitzarà com a material.",
+    "Las hojas .xls antiguas no se pueden leer: guardadla como .xlsx o .csv.": "Els fulls .xls antics no es poden llegir: deseu-lo com a .xlsx o .csv.",
     "v.usarTexto": "Usar aquest text",
     "v.apoyo": "Dades de l'associació (opcional)",
     "v.apoyo.ayuda": "Memòria anual, pressupost, enquestes… SubvencIA només prendrà els fets i les dades de l'associació d'ací o del projecte; el que l'associació pot decidir (sessions, places, calendari…) ho proposarà perquè ho reviseu.",
@@ -2007,7 +2038,11 @@ const I18N = {
     "v.proy": "Zuen proiektua",
     "v.proy.lede": "Daukazuen zirriborroa edo eskema, osatu gabe egon arren. Atalak izenburuekin bereizten badituzue, hobekuntza zehatzagoa izango da.",
     "v.proyDoc": "Proiektuaren zirriborroa",
-    "v.dropProy": "Arrastatu proiektua hona edo sakatu aukeratzeko",
+    "v.dropProy": "Arrastatu proiektua hona eta, nahi baduzue, beste fitxategi batzuk, edo sakatu aukeratzeko",
+    "v.dropFmtHoja": "Word, PDF, testua edo kalkulu-orria (.xlsx, .ods, .csv)",
+    "v.proy.varios": "Lehen testu-dokumentua zirriborroa da. Gainerakoa (aurrekontuaren kalkulu-orria, kronograma, memoria…) «Elkartearen datuak» atalera pasatzen da eta AAk material gisa erabiltzen du.",
+    "{0} fichero(s) añadido(s) a los datos de la asociación: la IA los usará como material.": "{0} fitxategi gehitu dira elkartearen datuetara: AAk material gisa erabiliko ditu.",
+    "Las hojas .xls antiguas no se pueden leer: guardadla como .xlsx o .csv.": "Ezin dira .xls orri zaharrak irakurri: gorde .xlsx edo .csv gisa.",
     "v.usarTexto": "Erabili testu hau",
     "v.apoyo": "Elkartearen datuak (hautazkoa)",
     "v.apoyo.ayuda": "Urteko memoria, aurrekontua, inkestak… SubvencIAk elkartearen gertaerak eta datuak hemendik edo proiektutik bakarrik hartuko ditu; elkarteak erabaki dezakeena (saioak, plazak, egutegia…) proposatu egingo du, zuek berrikus dezazuen.",
@@ -2407,7 +2442,11 @@ const I18N = {
     "v.proy": "O voso proxecto",
     "v.proy.lede": "O borrador ou o esquema que teñades, aínda que estea incompleto. Se separades as seccións con títulos, a mellora será máis precisa.",
     "v.proyDoc": "Borrador do proxecto",
-    "v.dropProy": "Arrastra aquí o proxecto ou preme para escollelo",
+    "v.dropProy": "Arrastra aquí o proxecto e, se queredes, outros ficheiros ou preme para escollelos",
+    "v.dropFmtHoja": "Word, PDF, texto ou folla de cálculo (.xlsx, .ods, .csv)",
+    "v.proy.varios": "O primeiro documento de texto é o borrador. O resto (a folla de cálculo do orzamento, o cronograma, a memoria…) pasa a «Datos da asociación» e a IA úsao como material.",
+    "{0} fichero(s) añadido(s) a los datos de la asociación: la IA los usará como material.": "{0} ficheiro(s) engadido(s) aos datos da asociación: a IA usaraos como material.",
+    "Las hojas .xls antiguas no se pueden leer: guardadla como .xlsx o .csv.": "As follas .xls antigas non se poden ler: gardádea como .xlsx ou .csv.",
     "v.usarTexto": "Usar este texto",
     "v.apoyo": "Datos da asociación (opcional)",
     "v.apoyo.ayuda": "Memoria anual, orzamento, enquisas… SubvencIA só tomará os feitos e datos da asociación de aquí ou do proxecto; o que a asociación pode decidir (sesións, prazas, calendario…) proporao para que o revisedes.",
@@ -2807,7 +2846,11 @@ const I18N = {
     "v.proy": "Your project",
     "v.proy.lede": "Whatever draft or outline you have, even if incomplete. If you separate the sections with headings, the improvement will be more precise.",
     "v.proyDoc": "Project draft",
-    "v.dropProy": "Drag the project here or click to choose it",
+    "v.dropProy": "Drag the project here and, if you like, other files, or click to choose them",
+    "v.dropFmtHoja": "Word, PDF, text or spreadsheet (.xlsx, .ods, .csv)",
+    "v.proy.varios": "The first text document is the draft. Everything else (the budget spreadsheet, the timeline, the annual report…) goes to “Association data” and the AI uses it as material.",
+    "{0} fichero(s) añadido(s) a los datos de la asociación: la IA los usará como material.": "{0} file(s) added to the association data: the AI will use them as material.",
+    "Las hojas .xls antiguas no se pueden leer: guardadla como .xlsx o .csv.": "Old .xls sheets cannot be read: save it as .xlsx or .csv.",
     "v.usarTexto": "Use this text",
     "v.apoyo": "Association data (optional)",
     "v.apoyo.ayuda": "Annual report, budget, surveys… SubvencIA will only take the association's facts and data from here or from the project; what the association can decide (sessions, places, timeline…) it will propose for you to review.",
@@ -3207,7 +3250,11 @@ const I18N = {
     "v.proy": "O vosso projeto",
     "v.proy.lede": "O rascunho ou o esquema que tiverem, mesmo incompleto. Se separarem as secções com títulos, a melhoria será mais precisa.",
     "v.proyDoc": "Rascunho do projeto",
-    "v.dropProy": "Arraste o projeto para aqui ou clique para o escolher",
+    "v.dropProy": "Arraste o projeto para aqui e, se quiserem, outros ficheiros, ou clique para os escolher",
+    "v.dropFmtHoja": "Word, PDF, texto ou folha de cálculo (.xlsx, .ods, .csv)",
+    "v.proy.varios": "O primeiro documento de texto é o rascunho. O resto (a folha de cálculo do orçamento, o cronograma, o relatório…) passa para «Dados da associação» e a IA usa-o como material.",
+    "{0} fichero(s) añadido(s) a los datos de la asociación: la IA los usará como material.": "{0} ficheiro(s) adicionado(s) aos dados da associação: a IA vai usá-los como material.",
+    "Las hojas .xls antiguas no se pueden leer: guardadla como .xlsx o .csv.": "As folhas .xls antigas não podem ser lidas: guardem-na como .xlsx ou .csv.",
     "v.usarTexto": "Usar este texto",
     "v.apoyo": "Dados da associação (opcional)",
     "v.apoyo.ayuda": "Relatório anual, orçamento, inquéritos… O SubvencIA só tirará os factos e dados da associação daqui ou do projeto; o que a associação pode decidir (sessões, vagas, calendário…) será proposto para que o revejam.",
@@ -3824,7 +3871,7 @@ function eligeCriterio() {
 }
 /* Cómo ayudar sin inventar: la IA redacta y PROPONE lo que la asociación puede decidir (y declara cada cifra que propone, que el código
    marca para revisar); los HECHOS solo salen del material; los trámites no van en la memoria. Así el proyecto no se llena de [COMPLETAR]. */
-const MAX_HUECOS = 2;
+const MAX_HUECOS = 2, MAX_APOYO = 20000;   // caracteres de los documentos de la asociación que van en cada llamada
 const PAUTA = `CÓMO AYUDAR (la asociación necesita un proyecto casi listo para presentar, no una lista de huecos)
 Redacta tú el contenido. Distingue tres tipos de información:
 1) DECISIONES DE PLANIFICACIÓN, que la asociación puede tomar: objetivos específicos y metas; número de grupos, sesiones, plazas y horas; duración y calendario por meses dentro del periodo de ejecución; reparto de tareas; criterios de acceso y de priorización; cómo participan pacientes y familias; instrumentos y momentos de evaluación; desglose del presupuesto en unidades × coste unitario que cuadre con los importes que ya constan, y porcentajes calculados con ellos; medidas de igualdad, accesibilidad, voluntariado y continuidad. PROPÓNLAS con valores concretos, realistas y coherentes entre sí, con el presupuesto y con las bases, y declara en "propuestas" cada cifra nueva que propongas.
@@ -3880,7 +3927,7 @@ async function ciclo() {
   const e = S.ev.c[c.id], antes = puntua(S.ev).total, n = ciclosN().length + 1;
   const previos = S.ciclos.filter(x => x.crit === c.id && x.dec !== 'ok').map(x => `- ${x.hip} → ${motivoTx(x)}`).join('\n');
   const basesV = c.ok ? ventanas(basesTx(), [c.cita], 500, 1500) : '';
-  const sc = scrub(proyParaIA(S.secs)), ap = scrub(apoyoTx().slice(0, 9000)), pf = scrub(JSON.stringify(perfilParaIA(S.perfil)));
+  const sc = scrub(proyParaIA(S.secs)), ap = scrub(apoyoTx().slice(0, MAX_APOYO)), pf = scrub(JSON.stringify(perfilParaIA(S.perfil)));
   if (!(await pideEnvio('proy', sc.t, sc.n + ap.n))) return 'cancel';
   const req = scrub(S.rub.req.map(x => x.texto).join(' · ')).t;
   const raw = await pide([{role: 'system', content: SYS}, {role: 'user', content: PROMPT_CICLO(c, e, sc.t, scrub(basesV).t, ap.t, pf.t, previos, req)}], 5000);
@@ -3973,7 +4020,7 @@ function procesaEstructura(raw) {
 async function proponeEstructura() {
   if (busy || !S.ev || !listo()) return; busy = true; estado('estEstado', t('Comparando el proyecto con lo que pide la convocatoria…')); pintaMejora();
   try {
-    const sc = scrub(proyParaIA(S.secs)), ap = scrub(apoyoTx().slice(0, 9000)), pf = scrub(JSON.stringify(perfilParaIA(S.perfil))), bs = scrub(basesTx().slice(0, 20000));
+    const sc = scrub(proyParaIA(S.secs)), ap = scrub(apoyoTx().slice(0, MAX_APOYO)), pf = scrub(JSON.stringify(perfilParaIA(S.perfil))), bs = scrub(basesTx().slice(0, 20000));
     if (!(await pideEnvio('proy', sc.t, sc.n + ap.n))) return;
     const raw = await pide([{role: 'system', content: SYS}, {role: 'user', content: PROMPT_EST(S.rub, sc.t, bs.t, ap.t, pf.t)}], 7000);
     const P = procesaEstructura(raw); if (!P.items.length) throw new Error(t('La IA no devolvió una respuesta con el formato esperado. Inténtalo de nuevo.'));
@@ -4077,7 +4124,14 @@ const sueltaEn = (id, fn) => { const dz = document.querySelector(`label[for="${i
 function nuevasBases() { S.rub = null; S.ev = S.ev0 = null; S.ciclos = []; S.vers = []; S.fallos = {}; S.prop0 = S.pre0 = S.c0 = null; S.esEjemplo = false; }
 function nuevoProyecto(p) { S.proy = p; S.secs = p ? seccionesDe(p.texto) : null; S.secs0 = null; S.ev = S.ev0 = null; S.ciclos = []; S.vers = []; S.fallos = {}; S.prop0 = S.pre0 = S.c0 = null; S.esEjemplo = false; }
 sueltaEn('fileBases', async fs => { const x = await lee(fs); if (x.length) { S.bases.push(...x); nuevasBases(); await guardaYa(); pintaBases(); } });
-sueltaEn('fileProy', async fs => { const x = await lee(fs.slice(0, 1)); if (x.length) { nuevoProyecto(x[0]); await guardaYa(); pintaProyecto(); } });
+/* zona del borrador: el primer documento de texto (no hoja de cálculo) es el borrador; el resto pasa a los datos de la asociación */
+sueltaEn('fileProy', async fs => {
+  const x = await lee(fs); if (!x.length) return;
+  const i = x.findIndex(d => !/\.(xlsx|ods|csv)$/i.test(d.nombre)), resto = x.filter((_, k) => k !== i);
+  if (i >= 0) nuevoProyecto(x[i]);
+  if (resto.length) { S.apoyo.push(...resto); S.esEjemplo = false; toast(t('{0} fichero(s) añadido(s) a los datos de la asociación: la IA los usará como material.', resto.length), 6000); }
+  await guardaYa(); pintaProyecto();
+});
 sueltaEn('fileApoyo', async fs => { const x = await lee(fs); if (x.length) { S.apoyo.push(...x); S.esEjemplo = false; await guardaYa(); pintaProyecto(); } });
 $('btnBasesPega').onclick = async () => { const v = $('basesPega').value.trim(); if (wc(v) < 20) return toast(t('Pega un texto más largo.')); S.bases.push({nombre: t('Texto pegado'), texto: v}); $('basesPega').value = ''; nuevasBases(); await guardaYa(); pintaBases(); };
 $('btnProyPega').onclick = async () => { const v = $('proyPega').value.trim(); if (wc(v) < 20) return toast(t('Pega un texto más largo.')); nuevoProyecto({nombre: t('Texto pegado'), texto: v}); $('proyPega').value = ''; await guardaYa(); pintaProyecto(); };
