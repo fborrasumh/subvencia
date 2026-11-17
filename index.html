@@ -1343,13 +1343,14 @@ async function zipDe(ficheros) { const b = await zipBytes(ficheros); return new 
 /* Word (.docx) escrito a mano: Office Open XML mínimo, válido para Word, LibreOffice, Pages y Google Docs. */
 const _x = s => String(s ?? '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g, '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 /* un «run» de texto: {text, b, i, col, s (medios puntos; null = el del estilo), font (null = el del estilo)} */
-function wRun({text = '', b, i, col, s = 22, font = 'Arial'} = {}) {
-  const pr = `<w:rPr>${font ? `<w:rFonts w:ascii="${font}" w:hAnsi="${font}" w:cs="${font}"/>` : ''}${b ? '<w:b/>' : ''}${i ? '<w:i/>' : ''}${col ? `<w:color w:val="${col}"/>` : ''}${s ? `<w:sz w:val="${s}"/><w:szCs w:val="${s}"/>` : ''}</w:rPr>`;   // s/font = null → los del estilo
+function wRun({text = '', b, i, col, s = 22, font = 'Arial', hl} = {}) {
+  const pr = `<w:rPr>${font ? `<w:rFonts w:ascii="${font}" w:hAnsi="${font}" w:cs="${font}"/>` : ''}${b ? '<w:b/>' : ''}${i ? '<w:i/>' : ''}${col ? `<w:color w:val="${col}"/>` : ''}${hl ? '<w:highlight w:val="yellow"/>' : ''}${s ? `<w:sz w:val="${s}"/><w:szCs w:val="${s}"/>` : ''}</w:rPr>`;   // s/font = null → los del estilo
   return String(text).split('\n').map((l, k) => (k ? '<w:br/>' : '') + `<w:t xml:space="preserve">${_x(l)}</w:t>`).map(t => `<w:r>${pr}${t}</w:r>`).join('');
 }
 /* **negrita**, *cursiva* y `código` en línea → runs */
 function wInline(tx, base = {}) {   // base.b pone todo en negrita (cabeceras de tabla)
-  return String(tx).split(/(\*\*[^*]+\*\*|\*[^*\s][^*]*\*|`[^`]+`)/).filter(Boolean).map(p =>
+  return String(tx).split(/(\[COMPLETAR[^\]]*\]|\*\*[^*]+\*\*|\*[^*\s][^*]*\*|`[^`]+`)/).filter(Boolean).map(p =>
+    /^\[COMPLETAR/.test(p) ? wRun({...base, text: p, hl: true}) :   // lo que falta, resaltado en amarillo
     p.startsWith('**') ? wRun({...base, text: p.slice(2, -2), b: true}) :
     p.startsWith('`') ? wRun({...base, text: p.slice(1, -1), font: 'Consolas'}) :
     /^\*[^*\s]/.test(p) && p.endsWith('*') && p.length > 2 ? wRun({...base, text: p.slice(1, -1), i: true}) :
@@ -1363,35 +1364,59 @@ function wPara(tx, o = {}) {
   return `<w:p><w:pPr>${ppr}</w:pPr>${runs}</w:p>`;
 }
 /* tabla a partir de filas de celdas (la primera, cabecera en negrita) */
-function wTabla(filas) {
+function wTabla(filas, fondo = 'EEF2F6') {
   const nc = Math.max(...filas.map(f => f.length)), w = Math.floor(9000 / nc), bd = '<w:top w:val="single" w:sz="4" w:color="BFC9D4"/><w:left w:val="single" w:sz="4" w:color="BFC9D4"/><w:bottom w:val="single" w:sz="4" w:color="BFC9D4"/><w:right w:val="single" w:sz="4" w:color="BFC9D4"/><w:insideH w:val="single" w:sz="4" w:color="BFC9D4"/><w:insideV w:val="single" w:sz="4" w:color="BFC9D4"/>';
-  const fila = (f, cab) => '<w:tr>' + Array.from({length: nc}, (_, j) => `<w:tc><w:tcPr><w:tcW w:w="${w}" w:type="dxa"/>${cab ? '<w:shd w:val="clear" w:color="auto" w:fill="EEF2F6"/>' : ''}</w:tcPr><w:p><w:pPr><w:spacing w:after="40"/></w:pPr>${wInline(f[j] ?? '', {s: 20, b: cab})}</w:p></w:tc>`).join('') + '</w:tr>';
+  const fila = (f, cab) => '<w:tr>' + Array.from({length: nc}, (_, j) => `<w:tc><w:tcPr><w:tcW w:w="${w}" w:type="dxa"/>${cab ? `<w:shd w:val="clear" w:color="auto" w:fill="${fondo}"/>` : ''}</w:tcPr><w:p><w:pPr><w:spacing w:after="40"/></w:pPr>${wInline(f[j] ?? '', {s: 20, b: cab})}</w:p></w:tc>`).join('') + '</w:tr>';
   return `<w:tbl><w:tblPr><w:tblW w:w="${w * nc}" w:type="dxa"/><w:tblBorders>${bd}</w:tblBorders><w:tblCellMar><w:left w:w="80" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>${('<w:gridCol w:w="' + w + '"/>').repeat(nc)}</w:tblGrid>${filas.map((f, k) => fila(f, k === 0)).join('')}</w:tbl><w:p><w:pPr><w:spacing w:after="60"/></w:pPr></w:p>`;
 }
 /* wordDeXml(cuerpoXml, {creador, titulo}) → Blob .docx   (para apps que montan su propio cuerpo con wPara/wTabla) */
-async function wordDeXml(cuerpo, {creador = '', titulo = ''} = {}) {
+/* opcionales: color (hex sin #) de los títulos 1-2; img {bytes, w, h} para wImg(); pie (texto del pie con número de página;
+   con portada:true el pie no sale en la primera página) */
+const wImg = (cx, cy) => `<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="1" name="Logo"/><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="0" name="logo.jpeg"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rIdImg"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>`;
+const wSalto = '<w:p><w:r><w:br w:type="page"/></w:r></w:p>';
+async function wordDeXml(cuerpo, {creador = '', titulo = '', color = '', img = null, pie = '', portada = false} = {}) {
   const W = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"';
-  const hs = [[1, 32, '0F2237'], [2, 26, '0F2237'], [3, 23, '33475B']].map(([n, s, col]) => `<w:style w:type="paragraph" w:styleId="Heading${n}"><w:name w:val="heading ${n}"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:uiPriority w:val="9"/><w:qFormat/><w:pPr><w:keepNext/><w:spacing w:before="${n === 1 ? 280 : 200}" w:after="100"/><w:outlineLvl w:val="${n - 1}"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:b/><w:color w:val="${col}"/><w:sz w:val="${s}"/><w:szCs w:val="${s}"/></w:rPr></w:style>`).join('');
+  const hs = [[1, 32, color || '0F2237'], [2, 26, color || '0F2237'], [3, 23, '33475B']].map(([n, s, col]) => `<w:style w:type="paragraph" w:styleId="Heading${n}"><w:name w:val="heading ${n}"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:uiPriority w:val="9"/><w:qFormat/><w:pPr><w:keepNext/><w:spacing w:before="${n === 1 ? 280 : 200}" w:after="100"/><w:outlineLvl w:val="${n - 1}"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:b/><w:color w:val="${col}"/><w:sz w:val="${s}"/><w:szCs w:val="${s}"/></w:rPr></w:style>`).join('');
   const lang = typeof LANG === 'string' ? ({es: 'es-ES', ca: 'ca-ES', eu: 'eu-ES', gl: 'gl-ES', en: 'en-GB', pt: 'pt-PT'}[LANG] || 'es-ES') : 'es-ES';
   const ahora = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
   return new Blob([await zipBytes({
-    '[Content_Types].xml': '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>',
+    '[Content_Types].xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>${img ? '<Default Extension="jpeg" ContentType="image/jpeg"/>' : ''}${pie ? '<Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/>' : ''}<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>`,
     '_rels/.rels': '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>',
     'docProps/core.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${_x(titulo)}</dc:title><dc:creator>${_x(creador)}</dc:creator><dcterms:created xsi:type="dcterms:W3CDTF">${ahora}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${ahora}</dcterms:modified></cp:coreProperties>`,
-    'word/_rels/document.xml.rels': '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>',
+    'word/_rels/document.xml.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>${img ? '<Relationship Id="rIdImg" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/logo.jpeg"/>' : ''}${pie ? '<Relationship Id="rIdPie" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>' : ''}</Relationships>`,
     'word/styles.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles ${W}><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" w:eastAsia="Arial"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="${lang}"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="110" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style>${hs}</w:styles>`,
-    'word/document.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${W}><w:body>${cuerpo}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1418" w:right="1418" w:bottom="1418" w:left="1418" w:header="709" w:footer="709" w:gutter="0"/></w:sectPr></w:body></w:document>`
+    'word/document.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${W} xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"><w:body>${cuerpo}<w:sectPr>${pie ? '<w:footerReference w:type="default" r:id="rIdPie"/>' : ''}<w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1418" w:right="1418" w:bottom="1418" w:left="1418" w:header="709" w:footer="709" w:gutter="0"/>${pie && portada ? '<w:titlePg/>' : ''}</w:sectPr></w:body></w:document>`,
+    ...(img ? {'word/media/logo.jpeg': img.bytes} : {}),
+    ...(pie ? {'word/footer1.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr ${W}><w:p><w:pPr><w:jc w:val="center"/></w:pPr>${wRun({text: pie + '  ·  ', s: 16, col: '8899AA'})}<w:r><w:rPr><w:sz w:val="16"/><w:color w:val="8899AA"/></w:rPr><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:rPr><w:sz w:val="16"/><w:color w:val="8899AA"/></w:rPr><w:instrText xml:space="preserve"> PAGE </w:instrText></w:r><w:r><w:rPr><w:sz w:val="16"/><w:color w:val="8899AA"/></w:rPr><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:rPr><w:sz w:val="16"/><w:color w:val="8899AA"/></w:rPr><w:t>1</w:t></w:r><w:r><w:rPr><w:sz w:val="16"/><w:color w:val="8899AA"/></w:rPr><w:fldChar w:fldCharType="end"/></w:r></w:p></w:ftr>`} : {})
   })], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
 }
 /* wordDeMarkdown(md, {titulo, subtitulo, pie, kicker}) → Blob .docx
    Convierte #/##/### encabezados, listas, tablas Markdown (| a | b |), **negritas**, *cursivas* y `código`. */
-async function wordDeMarkdown(md, {titulo = '', subtitulo = '', pie = '', kicker = ''} = {}) {
-  const k = [];
-  if (kicker) k.push(wPara(String(kicker).toUpperCase(), {c: true, b: true, col: 'E4572E', s: 20, plain: true}));
-  if (titulo) k.push(wPara(titulo, {c: true, b: true, s: 32, plain: true}));
-  if (subtitulo) k.push(wPara(subtitulo, {c: true, col: '5D7691', s: 20, after: 260, plain: true}));
+/* portada (opcional): {lineas:[…], logo: dataURL} → página propia con logo, título en el color, subtítulo y líneas; color: títulos y
+   cabeceras de tabla; piePagina: texto del pie con número de página */
+const tinte = (hex, k = .86) => hex.match(/../g).map(c => Math.round(parseInt(c, 16) + (255 - parseInt(c, 16)) * k).toString(16).padStart(2, '0')).join('').toUpperCase();
+async function imgParaWord(dataUrl, maxW = 2600000, maxH = 1100000) {   // EMU (1 cm = 360000)
+  const jpg = await reduceImg(dataUrl, 900), im = new Image(); await new Promise((ok, ko) => { im.onload = ok; im.onerror = ko; im.src = jpg; });
+  const k = Math.min(maxW / im.width, maxH / im.height), bin = atob(jpg.split(',')[1]), bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return {bytes, cx: Math.round(im.width * k), cy: Math.round(im.height * k)};
+}
+async function wordDeMarkdown(md, {titulo = '', subtitulo = '', pie = '', kicker = '', color = '', portada = null, piePagina = ''} = {}) {
+  const k = [], col = /^[0-9A-F]{6}$/i.test(color) ? color.toUpperCase() : ''; let img = null;
+  if (portada) {
+    if (portada.logo) { try { img = await imgParaWord(portada.logo); } catch { img = null; } }
+    k.push(`<w:p><w:pPr><w:spacing w:before="1400" w:after="600"/><w:jc w:val="center"/></w:pPr>${img ? wImg(img.cx, img.cy) : ''}</w:p>`);
+    if (kicker) k.push(wPara(String(kicker).toUpperCase(), {c: true, b: true, col: col || 'E4572E', s: 20, plain: true}));
+    if (titulo) k.push(wPara(titulo, {c: true, b: true, s: 48, col: col || '0F2237', plain: true, after: 240}));
+    if (subtitulo) k.push(wPara(subtitulo, {c: true, col: '5D7691', s: 26, after: 900, plain: true}));
+    (portada.lineas || []).filter(Boolean).forEach(l => k.push(wPara(l, {c: true, s: 22, col: '33475B', plain: true, after: 80})));
+    k.push(wSalto);
+  } else {
+    if (kicker) k.push(wPara(String(kicker).toUpperCase(), {c: true, b: true, col: 'E4572E', s: 20, plain: true}));
+    if (titulo) k.push(wPara(titulo, {c: true, b: true, s: 32, plain: true}));
+    if (subtitulo) k.push(wPara(subtitulo, {c: true, col: '5D7691', s: 20, after: 260, plain: true}));
+  }
   const lineas = String(md ?? '').replace(/\r\n?/g, '\n').split('\n'); let tabla = [];
-  const cierraTabla = () => { if (tabla.length) { k.push(wTabla(tabla)); tabla = []; } };
+  const cierraTabla = () => { if (tabla.length) { k.push(wTabla(tabla, col ? tinte(col) : undefined)); tabla = []; } };
   for (const l of lineas) {
     const t = l.trimEnd(); let m;
     if (/^\s*\|.*\|\s*$/.test(t)) { if (!/^\s*\|[\s:|-]+\|\s*$/.test(t)) tabla.push(t.trim().slice(1, -1).split('|').map(c => c.trim())); continue; }
@@ -1405,7 +1430,7 @@ async function wordDeMarkdown(md, {titulo = '', subtitulo = '', pie = '', kicker
   cierraTabla();
   if (pie) k.push(wPara(pie, {i: true, s: 16, col: '8899AA', plain: true}));
   const app = typeof APP_NAME === 'string' ? APP_NAME : (typeof APP === 'string' ? APP : '');
-  return wordDeXml(k.join(''), {creador: app, titulo: titulo || app});
+  return wordDeXml(k.join(''), {creador: app, titulo: titulo || app, color: col, img: img ? {bytes: img.bytes} : null, pie: piePagina, portada: !!portada});
 }
 /* csv con BOM, separador «;» (Excel en español) y comillas escapadas */
 const csvq = v => { const s = String(v ?? ''); return /[";\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
@@ -1705,6 +1730,35 @@ const I18N = {
     "rechazado: la sección «{0}» no existe": "rebutjat: la secció «{0}» no existeix",
     "Tienes un proyecto en marcha en este navegador.": "Tens un projecte en marxa en aquest navegador.",
     "Seguir": "Continuar",
+    "Añade huecos [COMPLETAR]: no se puede aceptar.": "Afegeix buits [COMPLETAR]: no es pot acceptar.",
+    "Con el pulido la puntuación baja: revisad las secciones pulidas o deshaced el pulido.": "Amb el poliment la puntuació baixa: reviseu les seccions polides o desfeu el poliment.",
+    "Deshacer el pulido": "Desfer el poliment",
+    "El proyecto volverá a la versión de antes del pulido; se perderán los cambios que hayáis hecho a mano después. ¿Seguir?": "El projecte tornarà a la versió d'abans del poliment; es perdran els canvis que hàgeu fet a mà després. Voleu continuar?",
+    "Guía de estilo": "Guia d'estil",
+    "Hace unas {0} llamadas a la IA: una para la coherencia, una por sección y una para puntuar.": "Fa unes {0} crides a la IA: una per a la coherència, una per secció i una per puntuar.",
+    "Incoherencias detectadas ({0})": "Incoherències detectades ({0})",
+    "Límite de las bases: {0} páginas": "Límit de les bases: {0} pàgines",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. No se pueden aceptar las secciones con cifras nuevas que no se declaran como propuesta ni las que añaden huecos [COMPLETAR].": "Marqueu les seccions que accepteu. El que no accepteu es queda com estava. No es poden acceptar les seccions amb xifres noves que no es declaren com a proposta ni les que afegeixen buits [COMPLETAR].",
+    "No habéis aceptado ninguna sección.": "No heu acceptat cap secció.",
+    "Ojo: el proyecto aún tiene {0} hueco(s) [COMPLETAR].": "Compte: el projecte encara té {0} buit(s) [COMPLETAR].",
+    "Parado: se muestran las secciones ya pulidas.": "Aturat: es mostren les seccions ja polides.",
+    "Parando al terminar esta sección…": "Aturant en acabar aquesta secció…",
+    "Pulido aplicado en {0} sección(es): de {1} a {2} puntos.": "Poliment aplicat en {0} secció(ns): de {1} a {2} punts.",
+    "Pulido final": "Poliment final",
+    "Puliendo la sección {0} de {1}…": "Polint la secció {0} de {1}…",
+    "Pulir el proyecto": "Polir el projecte",
+    "Puntuando la versión pulida…": "Puntuant la versió polida…",
+    "Recorta mucho la sección: revisad que no se pierda nada importante.": "Retalla molt la secció: reviseu que no es perda res important.",
+    "Revisando la coherencia del proyecto…": "Revisant la coherència del projecte…",
+    "Se pierden cifras que estaban: {0}. Revisadlo antes de aceptar.": "Es perden xifres que hi havia: {0}. Reviseu-ho abans d'acceptar.",
+    "Secciones pulidas": "Seccions polides",
+    "Subtítulo": "Subtítol",
+    "Tres agentes dejan el proyecto listo para presentar: uno revisa la coherencia de todo el proyecto y fija una guía de estilo; otro pule cada sección (tablas, listas, subtítulos, sin repeticiones ni frases de relleno) sin cambiar lo que dice; el último lo vuelve a puntuar. El código comprueba cada sección y vosotros aceptáis o descartáis cada una.": "Tres agents deixen el projecte a punt per presentar: un revisa la coherència de tot el projecte i fixa una guia d'estil; un altre poleix cada secció (taules, llistes, subtítols, sense repeticions ni frases de farciment) sense canviar el que diu; l'últim el torna a puntuar. El codi comprova cada secció i vosaltres accepteu o descarteu cadascuna.",
+    "Título de la portada": "Títol de la portada",
+    "Unas {0} páginas": "Unes {0} pàgines",
+    "se quita: repite otra sección o la portada": "es lleva: repeteix una altra secció o la portada",
+    "{0} tabla(s)": "{0} taula(es)",
+    "{0} → {1} palabras": "{0} → {1} paraules",
     "Empezar de cero": "Començar de zero",
     "Borrar los ciclos": "Esborrar els cicles",
     "Se borrarán las bases, el proyecto, los documentos, la rúbrica y todos los ciclos guardados en este navegador. El perfil de la asociación se conserva. ¿Seguir?": "S'esborraran les bases, el projecte, els documents, la rúbrica i tots els cicles guardats en aquest navegador. El perfil de l'associació es conserva. Voleu continuar?",
@@ -1785,7 +1839,6 @@ const I18N = {
     "Podéis editar el texto aquí. Rellenad los [COMPLETAR] con datos reales; si no los tenéis, quitad la frase.": "Podeu editar el text ací. Ompliu els [COMPLETAR] amb dades reals; si no les teniu, traieu la frase.",
     "mejorada en el ciclo {0}": "millorada en el cicle {0}",
     "{0} por completar": "{0} per completar",
-    "Puntuación simulada con {0}: {1} de {2}. Datos por completar: {3}. La puntuación orienta, pero no garantiza la del tribunal.": "Puntuació simulada amb {0}: {1} de {2}. Dades per completar: {3}. La puntuació orienta, però no garanteix la del tribunal.",
     "Resumen": "Resum",
     "De {0} a {1} puntos de {2} en {3} ciclo(s); {4} cambio(s) conservado(s).": "De {0} a {1} punts de {2} en {3} cicle/s; {4} canvi/s conservat/s.",
     "Puntuación por criterio": "Puntuació per criteri",
@@ -2115,6 +2168,35 @@ const I18N = {
     "rechazado: la sección «{0}» no existe": "baztertuta: «{0}» atala ez dago",
     "Tienes un proyecto en marcha en este navegador.": "Proiektu bat duzu martxan nabigatzaile honetan.",
     "Seguir": "Jarraitu",
+    "Añade huecos [COMPLETAR]: no se puede aceptar.": "[COMPLETAR] hutsuneak gehitzen ditu: ezin da onartu.",
+    "Con el pulido la puntuación baja: revisad las secciones pulidas o deshaced el pulido.": "Leuntzearekin puntuazioa jaisten da: berrikusi leundutako atalak edo desegin leuntzea.",
+    "Deshacer el pulido": "Leuntzea desegin",
+    "El proyecto volverá a la versión de antes del pulido; se perderán los cambios que hayáis hecho a mano después. ¿Seguir?": "Proiektua leundu aurreko bertsiora itzuliko da; ondoren eskuz egindako aldaketak galduko dira. Jarraitu?",
+    "Guía de estilo": "Estilo-gida",
+    "Hace unas {0} llamadas a la IA: una para la coherencia, una por sección y una para puntuar.": "AAri {0} dei inguru egiten dizkio: bat koherentziarako, bat atal bakoitzeko eta bat puntuatzeko.",
+    "Incoherencias detectadas ({0})": "Antzemandako inkoherentziak ({0})",
+    "Límite de las bases: {0} páginas": "Oinarrien muga: {0} orrialde",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. No se pueden aceptar las secciones con cifras nuevas que no se declaran como propuesta ni las que añaden huecos [COMPLETAR].": "Markatu onartzen dituzuen atalak. Onartzen ez duzuena lehen bezala geratzen da. Ezin dira onartu proposamen gisa adierazi gabeko zifra berriak dituzten atalak, ezta [COMPLETAR] hutsuneak gehitzen dituztenak ere.",
+    "No habéis aceptado ninguna sección.": "Ez duzue atalik onartu.",
+    "Ojo: el proyecto aún tiene {0} hueco(s) [COMPLETAR].": "Kontuz: proiektuak oraindik {0} [COMPLETAR] hutsune ditu.",
+    "Parado: se muestran las secciones ya pulidas.": "Geldituta: dagoeneko leundutako atalak erakusten dira.",
+    "Parando al terminar esta sección…": "Atal hau amaitzean geldituko da…",
+    "Pulido aplicado en {0} sección(es): de {1} a {2} puntos.": "Leuntzea {0} ataletan aplikatuta: {1} puntutik {2} puntura.",
+    "Pulido final": "Azken leuntzea",
+    "Puliendo la sección {0} de {1}…": "{1}etik {0}. atala leuntzen…",
+    "Pulir el proyecto": "Proiektua leundu",
+    "Puntuando la versión pulida…": "Leundutako bertsioa puntuatzen…",
+    "Recorta mucho la sección: revisad que no se pierda nada importante.": "Atala asko laburtzen du: egiaztatu ez dela ezer garrantzitsurik galtzen.",
+    "Revisando la coherencia del proyecto…": "Proiektuaren koherentzia berrikusten…",
+    "Se pierden cifras que estaban: {0}. Revisadlo antes de aceptar.": "Lehen zeuden zifrak galtzen dira: {0}. Berrikusi onartu aurretik.",
+    "Secciones pulidas": "Leundutako atalak",
+    "Subtítulo": "Azpititulua",
+    "Tres agentes dejan el proyecto listo para presentar: uno revisa la coherencia de todo el proyecto y fija una guía de estilo; otro pule cada sección (tablas, listas, subtítulos, sin repeticiones ni frases de relleno) sin cambiar lo que dice; el último lo vuelve a puntuar. El código comprueba cada sección y vosotros aceptáis o descartáis cada una.": "Hiru agentek proiektua aurkezteko prest uzten dute: batek proiektu osoaren koherentzia berrikusten du eta estilo-gida bat finkatzen du; beste batek atal bakoitza leuntzen du (taulak, zerrendak, azpitituluak, errepikapenik eta betegarririk gabe) esaten duena aldatu gabe; azkenak berriro puntuatzen du. Kodeak atal bakoitza egiaztatzen du eta zuek bakoitza onartu edo baztertzen duzue.",
+    "Título de la portada": "Azaleko izenburua",
+    "Unas {0} páginas": "{0} orrialde inguru",
+    "se quita: repite otra sección o la portada": "kentzen da: beste atal bat edo azala errepikatzen du",
+    "{0} tabla(s)": "{0} taula",
+    "{0} → {1} palabras": "{0} → {1} hitz",
     "Empezar de cero": "Hutsetik hasi",
     "Borrar los ciclos": "Zikloak ezabatu",
     "Se borrarán las bases, el proyecto, los documentos, la rúbrica y todos los ciclos guardados en este navegador. El perfil de la asociación se conserva. ¿Seguir?": "Nabigatzaile honetan gordetako oinarriak, proiektua, dokumentuak, errubrika eta ziklo guztiak ezabatuko dira. Elkartearen profila gorde egiten da. Jarraitu?",
@@ -2195,7 +2277,6 @@ const I18N = {
     "Podéis editar el texto aquí. Rellenad los [COMPLETAR] con datos reales; si no los tenéis, quitad la frase.": "Testua hemen edita dezakezue. Bete [COMPLETAR] guztiak benetako datuekin; ez badituzue, kendu esaldia.",
     "mejorada en el ciclo {0}": "{0}. zikloan hobetua",
     "{0} por completar": "{0} osatzeko",
-    "Puntuación simulada con {0}: {1} de {2}. Datos por completar: {3}. La puntuación orienta, pero no garantiza la del tribunal.": "{0}-(r)ekin simulatutako puntuazioa: {1}/{2}. Osatzeko datuak: {3}. Puntuazioak orientatu egiten du, baina ez du epaimahaiarena bermatzen.",
     "Resumen": "Laburpena",
     "De {0} a {1} puntos de {2} en {3} ciclo(s); {4} cambio(s) conservado(s).": "{0}tik {1}era, {2} puntutik, {3} ziklotan; {4} aldaketa gordeta.",
     "Puntuación por criterio": "Puntuazioa irizpideka",
@@ -2525,6 +2606,35 @@ const I18N = {
     "rechazado: la sección «{0}» no existe": "rexeitado: a sección «{0}» non existe",
     "Tienes un proyecto en marcha en este navegador.": "Tes un proxecto en marcha neste navegador.",
     "Seguir": "Seguir",
+    "Añade huecos [COMPLETAR]: no se puede aceptar.": "Engade ocos [COMPLETAR]: non se pode aceptar.",
+    "Con el pulido la puntuación baja: revisad las secciones pulidas o deshaced el pulido.": "Co pulido a puntuación baixa: revisade as seccións puídas ou desfacede o pulido.",
+    "Deshacer el pulido": "Desfacer o pulido",
+    "El proyecto volverá a la versión de antes del pulido; se perderán los cambios que hayáis hecho a mano después. ¿Seguir?": "O proxecto volverá á versión de antes do pulido; perderanse os cambios que fixerades a man despois. Seguir?",
+    "Guía de estilo": "Guía de estilo",
+    "Hace unas {0} llamadas a la IA: una para la coherencia, una por sección y una para puntuar.": "Fai unhas {0} chamadas á IA: unha para a coherencia, unha por sección e unha para puntuar.",
+    "Incoherencias detectadas ({0})": "Incoherencias detectadas ({0})",
+    "Límite de las bases: {0} páginas": "Límite das bases: {0} páxinas",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. No se pueden aceptar las secciones con cifras nuevas que no se declaran como propuesta ni las que añaden huecos [COMPLETAR].": "Marcade as seccións que aceptades. O que non aceptedes queda como estaba. Non se poden aceptar as seccións con cifras novas que non se declaran como proposta nin as que engaden ocos [COMPLETAR].",
+    "No habéis aceptado ninguna sección.": "Non aceptastes ningunha sección.",
+    "Ojo: el proyecto aún tiene {0} hueco(s) [COMPLETAR].": "Ollo: o proxecto aínda ten {0} oco(s) [COMPLETAR].",
+    "Parado: se muestran las secciones ya pulidas.": "Parado: amósanse as seccións xa puídas.",
+    "Parando al terminar esta sección…": "Parando ao rematar esta sección…",
+    "Pulido aplicado en {0} sección(es): de {1} a {2} puntos.": "Pulido aplicado en {0} sección(s): de {1} a {2} puntos.",
+    "Pulido final": "Pulido final",
+    "Puliendo la sección {0} de {1}…": "Puíndo a sección {0} de {1}…",
+    "Pulir el proyecto": "Puír o proxecto",
+    "Puntuando la versión pulida…": "Puntuando a versión puída…",
+    "Recorta mucho la sección: revisad que no se pierda nada importante.": "Recorta moito a sección: revisade que non se perda nada importante.",
+    "Revisando la coherencia del proyecto…": "Revisando a coherencia do proxecto…",
+    "Se pierden cifras que estaban: {0}. Revisadlo antes de aceptar.": "Pérdense cifras que estaban: {0}. Revisádeo antes de aceptar.",
+    "Secciones pulidas": "Seccións puídas",
+    "Subtítulo": "Subtítulo",
+    "Tres agentes dejan el proyecto listo para presentar: uno revisa la coherencia de todo el proyecto y fija una guía de estilo; otro pule cada sección (tablas, listas, subtítulos, sin repeticiones ni frases de relleno) sin cambiar lo que dice; el último lo vuelve a puntuar. El código comprueba cada sección y vosotros aceptáis o descartáis cada una.": "Tres axentes deixan o proxecto listo para presentar: un revisa a coherencia de todo o proxecto e fixa unha guía de estilo; outro pule cada sección (táboas, listas, subtítulos, sen repeticións nin frases de recheo) sen cambiar o que di; o último volve puntualo. O código comproba cada sección e vós aceptades ou descartades cada unha.",
+    "Título de la portada": "Título da portada",
+    "Unas {0} páginas": "Unhas {0} páxinas",
+    "se quita: repite otra sección o la portada": "quítase: repite outra sección ou a portada",
+    "{0} tabla(s)": "{0} táboa(s)",
+    "{0} → {1} palabras": "{0} → {1} palabras",
     "Empezar de cero": "Comezar de cero",
     "Borrar los ciclos": "Borrar os ciclos",
     "Se borrarán las bases, el proyecto, los documentos, la rúbrica y todos los ciclos guardados en este navegador. El perfil de la asociación se conserva. ¿Seguir?": "Borraranse as bases, o proxecto, os documentos, a rúbrica e todos os ciclos gardados neste navegador. O perfil da asociación consérvase. Seguir?",
@@ -2605,7 +2715,6 @@ const I18N = {
     "Podéis editar el texto aquí. Rellenad los [COMPLETAR] con datos reales; si no los tenéis, quitad la frase.": "Podedes editar o texto aquí. Enchede os [COMPLETAR] con datos reais; se non os tedes, quitade a frase.",
     "mejorada en el ciclo {0}": "mellorada no ciclo {0}",
     "{0} por completar": "{0} por completar",
-    "Puntuación simulada con {0}: {1} de {2}. Datos por completar: {3}. La puntuación orienta, pero no garantiza la del tribunal.": "Puntuación simulada con {0}: {1} de {2}. Datos por completar: {3}. A puntuación orienta, pero non garante a do tribunal.",
     "Resumen": "Resumo",
     "De {0} a {1} puntos de {2} en {3} ciclo(s); {4} cambio(s) conservado(s).": "De {0} a {1} puntos de {2} en {3} ciclo(s); {4} cambio(s) conservado(s).",
     "Puntuación por criterio": "Puntuación por criterio",
@@ -2935,6 +3044,35 @@ const I18N = {
     "rechazado: la sección «{0}» no existe": "rejected: the section “{0}” does not exist",
     "Tienes un proyecto en marcha en este navegador.": "You have a project in progress in this browser.",
     "Seguir": "Continue",
+    "Añade huecos [COMPLETAR]: no se puede aceptar.": "It adds [COMPLETAR] gaps: it cannot be accepted.",
+    "Con el pulido la puntuación baja: revisad las secciones pulidas o deshaced el pulido.": "The score drops with the polish: review the polished sections or undo the polish.",
+    "Deshacer el pulido": "Undo the polish",
+    "El proyecto volverá a la versión de antes del pulido; se perderán los cambios que hayáis hecho a mano después. ¿Seguir?": "The project will go back to the version before the polish; any changes you made by hand afterwards will be lost. Continue?",
+    "Guía de estilo": "Style guide",
+    "Hace unas {0} llamadas a la IA: una para la coherencia, una por sección y una para puntuar.": "It makes about {0} calls to the AI: one for coherence, one per section and one to score.",
+    "Incoherencias detectadas ({0})": "Inconsistencies found ({0})",
+    "Límite de las bases: {0} páginas": "Limit in the rules: {0} pages",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. No se pueden aceptar las secciones con cifras nuevas que no se declaran como propuesta ni las que añaden huecos [COMPLETAR].": "Tick the sections you accept. Anything you do not accept stays as it was. Sections with new figures not declared as a proposal, or that add [COMPLETAR] gaps, cannot be accepted.",
+    "No habéis aceptado ninguna sección.": "You have not accepted any section.",
+    "Ojo: el proyecto aún tiene {0} hueco(s) [COMPLETAR].": "Note: the project still has {0} [COMPLETAR] gap(s).",
+    "Parado: se muestran las secciones ya pulidas.": "Stopped: the sections already polished are shown.",
+    "Parando al terminar esta sección…": "Stopping after this section…",
+    "Pulido aplicado en {0} sección(es): de {1} a {2} puntos.": "Polish applied to {0} section(s): from {1} to {2} points.",
+    "Pulido final": "Final polish",
+    "Puliendo la sección {0} de {1}…": "Polishing section {0} of {1}…",
+    "Pulir el proyecto": "Polish the project",
+    "Puntuando la versión pulida…": "Scoring the polished version…",
+    "Recorta mucho la sección: revisad que no se pierda nada importante.": "It shortens the section a lot: check that nothing important is lost.",
+    "Revisando la coherencia del proyecto…": "Checking the project's coherence…",
+    "Se pierden cifras que estaban: {0}. Revisadlo antes de aceptar.": "Figures that were there are lost: {0}. Check before accepting.",
+    "Secciones pulidas": "Polished sections",
+    "Subtítulo": "Subtitle",
+    "Tres agentes dejan el proyecto listo para presentar: uno revisa la coherencia de todo el proyecto y fija una guía de estilo; otro pule cada sección (tablas, listas, subtítulos, sin repeticiones ni frases de relleno) sin cambiar lo que dice; el último lo vuelve a puntuar. El código comprueba cada sección y vosotros aceptáis o descartáis cada una.": "Three agents get the project ready to submit: one checks the coherence of the whole project and sets a style guide; another polishes each section (tables, lists, subheadings, no repetition or filler) without changing what it says; the last one scores it again. The code checks each section and you accept or discard each one.",
+    "Título de la portada": "Cover title",
+    "Unas {0} páginas": "About {0} pages",
+    "se quita: repite otra sección o la portada": "removed: it repeats another section or the cover",
+    "{0} tabla(s)": "{0} table(s)",
+    "{0} → {1} palabras": "{0} → {1} words",
     "Empezar de cero": "Start from scratch",
     "Borrar los ciclos": "Delete the cycles",
     "Se borrarán las bases, el proyecto, los documentos, la rúbrica y todos los ciclos guardados en este navegador. El perfil de la asociación se conserva. ¿Seguir?": "The rules, the project, the documents, the rubric and all the cycles saved in this browser will be deleted. The association profile is kept. Continue?",
@@ -3015,7 +3153,6 @@ const I18N = {
     "Podéis editar el texto aquí. Rellenad los [COMPLETAR] con datos reales; si no los tenéis, quitad la frase.": "You can edit the text here. Fill in the [COMPLETAR] gaps with real data; if you do not have them, remove the sentence.",
     "mejorada en el ciclo {0}": "improved in cycle {0}",
     "{0} por completar": "{0} to complete",
-    "Puntuación simulada con {0}: {1} de {2}. Datos por completar: {3}. La puntuación orienta, pero no garantiza la del tribunal.": "Score simulated with {0}: {1} out of {2}. Items to complete: {3}. The score is a guide but does not guarantee the panel's score.",
     "Resumen": "Summary",
     "De {0} a {1} puntos de {2} en {3} ciclo(s); {4} cambio(s) conservado(s).": "From {0} to {1} points out of {2} in {3} cycle(s); {4} change(s) kept.",
     "Puntuación por criterio": "Score by criterion",
@@ -3345,6 +3482,35 @@ const I18N = {
     "rechazado: la sección «{0}» no existe": "rejeitado: a secção «{0}» não existe",
     "Tienes un proyecto en marcha en este navegador.": "Tem um projeto em curso neste navegador.",
     "Seguir": "Continuar",
+    "Añade huecos [COMPLETAR]: no se puede aceptar.": "Acrescenta lacunas [COMPLETAR]: não pode ser aceite.",
+    "Con el pulido la puntuación baja: revisad las secciones pulidas o deshaced el pulido.": "Com o polimento a pontuação desce: revejam as secções polidas ou desfaçam o polimento.",
+    "Deshacer el pulido": "Desfazer o polimento",
+    "El proyecto volverá a la versión de antes del pulido; se perderán los cambios que hayáis hecho a mano después. ¿Seguir?": "O projeto voltará à versão anterior ao polimento; perdem-se as alterações feitas à mão depois. Continuar?",
+    "Guía de estilo": "Guia de estilo",
+    "Hace unas {0} llamadas a la IA: una para la coherencia, una por sección y una para puntuar.": "Faz cerca de {0} chamadas à IA: uma para a coerência, uma por secção e uma para pontuar.",
+    "Incoherencias detectadas ({0})": "Incoerências detetadas ({0})",
+    "Límite de las bases: {0} páginas": "Limite do regulamento: {0} páginas",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. No se pueden aceptar las secciones con cifras nuevas que no se declaran como propuesta ni las que añaden huecos [COMPLETAR].": "Marquem as secções que aceitam. O que não aceitarem fica como estava. Não podem ser aceites as secções com números novos não declarados como proposta nem as que acrescentam lacunas [COMPLETAR].",
+    "No habéis aceptado ninguna sección.": "Não aceitaram nenhuma secção.",
+    "Ojo: el proyecto aún tiene {0} hueco(s) [COMPLETAR].": "Atenção: o projeto ainda tem {0} lacuna(s) [COMPLETAR].",
+    "Parado: se muestran las secciones ya pulidas.": "Parado: mostram-se as secções já polidas.",
+    "Parando al terminar esta sección…": "A parar no fim desta secção…",
+    "Pulido aplicado en {0} sección(es): de {1} a {2} puntos.": "Polimento aplicado em {0} secção(ões): de {1} para {2} pontos.",
+    "Pulido final": "Polimento final",
+    "Puliendo la sección {0} de {1}…": "A polir a secção {0} de {1}…",
+    "Pulir el proyecto": "Polir o projeto",
+    "Puntuando la versión pulida…": "A pontuar a versão polida…",
+    "Recorta mucho la sección: revisad que no se pierda nada importante.": "Corta muito a secção: confirmem que não se perde nada importante.",
+    "Revisando la coherencia del proyecto…": "A rever a coerência do projeto…",
+    "Se pierden cifras que estaban: {0}. Revisadlo antes de aceptar.": "Perdem-se números que lá estavam: {0}. Revejam antes de aceitar.",
+    "Secciones pulidas": "Secções polidas",
+    "Subtítulo": "Subtítulo",
+    "Tres agentes dejan el proyecto listo para presentar: uno revisa la coherencia de todo el proyecto y fija una guía de estilo; otro pule cada sección (tablas, listas, subtítulos, sin repeticiones ni frases de relleno) sin cambiar lo que dice; el último lo vuelve a puntuar. El código comprueba cada sección y vosotros aceptáis o descartáis cada una.": "Três agentes deixam o projeto pronto a apresentar: um revê a coerência de todo o projeto e fixa um guia de estilo; outro pole cada secção (tabelas, listas, subtítulos, sem repetições nem frases de enchimento) sem mudar o que diz; o último volta a pontuá-lo. O código verifica cada secção e vocês aceitam ou descartam cada uma.",
+    "Título de la portada": "Título da capa",
+    "Unas {0} páginas": "Cerca de {0} páginas",
+    "se quita: repite otra sección o la portada": "retira-se: repete outra secção ou a capa",
+    "{0} tabla(s)": "{0} tabela(s)",
+    "{0} → {1} palabras": "{0} → {1} palavras",
     "Empezar de cero": "Começar do zero",
     "Borrar los ciclos": "Apagar os ciclos",
     "Se borrarán las bases, el proyecto, los documentos, la rúbrica y todos los ciclos guardados en este navegador. El perfil de la asociación se conserva. ¿Seguir?": "Serão apagados o regulamento, o projeto, os documentos, a rubrica e todos os ciclos guardados neste navegador. O perfil da associação mantém-se. Continuar?",
@@ -3425,7 +3591,6 @@ const I18N = {
     "Podéis editar el texto aquí. Rellenad los [COMPLETAR] con datos reales; si no los tenéis, quitad la frase.": "Podem editar o texto aqui. Preencham os [COMPLETAR] com dados reais; se não os tiverem, retirem a frase.",
     "mejorada en el ciclo {0}": "melhorada no ciclo {0}",
     "{0} por completar": "{0} por completar",
-    "Puntuación simulada con {0}: {1} de {2}. Datos por completar: {3}. La puntuación orienta, pero no garantiza la del tribunal.": "Pontuação simulada com {0}: {1} em {2}. Dados por completar: {3}. A pontuação orienta, mas não garante a do júri.",
     "Resumen": "Resumo",
     "De {0} a {1} puntos de {2} en {3} ciclo(s); {4} cambio(s) conservado(s).": "De {0} a {1} pontos em {2} em {3} ciclo(s); {4} alteração(ões) mantida(s).",
     "Puntuación por criterio": "Pontuação por critério",
@@ -4083,6 +4248,141 @@ async function deshazEstructura() {
   S.secs = S.pre0.secs; S.ev = S.pre0.ev; S.pre0 = null; S.c0 = null;
   S.ciclos = S.ciclos.filter(c => c.tipo !== 'estructura'); S.vers = S.vers.filter(v => v.tipo !== 'estructura'); await guardaYa(); pintaMejora();
 }
+/* ── pulido final, en tres agentes: el REVISOR DE COHERENCIA lee todo el proyecto y fija guía de estilo, incoherencias, secciones que
+   sobran y título de portada; el MAQUETADOR pule cada sección (formato, tablas, coherencia, sin cambiar lo que dice); el EVALUADOR
+   vuelve a puntuar lo aceptado. El código comprueba cada sección (cifras nuevas sin declarar, más [COMPLETAR], cifras que se pierden,
+   recortes) y la asociación acepta o descarta cada una. Se puede deshacer mientras no haya cambios posteriores. ── */
+const PAL_PAG = 430;   // palabras por página aproximadas en el Word (Arial 11, con tablas)
+const limitePags = () => { for (const r of (S.rub?.req || [])) { const m = r.texto.match(/(\d+)\s*(?:p[áà]ginas?|pages?|p[áà]xinas?|orrialde)/i); if (m) return +m[1]; } return null; };
+const pagsDe = (secs = S.secs) => Math.max(1, Math.ceil(wc(textoProy(secs)) / PAL_PAG));
+const contenido = (a, b) => { const pal = [...new Set(norm(a).split(' ').filter(w => w.length > 3))], en = new Set(norm(b).split(' ')); return pal.length ? pal.filter(w => en.has(w)).length / pal.length : 1; };
+const PROMPT_COH = (rub, proy, apoyo, perfil, lim, pags) => `Eres el REVISOR DE COHERENCIA de un proyecto que una asociación de pacientes va a presentar a una convocatoria. El contenido ya está mejorado; ahora hay que dejarlo coherente y bien presentado, sin cambiar lo que dice.
+
+RÚBRICA: ${rub.crits.map(c => c.nombre).join('; ')}
+REQUISITOS: ${rub.req.map(r => r.texto).join(' · ') || '—'}
+${lim ? `EXTENSIÓN: las bases limitan la memoria a ${lim} páginas; ahora ocupa unas ${pags}.` : `EXTENSIÓN: ahora ocupa unas ${pags} páginas.`}
+
+PROYECTO (cada sección empieza por ###):
+${proy}
+
+DATOS DE LA ASOCIACIÓN:
+${apoyo || '(no hay documentos)'}
+Perfil: ${perfil}
+
+TAREAS
+1. Título y subtítulo para la portada, tomados del propio proyecto (si ya tiene nombre, úsalo).
+2. Una guía de estilo breve para todas las secciones: persona gramatical; una sola forma de nombrar la entidad, el proyecto y la población destinataria; formato de importes, porcentajes y fechas.
+3. Las incoherencias entre secciones: cifras que no cuadran (participantes, sesiones, horas, importes, totales, porcentajes de ayuda y cofinanciación), nombres o fechas distintos para lo mismo, objetivos sin actividad o sin indicador, actividades sin partida, repeticiones entre secciones y frases sobre el propio proceso de redacción («se completará antes de presentar…», «no se inventarán datos…») que no deben quedar en una memoria. Para cada una: en qué secciones está y cómo arreglarla, usando solo cifras que ya están en el proyecto o en el material.
+4. Secciones que sobran porque repiten otra entera o solo contienen el título y la entidad (irán en la portada).
+
+Devuelve SOLO este JSON:
+{"titulo":"…","subtitulo":"una línea: qué es el proyecto","guia":"…","problemas":[{"secciones":["título EXACTO de la sección"],"problema":"…","arreglo":"…"}],"sobran":["título EXACTO de la sección"]}
+${INSTR_IDIOMA()}`;
+const PROMPT_PUL = (guia, probs, tit, texto, proy, rub, objetivo) => `Eres el MAQUETADOR de un proyecto para una convocatoria. Pule UNA sección para que quede coherente, clara y con una presentación cuidada, SIN cambiar lo que dice.
+
+GUÍA DE ESTILO (aplícala): ${guia || '—'}
+PROBLEMAS QUE TE TOCA ARREGLAR EN ESTA SECCIÓN:
+${probs || '— ninguno señalado'}
+LO QUE VALORA EL TRIBUNAL: ${rub.crits.map(c => `${c.nombre} (${c.mira.join('; ')})`).join(' · ')}
+${objetivo ? `EXTENSIÓN: como mucho unas ${objetivo} palabras, para no pasar del límite de páginas de las bases.` : ''}
+
+PROYECTO COMPLETO (contexto; cada sección empieza por ###):
+${proy}
+
+SECCIÓN QUE PULES: ${tit}
+${texto}
+
+REGLAS
+- Conserva todo el contenido sustantivo y TODAS las cifras, nombres y compromisos. No añadas hechos nuevos. Puedes calcular totales o porcentajes con cifras que ya están; decláralos en "propuestas".
+- Mantén tal cual los [COMPLETAR] que sigan siendo necesarios; no los rellenes con datos inventados.
+- Formato (se convierte a Word): párrafos breves; listas con "- "; TABLAS Markdown (| col | col |, con fila de cabecera y fila |---|) para presupuesto, calendario, indicadores, actividades o cualquier serie de 3 o más elementos comparables; subtítulos dentro de la sección con "#### "; **negrita** solo para algún término clave. Sin emojis, sin el título de la sección y sin líneas de separación.
+- Quita repeticiones, frases de relleno y frases sobre el propio proceso de redacción. Redacción directa y profesional, en el tono de una memoria técnica.
+
+Devuelve SOLO este JSON:
+{"texto":"texto completo pulido de la sección, sin el título","cambios":["qué has hecho, en pocas palabras"],${JSON_PROP}}
+${INSTR_IDIOMA()}`;
+function revisaPulido(i, s, raw, mat, factor) {
+  const texto = String(raw.texto || '').replace(/\r/g, '').trim(), prop = propuestasDe(raw, texto), cif = cifrasSinDeclarar(texto, mat, prop);
+  const nuevas = cifrasDe(texto), pierde = [...new Set(String(s.x).match(CIFRA_RX) || [])].filter(x => parseFloat(cifraNorm(x)) > 12 && !nuevas.has(cifraNorm(x)));
+  const masHuecos = huecos(texto) > huecos(s.x), corto = wc(texto) < wc(s.x) * (factor || 1) * 0.6, igual = norm(texto) === norm(s.x);
+  const bloq = !texto || igual || cif.length > 0 || masHuecos;
+  return {i, tit: s.t, antes: s.x, texto, cambios: aLista(raw.cambios).slice(0, 6), prop, cif, pierde, masHuecos, corto, igual, bloq,
+    tablas: (texto.match(/^\s*\|[\s:|-]+\|\s*$/gm) || []).length, acepta: !bloq && !pierde.length && !corto};
+}
+async function pule() {
+  if (busy || !S.ev || !listo()) return; if (S.esEjemplo) return toast(t('Esto es el ejemplo: sube vuestras bases y proyecto para mejorarlo.'));
+  busy = true; PARAR = false; estado('pulEstado', t('Revisando la coherencia del proyecto…')); pintaFinal();
+  try {
+    const sc = scrub(proyParaIA(S.secs)), ap = scrub(apoyoTx().slice(0, MAX_APOYO)), pf = scrub(JSON.stringify(perfilParaIA(S.perfil)));
+    if (!(await pideEnvio('proy', sc.t, sc.n + ap.n))) return;
+    const lim = limitePags(), W = wc(textoProy()), pags = pagsDe(), factor = lim && W > lim * PAL_PAG ? lim * PAL_PAG / W : null;
+    const coh = await pide([{role: 'system', content: SYS}, {role: 'user', content: PROMPT_COH(S.rub, sc.t, ap.t, pf.t, lim, pags)}], 5000);
+    const P = {estado: 'propuesta', titulo: String(coh.titulo || '').trim(), subtitulo: String(coh.subtitulo || '').trim(), guia: String(coh.guia || '').trim(), lim, pagsA: pags, items: [],
+      probs: (Array.isArray(coh.problemas) ? coh.problemas : []).map(p => ({secs: aLista(p?.secciones), problema: String(p?.problema || '').trim(), arreglo: String(p?.arreglo || '').trim()})).filter(p => p.problema)};
+    const sobran = new Set(aLista(coh.sobran).map(x => buscaSec(S.secs, x)).filter(i => i >= 0)), mat = materialTx() + '\n' + textoProy();
+    for (let i = 0; i < S.secs.length && !PARAR; i++) {
+      const s = S.secs[i];
+      if (sobran.has(i)) {   // solo se quita si su contenido ya está en otra sección o en la portada
+        const resto = S.secs.filter((_, j) => j !== i).map(x => x.t + ' ' + x.x).join(' ') + ' ' + P.titulo + ' ' + P.subtitulo + ' ' + (S.perfil.nombre || '');
+        if (contenido(s.t + ' ' + s.x, resto) >= 0.8) { P.items.push({i, tit: s.t, antes: s.x, texto: '', quitar: true, cambios: [], prop: [], cif: [], pierde: [], bloq: false, acepta: true}); continue; }
+      }
+      if (!s.x.trim()) continue;
+      estado('pulEstado', t('Puliendo la sección {0} de {1}…', i + 1, S.secs.length));
+      const pr = P.probs.filter(p => !p.secs.length || p.secs.some(x => buscaSec([s], x) === 0)).map(p => `- ${p.problema} → ${p.arreglo}`).join('\n');
+      const raw = await pide([{role: 'system', content: SYS}, {role: 'user', content: PROMPT_PUL(P.guia, scrub(pr).t, s.t || t('Presentación'), scrub(s.x).t, sc.t, S.rub, factor ? Math.max(60, Math.round(wc(s.x) * factor / 10) * 10) : null)}], 6000);
+      P.items.push(revisaPulido(i, s, raw, mat, factor));
+    }
+    S.pul = P; ESTADO.pulEstado = PARAR ? t('Parado: se muestran las secciones ya pulidas.') : ''; await guardaYa();
+  } catch (e) { estado('pulEstado', e.message); toast(e.message, 8000); }
+  finally { busy = false; if (step === 5) pintaFinal(); }
+}
+async function aplicaPulido() {
+  const P = S.pul; if (!P || busy) return;
+  const acept = P.items.filter(x => x.acepta && !x.bloq); if (!acept.length) return toast(t('No habéis aceptado ninguna sección.'));
+  const out = []; S.secs.forEach((s, i) => { const it = acept.find(x => x.i === i); if (it && it.quitar) return; out.push(it ? {t: s.t, x: it.texto} : {...s}); });
+  busy = true; estado('pulEstado', t('Puntuando la versión pulida…')); pintaFinal();
+  try {
+    const ev = await evalua(out); if (!ev) return;
+    P.antes = {secs: S.secs, ev: S.ev, evVieja: S.evVieja, nVers: S.vers.length}; P.tA = puntua(S.ev).total; P.tD = puntua(ev).total; P.acept = acept.length; P.pagsD = pagsDe(out); P.estado = 'aplicado';
+    S.secs = out; S.ev = ev; S.evVieja = false; S.vers.push({n: ciclosN().length, total: P.tD, tipo: 'pulido'}); ESTADO.pulEstado = ''; await guardaYa();
+  } catch (e) { estado('pulEstado', e.message); toast(e.message, 8000); }
+  finally { busy = false; if (step === 5) pintaFinal(); }
+}
+const puedeDeshacerPulido = () => S.pul?.estado === 'aplicado' && S.pul.antes && S.vers.length === S.pul.antes.nVers + 1;
+async function deshazPulido() {
+  if (!puedeDeshacerPulido() || !confirm(t('El proyecto volverá a la versión de antes del pulido; se perderán los cambios que hayáis hecho a mano después. ¿Seguir?'))) return;
+  const A = S.pul.antes; S.secs = A.secs; S.ev = A.ev; S.evVieja = A.evVieja; S.vers.length = A.nVers; S.pul = null; await guardaYa(); pintaFinal();
+}
+function tarjetaPulido() {
+  const P = S.pul, lim = limitePags(), est = ESTADO.pulEstado ? estadoHTML(ESTADO.pulEstado) : '';
+  const cab = `<h3 class="fa-h3"><svg class="i"><use href="#i-sparkles"/></svg> ${esc(t('Pulido final'))}</h3>`;
+  const ext = `${chip(lim && pagsDe() > lim ? 'aviso' : '', t('Unas {0} páginas', pagsDe()))}${lim ? ' ' + chip('', t('Límite de las bases: {0} páginas', lim)) : ''}`;
+  if (!P || busy && P.estado !== 'aplicado') return `<div class="card fa-est">${cab}<p>${esc(t('Tres agentes dejan el proyecto listo para presentar: uno revisa la coherencia de todo el proyecto y fija una guía de estilo; otro pule cada sección (tablas, listas, subtítulos, sin repeticiones ni frases de relleno) sin cambiar lo que dice; el último lo vuelve a puntuar. El código comprueba cada sección y vosotros aceptáis o descartáis cada una.'))}</p>
+    <p class="fa-resumen">${ext}</p><div class="actions"><button class="btn btn-primary${busy ? ' hidden' : ''}" id="btnPule" type="button"><svg class="i"><use href="#i-sparkles"/></svg>${esc(t('Pulir el proyecto'))}</button><button class="btn btn-ghost${busy ? '' : ' hidden'}" id="btnPararPul" type="button">${esc(t('Parar'))}</button></div>
+    <p class="help">${esc(t('Hace unas {0} llamadas a la IA: una para la coherencia, una por sección y una para puntuar.', S.secs.length + 2))}</p><p class="help" id="pulEstado" role="status" aria-live="polite">${est}</p></div>`;
+  if (P.estado === 'aplicado') return `<div class="card fa-est">${cab}<p>${esc(t('Pulido aplicado en {0} sección(es): de {1} a {2} puntos.', P.acept, f1(P.tA), f1(P.tD)))} ${chip('', t('Unas {0} páginas', P.pagsD || pagsDe()))}</p>${P.tD < P.tA - 0.001 ? `<div class="aviso">${esc(t('Con el pulido la puntuación baja: revisad las secciones pulidas o deshaced el pulido.'))}</div>` : ''}
+    <div class="grid2"><div class="field"><label for="pulTit">${esc(t('Título de la portada'))}</label><input type="text" id="pulTit" value="${esc(P.titulo)}"></div><div class="field"><label for="pulSub">${esc(t('Subtítulo'))}</label><input type="text" id="pulSub" value="${esc(P.subtitulo)}"></div></div>
+    ${puedeDeshacerPulido() ? `<div class="actions"><button class="btn btn-ghost btn-sm" id="btnDeshazPul" type="button"><svg class="i"><use href="#i-left"/></svg>${esc(t('Deshacer el pulido'))}</button></div>` : ''}<p class="help" id="pulEstado" role="status">${est}</p></div>`;
+  const n = P.items.filter(x => x.acepta && !x.bloq).length;
+  return `<div class="card fa-est">${cab}<p class="help" style="margin-top:0">${esc(t('Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. No se pueden aceptar las secciones con cifras nuevas que no se declaran como propuesta ni las que añaden huecos [COMPLETAR].'))}</p>
+    <div class="grid2"><div class="field"><label for="pulTit">${esc(t('Título de la portada'))}</label><input type="text" id="pulTit" value="${esc(P.titulo)}"></div><div class="field"><label for="pulSub">${esc(t('Subtítulo'))}</label><input type="text" id="pulSub" value="${esc(P.subtitulo)}"></div></div>
+    ${P.guia ? `<details class="fa-det"><summary>${esc(t('Guía de estilo'))}</summary><p>${esc(P.guia)}</p></details>` : ''}
+    ${P.probs.length ? `<details class="fa-det" open><summary>${esc(t('Incoherencias detectadas ({0})', P.probs.length))}</summary><ul class="fa-ul">${P.probs.map(p => `<li>${esc(p.problema)}${p.secs.length ? ` <small class="muted">(${esc(p.secs.join(' · '))})</small>` : ''}<br><small>→ ${esc(p.arreglo)}</small></li>`).join('')}</ul></details>` : ''}
+    <ol class="fa-est-l">${P.items.map((x, k) => `<li class="fa-e-${x.quitar ? 'cambio' : x.bloq ? 'igual' : 'nueva'}${x.bloq && !x.igual ? ' fa-e-bloq' : ''}"><div class="fa-e-h"><label class="fa-chk"><input type="checkbox" data-pul="${k}"${x.acepta && !x.bloq ? ' checked' : ''}${x.bloq ? ' disabled' : ''}> </label><b>${esc(titSec({t: x.tit}))}</b>${x.quitar ? chip('aviso', t('se quita: repite otra sección o la portada')) : x.igual ? chip('', t('sin cambios')) : chip('', t('{0} → {1} palabras', wc(x.antes), wc(x.texto)))}${x.tablas ? chip('ok', t('{0} tabla(s)', x.tablas)) : ''}${x.prop.length ? chip('', t('{0} cifra(s) propuesta(s)', x.prop.length)) : ''}</div>
+      ${x.cambios.length ? `<small class="muted">${esc(x.cambios.join(' · '))}</small>` : ''}${listaProp(x.prop)}
+      ${x.cif.length ? `<div class="aviso">${esc(t('Cifras que no están en vuestro material: {0}. Comprobadlas o quitadlas.', x.cif.join(', ')))}</div>` : ''}${x.masHuecos ? `<div class="aviso">${esc(t('Añade huecos [COMPLETAR]: no se puede aceptar.'))}</div>` : ''}${x.pierde.length ? `<div class="aviso">${esc(t('Se pierden cifras que estaban: {0}. Revisadlo antes de aceptar.', x.pierde.join(', ')))}</div>` : ''}${x.corto ? `<div class="aviso">${esc(t('Recorta mucho la sección: revisad que no se pierda nada importante.'))}</div>` : ''}
+      ${x.igual ? '' : `<details><summary>${esc(t('Ver el cambio'))}</summary><div class="fa-dif"><div><b>${esc(t('Antes'))}</b><p>${esc(x.antes)}</p></div><div><b>${esc(t('Después'))}</b><p>${x.quitar ? '—' : esc(x.texto)}</p></div></div></details>`}</li>`).join('')}</ol>
+    <div class="actions"><button class="btn btn-primary" id="btnPulOk" type="button"${busy ? ' disabled' : ''}><svg class="i"><use href="#i-check"/></svg>${esc(t('Aplicar {0} sección(es) aceptada(s)', n))}</button><button class="btn btn-ghost" id="btnPulNo" type="button"${busy ? ' disabled' : ''}>${esc(t('Descartar la propuesta'))}</button></div><p class="help" id="pulEstado" role="status">${est}</p></div>`;
+}
+$('final').addEventListener('click', e => {
+  const id = e.target.closest('button')?.id; if (!id) return;
+  if (id === 'btnPule') pule(); else if (id === 'btnPararPul') { PARAR = true; estado('pulEstado', t('Parando al terminar esta sección…')); }
+  else if (id === 'btnPulOk') aplicaPulido(); else if (id === 'btnPulNo') { S.pul = null; guarda(); pintaFinal(); } else if (id === 'btnDeshazPul') deshazPulido();
+});
+$('final').addEventListener('change', e => {
+  const c = e.target.closest('[data-pul]'); if (c && S.pul) { S.pul.items[+c.dataset.pul].acepta = c.checked; guarda(); const n = S.pul.items.filter(x => x.acepta && !x.bloq).length; $('btnPulOk').lastChild.textContent = t('Aplicar {0} sección(es) aceptada(s)', n); }
+  if (e.target.id === 'pulTit' || e.target.id === 'pulSub') { S.pul[e.target.id === 'pulTit' ? 'titulo' : 'subtitulo'] = e.target.value.trim(); guarda(); }
+});
 const ESTADO_EST = {igual: 'sin cambios', renombrada: 'renombrada', cambio: 'cambiada', nueva: 'nueva'};
 function tarjetaEstructura() {
   if (S.esEjemplo && !S.prop0) return '';
@@ -4119,7 +4419,8 @@ const motivoTx = x => x.tipo === 'estructura' ? t('{0} de {1} cambios aceptados 
 const listaProp = (ps, cl = 'aviso') => ps && ps.length ? `<div class="${cl}">⚠ ${esc(t('Cifras propuestas para revisar: {0}', ps.map(p => p.cifra + (p.que ? ' (' + p.que + ')' : '')).join(' · ')))}</div>` : '';
 function propuestasVivas() {
   const vistas = new Set();
-  return S.ciclos.filter(c => c.dec === 'ok').flatMap(c => c.prop || []).filter(p => {
+  const pul = S.pul?.estado === 'aplicado' ? S.pul.items.filter(x => x.acepta && !x.bloq).flatMap(x => x.prop.map(p => ({...p, sec: x.tit}))) : [];
+  return S.ciclos.filter(c => c.dec === 'ok').flatMap(c => c.prop || []).concat(pul).filter(p => {
     const s = S.secs.find(x => normTit(x.t) === normTit(p.sec)), k = normTit(p.sec) + '|' + p.cifra;
     if (!s || !s.x.includes(p.cifra) || vistas.has(k)) return false; vistas.add(k); return true;
   });
@@ -4143,13 +4444,13 @@ function pintaInicio() { $('inicioProj').innerHTML = (S.rub || S.proy || S.bases
    «Borrar los ciclos» devuelve el proyecto a su versión inicial y conserva bases, documentos y rúbrica */
 async function empiezaDeCero() {
   if (busy || !confirm(t('Se borrarán las bases, el proyecto, los documentos, la rúbrica y todos los ciclos guardados en este navegador. El perfil de la asociación se conserva. ¿Seguir?'))) return;
-  S = {...S, bases: [], proy: null, apoyo: [], rub: null, secs0: null, secs: null, ev0: null, ev: null, evVieja: false, ciclos: [], vers: [], fallos: {}, prop0: null, pre0: null, c0: null, esEjemplo: false};
+  S = {...S, bases: [], proy: null, apoyo: [], rub: null, secs0: null, secs: null, ev0: null, ev: null, evVieja: false, ciclos: [], vers: [], fallos: {}, prop0: null, pre0: null, c0: null, pul: null, esEjemplo: false};
   Object.keys(ESTADO).forEach(k => delete ESTADO[k]); await guardaYa(); pintaInicio(); toast(t('Todo borrado: podéis empezar un proyecto nuevo.'));
 }
 async function borraCiclos() {
   if (busy || !S.ciclos.length || !confirm(t('Se borrarán todos los ciclos (también el ciclo 0) y el proyecto volverá a su versión inicial. Las bases, los documentos y la rúbrica se conservan. ¿Seguir?'))) return;
   S.secs = S.secs0 ? JSON.parse(JSON.stringify(S.secs0)) : seccionesDe(S.proy.texto); S.ev = S.ev0; S.evVieja = false;
-  S.ciclos = []; S.fallos = {}; S.prop0 = S.pre0 = S.c0 = null; S.vers = S.ev0 ? [{n: 0, total: puntua(S.ev0).total, tipo: 'inicial'}] : [];
+  S.ciclos = []; S.fallos = {}; S.prop0 = S.pre0 = S.c0 = S.pul = null; S.vers = S.ev0 ? [{n: 0, total: puntua(S.ev0).total, tipo: 'inicial'}] : [];
   ESTADO.mejEstado = ESTADO.estEstado = ''; await guardaYa(); pintaMejora(); toast(t('Ciclos borrados: el proyecto vuelve a su versión inicial.'));
 }
 $('btnStart').onclick = () => { if (S.esEjemplo) { S = {...S, perfil: perfilVacio(), bases: [], proy: null, apoyo: [], rub: null, secs0: null, secs: null, ev0: null, ev: null, ciclos: [], vers: [], fallos: {}, prop0: null, pre0: null, c0: null, esEjemplo: false}; guarda(); } go(1); };
@@ -4164,8 +4465,8 @@ async function lee(files) {
   return out;
 }
 const sueltaEn = (id, fn) => { const dz = document.querySelector(`label[for="${id}"]`); ['dragenter', 'dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('fa-sobre'); })); ['dragleave', 'drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('fa-sobre'); })); dz.addEventListener('drop', e => fn([...e.dataTransfer.files])); $(id).onchange = e => { fn([...e.target.files]); e.target.value = ''; }; };
-function nuevasBases() { S.rub = null; S.ev = S.ev0 = null; S.ciclos = []; S.vers = []; S.fallos = {}; S.prop0 = S.pre0 = S.c0 = null; S.esEjemplo = false; }
-function nuevoProyecto(p) { S.proy = p; S.secs = p ? seccionesDe(p.texto) : null; S.secs0 = null; S.ev = S.ev0 = null; S.ciclos = []; S.vers = []; S.fallos = {}; S.prop0 = S.pre0 = S.c0 = null; S.esEjemplo = false; }
+function nuevasBases() { S.pul = null; S.rub = null; S.ev = S.ev0 = null; S.ciclos = []; S.vers = []; S.fallos = {}; S.prop0 = S.pre0 = S.c0 = null; S.esEjemplo = false; }
+function nuevoProyecto(p) { S.pul = null; S.proy = p; S.secs = p ? seccionesDe(p.texto) : null; S.secs0 = null; S.ev = S.ev0 = null; S.ciclos = []; S.vers = []; S.fallos = {}; S.prop0 = S.pre0 = S.c0 = null; S.esEjemplo = false; }
 sueltaEn('fileBases', async fs => { const x = await lee(fs); if (x.length) { S.bases.push(...x); nuevasBases(); await guardaYa(); pintaBases(); } });
 /* zona del borrador: el primer documento de texto (no hoja de cálculo) es el borrador; el resto pasa a los datos de la asociación */
 sueltaEn('fileProy', async fs => {
@@ -4257,6 +4558,7 @@ function pintaFinal() {
   const P = puntua(S.ev), P0 = puntua(S.ev0), cm = cambiosPorSec(), hue = huecos(textoProy()), pv = propuestasVivas();
   el.innerHTML = `<div class="card fa-cab"><div><p class="fa-kicker">${esc(S.rub.conv || t('Convocatoria'))}</p><h3 class="fa-h3">${esc(t('De {0} a {1} puntos de {2}', f1(P0.total), f1(P.total), f1(P.max)))}</h3><p class="fa-resumen">${hue ? chip('aviso', t('{0} dato(s) por completar', hue)) : chip('ok', t('Sin datos por completar'))} ${pv.length ? chip('aviso', t('{0} cifra(s) propuesta(s)', pv.length)) : ''} <span id="viejaChip">${S.evVieja ? chip('aviso', t('puntuación anterior a vuestros cambios')) : ''}</span></p></div>
     <div class="actions" style="margin:0"><button class="btn btn-word" id="btnWordP" type="button"><svg class="i"><use href="#i-doc"/></svg>${esc(t('Proyecto (Word)'))}</button><button class="btn btn-ghost" id="btnWordI" type="button"><svg class="i"><use href="#i-doc"/></svg>${esc(t('Informe de ciclos (Word)'))}</button>${!S.esEjemplo && S.evVieja ? `<button class="btn btn-primary" id="btnRepunt2" type="button"><svg class="i"><use href="#i-scale"/></svg>${esc(t('Volver a puntuar'))}</button>` : ''}</div></div>
+  ${S.esEjemplo ? '' : tarjetaPulido()}
   <div class="card"><h3 class="fa-h3"><svg class="i"><use href="#i-scale"/></svg> ${esc(t('Antes y después'))}</h3><div class="table-wrap"><table><thead><tr><th>${esc(t('Criterio'))}</th><th>${esc(t('Inicial'))}</th><th>${esc(t('Final'))}</th><th>${esc(t('Máximo'))}</th></tr></thead><tbody>${P.por.map((p, i) => `<tr><td>${esc(S.rub.crits[i].nombre)}</td><td>${f1(P0.por[i]?.pts ?? 0)}</td><td><b>${f1(p.pts)}</b></td><td>${f1(p.max)}</td></tr>`).join('')}<tr><td><b>${esc(t('Total'))}</b></td><td>${f1(P0.total)}</td><td><b>${f1(P.total)}</b></td><td>${f1(P.max)}</td></tr></tbody></table></div></div>
   <div class="card"><h3 class="fa-h3"><svg class="i"><use href="#i-pencil"/></svg> ${esc(t('El proyecto, sección a sección'))}</h3><p class="help" style="margin-top:0">${esc(t('Podéis editar el texto aquí. Rellenad los [COMPLETAR] con datos reales; si no los tenéis, quitad la frase.'))}</p>
     ${S.secs.map((s, i) => `<div class="fa-sec"><div class="fa-sec-h"><b>${esc(titSec(s))}</b>${cm[normTit(s.t)] ? chip('ok', t('mejorada en el ciclo {0}', cm[normTit(s.t)])) : ''}${huecos(s.x) ? chip('aviso', t('{0} por completar', huecos(s.x))) : ''}</div><textarea rows="${Math.min(14, Math.max(3, Math.ceil(s.x.length / 90)))}" data-sx="${i}" aria-label="${esc(titSec(s))}">${esc(s.x)}</textarea>${listaProp(pv.filter(p => normTit(p.sec) === normTit(s.t)))}</div>`).join('')}
@@ -4269,8 +4571,11 @@ $('final').addEventListener('change', e => { if (e.target.closest('[data-sx]')) 
 /* Word */
 const celda = s => String(s ?? '').replace(/\|/g, '/').replace(/\n+/g, ' ');
 async function wordProyecto() {
-  const P = puntua(S.ev), md = S.secs.map(s => `${s.t ? '## ' + s.t + '\n' : ''}${s.x}`).join('\n\n');
-  try { dl(`proyecto-${slug(S.perfil.nombre || S.rub.conv || 'subvencia')}.docx`, await wordDeMarkdown(md, {titulo: S.proy?.nombre?.replace(/\.(docx|pdf|txt|md)$/i, '') || t('Proyecto'), subtitulo: [S.perfil.nombre, S.rub.conv].filter(Boolean).join(' · '), pie: t('Puntuación simulada con {0}: {1} de {2}. Datos por completar: {3}. La puntuación orienta, pero no garantiza la del tribunal.', APP_NAME, f1(P.total), f1(P.max), huecos(textoProy()))})); } catch (e) { toast(e.message, 7000); }
+  const md = S.secs.map(s => `${s.t ? '## ' + s.t + '\n' : ''}${s.x}`).join('\n\n'), hue = huecos(textoProy());
+  const tit = S.pul?.titulo || (S.proy?.nombre || t('Proyecto')).replace(/\.(docx|pdf|txt|md)$/i, '').replace(/[_-]+/g, ' ').replace(/^./, c => c.toUpperCase());
+  const fecha = new Date().toLocaleDateString(locale(), {month: 'long', year: 'numeric'});
+  if (hue) toast(t('Ojo: el proyecto aún tiene {0} hueco(s) [COMPLETAR].', hue), 6000);
+  try { dl(`proyecto-${slug(S.perfil.nombre || S.rub.conv || 'subvencia')}.docx`, await wordDeMarkdown(md, {titulo: tit, subtitulo: S.pul?.subtitulo || '', kicker: S.rub.conv || '', color: (S.perfil.color1 || '').replace('#', ''), portada: {logo: S.perfil.logo, lineas: [S.perfil.nombre, S.perfil.territorio, fecha]}, piePagina: [S.perfil.nombre, tit].filter(Boolean).join(' · ')})); } catch (e) { toast(e.message, 7000); }
 }
 async function wordInforme() {
   const P = puntua(S.ev), P0 = puntua(S.ev0), R = S.rub, L = [];
@@ -4278,6 +4583,7 @@ async function wordInforme() {
   L.push('', `## ${t('Rúbrica')}`, `| ${t('Criterio')} | ${t('Puntos')} | ${t('Qué mira el tribunal')} | ${t('Cita de las bases')} |`, '|---|---|---|---|', ...R.crits.map(c => `| ${celda(c.nombre)} | ${f1(c.peso)} | ${celda(c.mira.join('; '))} | ${c.mano ? t('añadido a mano') : (c.ok ? '✓ ' : '⚠ ') + celda(c.cita)} |`));
   L.push('', `## ${t('Puntuación por criterio')}`, `| ${t('Criterio')} | ${t('Inicial')} | ${t('Final')} | ${t('Máximo')} |`, '|---|---|---|---|', ...P.por.map((p, i) => `| ${celda(R.crits[i].nombre)} | ${f1(P0.por[i]?.pts ?? 0)} | ${f1(p.pts)} | ${f1(p.max)} |`), `| **${t('Total')}** | ${f1(P0.total)} | **${f1(P.total)}** | ${f1(P.max)} |`);
   if (S.ciclos.length) { L.push('', `## ${t('Historial de ciclos')}`, `| ${t('Ciclo')} | ${t('Criterio')} | ${t('Sección')} | ${t('Antes')} | ${t('Después')} | ${t('Decisión')} |`, '|---|---|---|---|---|---|', ...S.ciclos.map(c => `| ${c.n} | ${celda(nomCiclo(c))} | ${celda(c.sec || t('Presentación'))} | ${f1(c.tA)} | ${c.dec === 'rech' ? '—' : f1(c.tD)} | ${celda(motivoTx(c))} |`)); L.push('', `### ${t('Hipótesis')}`, ...S.ciclos.map(c => `- **${t('Ciclo {0}', c.n)} · ${nomCiclo(c)}:** ${c.hip}`)); }
+  if (S.pul?.estado === 'aplicado') { const Pu = S.pul; L.push('', `## ${t('Pulido final')}`, t('Pulido aplicado en {0} sección(es): de {1} a {2} puntos.', Pu.acept, f1(Pu.tA), f1(Pu.tD)), '', `**${t('Guía de estilo')}:** ${Pu.guia || '—'}`); if (Pu.probs.length) L.push('', `### ${t('Incoherencias detectadas ({0})', Pu.probs.length)}`, ...Pu.probs.map(p => `- ${p.problema} → ${p.arreglo}`)); L.push('', `### ${t('Secciones pulidas')}`, ...Pu.items.filter(x => x.acepta && !x.bloq).map(x => `- **${titSec({t: x.tit})}:** ${x.quitar ? t('se quita: repite otra sección o la portada') : x.cambios.join('; ') || '—'}`)); }
   const pv = propuestasVivas();
   if (pv.length) L.push('', `## ${t('Cifras propuestas por la IA')}`, t('Las cifras propuestas son decisiones de planificación que ha redactado la IA (sesiones, plazas, metas, desglose del presupuesto…). Comprobad que la asociación puede asumirlas o cambiadlas antes de presentar el proyecto.'), `| ${t('Sección')} | ${t('Cifra')} | ${t('Qué es')} |`, '|---|---|---|', ...pv.map(p => `| ${celda(p.sec)} | ${celda(p.cifra)} | ${celda(p.que)} |`));
   if (R.req.length) L.push('', `## ${t('Requisitos que hay que cumplir')}`, t('Marcad cada requisito cuando hayáis comprobado que lo cumplís.'), ...R.req.map(r => `- ☐ ${r.texto}${r.ok ? '' : ' (⚠ ' + t('Cita no encontrada en las bases: comprobadlo.') + ')'}`));
