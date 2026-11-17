@@ -543,7 +543,7 @@ table{border-collapse:collapse;width:100%;font-size:13.8px}th{background:var(--p
   </div>
   <div class="card">
     <h3 class="fa-h3"><svg class="i"><use href="#i-folder"/></svg> <span data-i18n="v.apoyo">Datos de la asociación (opcional)</span></h3>
-    <p class="help" style="margin-top:0" data-i18n="v.apoyo.ayuda">Memoria anual, presupuesto, encuestas… SubvencIA solo usará cifras que estén aquí o en el proyecto; lo que falte lo marcará con [COMPLETAR].</p>
+    <p class="help" style="margin-top:0" data-i18n="v.apoyo.ayuda">Memoria anual, presupuesto, encuestas… SubvencIA solo tomará los hechos y datos de la asociación de aquí o del proyecto; lo que la asociación puede decidir (sesiones, plazas, calendario…) lo propondrá para que lo reviséis.</p>
     <label class="fa-drop" for="fileApoyo"><svg class="i"><use href="#i-upload"/></svg><b data-i18n="v.dropApoyo">Arrastra aquí otros documentos o pulsa para elegirlos</b><span data-i18n="v.dropFmt">Word, PDF o texto</span></label>
     <input type="file" id="fileApoyo" multiple hidden accept=".docx,.pdf,.txt,.md,.csv">
     <ul class="fa-files" id="apoyoList"></ul>
@@ -572,7 +572,7 @@ table{border-collapse:collapse;width:100%;font-size:13.8px}th{background:var(--p
 
 <!-- 5 · RESULTADO -->
 <section class="screen" data-step="5">
-  <header class="sh" style="--c:#0E8C7A"><div class="sh-ico"><svg class="i"><use href="#i-check"/></svg></div><div><p class="sh-step" data-i18n="v.paso5">Paso 5 de 5</p><h2 data-i18n="v.fin">Proyecto mejorado</h2><p class="sh-lede" data-i18n="v.fin.lede">Completad lo marcado con [COMPLETAR], revisad cada sección y descargadlo en Word. La puntuación es una simulación: orienta, pero no garantiza la del tribunal.</p></div></header>
+  <header class="sh" style="--c:#0E8C7A"><div class="sh-ico"><svg class="i"><use href="#i-check"/></svg></div><div><p class="sh-step" data-i18n="v.paso5">Paso 5 de 5</p><h2 data-i18n="v.fin">Proyecto mejorado</h2><p class="sh-lede" data-i18n="v.fin.lede">Revisad las cifras propuestas, completad lo marcado con [COMPLETAR] y descargadlo en Word. La puntuación es una simulación: orienta, pero no garantiza la del tribunal.</p></div></header>
   <div id="final"></div>
 </section>
 </main>
@@ -1610,7 +1610,7 @@ const I18N = {
     "v.dropProy": "Arrossega ací el projecte o prem per triar-lo",
     "v.usarTexto": "Usar aquest text",
     "v.apoyo": "Dades de l'associació (opcional)",
-    "v.apoyo.ayuda": "Memòria anual, pressupost, enquestes… SubvencIA només farà servir xifres que siguen ací o en el projecte; el que falte ho marcarà amb [COMPLETAR].",
+    "v.apoyo.ayuda": "Memòria anual, pressupost, enquestes… SubvencIA només prendrà els fets i les dades de l'associació d'ací o del projecte; el que l'associació pot decidir (sessions, places, calendari…) ho proposarà perquè ho reviseu.",
     "v.dropApoyo": "Arrossega ací altres documents o prem per triar-los",
     "v.perfil.ayuda": "El mateix de totes les apps del curs: pugeu-lo si el teniu o ompliu-lo ací i descarregueu-lo per a la següent.",
     "v.rub": "La rúbrica",
@@ -1618,7 +1618,7 @@ const I18N = {
     "v.mej": "Millora per cicles",
     "v.mej.lede": "En cada cicle es tria el criteri amb més marge, es reescriu només la seua secció i es torna a puntuar. Si la puntuació puja, el canvi es queda; si no, es desfà.",
     "v.fin": "Projecte millorat",
-    "v.fin.lede": "Completeu el que està marcat amb [COMPLETAR], reviseu cada secció i descarregueu-lo en Word. La puntuació és una simulació: orienta, però no garanteix la del tribunal.",
+    "v.fin.lede": "Reviseu les xifres proposades, completeu el que està marcat amb [COMPLETAR] i descarregueu-lo en Word. La puntuació és una simulació: orienta, però no garanteix la del tribunal.",
     "v.pie": "Eina de suport: la puntuació és una simulació i la decisió final és vostra. Les vostres dades es guarden només en aquest navegador.",
     "v.enviar": "Enviar",
     "Convocatoria": "Convocatòria",
@@ -1640,9 +1640,18 @@ const I18N = {
     "Cómo se puntúa": "Com es puntua",
     "Para cada criterio, la IA da un nivel de 0 a 4 según los elementos que mira la rúbrica, con una cita literal de vuestro proyecto. El código comprueba la cita (sin ella, el nivel no pasa de 1) y suma los puntos con los pesos de las bases.": "Per a cada criteri, la IA dona un nivell de 0 a 4 segons els elements que mira la rúbrica, amb una cita literal del vostre projecte. El codi comprova la cita (sense ella, el nivell no passa d'1) i suma els punts amb els pesos de les bases.",
     "El bucle de mejora": "El bucle de millora",
-    "En cada ciclo: se elige el criterio con más margen, se formula una hipótesis, se reescribe solo su sección y se vuelve a puntuar. Si la puntuación sube, se conserva; si no, se deshace. Un criterio que falla dos veces seguidas se aparca.": "En cada cicle: es tria el criteri amb més marge, es formula una hipòtesi, es reescriu només la seua secció i es torna a puntuar. Si la puntuació puja, es conserva; si no, es desfà. Un criteri que falla dues vegades seguides s'aparca.",
-    "Nada inventado": "Res inventat",
-    "Un cambio con cifras que no están en las bases, el proyecto o vuestros documentos se rechaza. Lo que falta se marca con [COMPLETAR] para que lo rellenéis vosotros.": "Un canvi amb xifres que no són a les bases, el projecte o els vostres documents es rebutja. El que falta es marca amb [COMPLETAR] perquè ho ompliu vosaltres.",
+    "En cada ciclo: se elige el criterio con más margen, se formula una hipótesis, se reescribe solo su sección y se vuelve a puntuar. Si sube el nivel de ese criterio sin que otro baje dos niveles, se conserva; si no, se deshace. Un criterio que falla dos veces seguidas se aparca.": "En cada cicle: es tria el criteri amb més marge, es formula una hipòtesi, es reescriu només la seua secció i es torna a puntuar. Si puja el nivell d'aquest criteri sense que cap altre baixe dos nivells, es conserva; si no, es desfà. Un criteri que falla dues vegades seguides s'aparca.",
+    "Hechos y propuestas": "Fets i propostes",
+    "rechazado: dejaba {0} huecos [COMPLETAR] en la sección; hay que proponer contenido": "rebutjat: deixava {0} buits [COMPLETAR] en la secció; cal proposar contingut",
+    "sube el criterio, pero empeora otros ({0}): se deshace": "puja el criteri, però n'empitjora d'altres ({0}): es desfà",
+    "Cifras propuestas para revisar: {0}": "Xifres proposades per revisar: {0}",
+    "{0} cifra(s) propuesta(s)": "{0} xifra(es) proposada(es)",
+    "Cifras propuestas por la IA": "Xifres proposades per la IA",
+    "Las cifras propuestas son decisiones de planificación que ha redactado la IA (sesiones, plazas, metas, desglose del presupuesto…). Comprobad que la asociación puede asumirlas o cambiadlas antes de presentar el proyecto.": "Les xifres proposades són decisions de planificació que ha redactat la IA (sessions, places, metes, desglossament del pressupost…). Comproveu que l'associació les pot assumir o canvieu-les abans de presentar el projecte.",
+    "Cifra": "Xifra",
+    "Qué es": "Què és",
+    "Marcad cada requisito cuando hayáis comprobado que lo cumplís.": "Marqueu cada requisit quan hàgeu comprovat que el compliu.",
+    "La IA redacta y propone lo que la asociación puede decidir (sesiones, plazas, calendario, metas, desglose del presupuesto) y declara cada cifra que propone, para que la reviséis. Los hechos (datos del territorio, resultados anteriores, acuerdos) solo salen de las bases, el proyecto o vuestros documentos: una cifra nueva no declarada se rechaza, y lo que de verdad falta se marca con [COMPLETAR], como mucho 2 por sección.": "La IA redacta i proposa el que l'associació pot decidir (sessions, places, calendari, metes, desglossament del pressupost) i declara cada xifra que proposa, perquè la reviseu. Els fets (dades del territori, resultats anteriors, acords) només ixen de les bases, el projecte o els vostres documents: una xifra nova no declarada es rebutja, i el que falta de veritat es marca amb [COMPLETAR], com a molt 2 per secció.",
     "Lo que no garantiza": "El que no garanteix",
     "La puntuación es una simulación: orienta, pero no garantiza la del tribunal. Revisad siempre el proyecto y no prometáis nada que la asociación no pueda cumplir.": "La puntuació és una simulació: orienta, però no garanteix la del tribunal. Reviseu sempre el projecte i no prometeu res que l'associació no puga complir.",
     "Todo se guarda solo en este navegador. Al usar la IA, las bases, el proyecto y vuestros documentos salen hacia vuestro proveedor con correos, DNI, teléfonos e IBAN enmascarados.": "Tot es guarda només en aquest navegador. En usar la IA, les bases, el projecte i els vostres documents surten cap al vostre proveïdor amb correus, DNI, telèfons i IBAN emmascarats.",
@@ -1759,20 +1768,20 @@ const I18N = {
     "Comparando el proyecto con lo que pide la convocatoria…": "Comparant el projecte amb el que demana la convocatòria…",
     "Puntuando la nueva estructura…": "Puntuant la nova estructura…",
     "Propuesta de estructura": "Proposta d'estructura",
-    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material no se pueden aceptar.": "Marqueu les seccions que accepteu. El que no accepteu es queda com estava. Les seccions amb xifres que no són al vostre material no es poden acceptar.",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material y que la IA no declara como propuesta no se pueden aceptar.": "Marqueu les seccions que accepteu. El que no accepteu es queda com estava. Les seccions amb xifres que no són al vostre material i que la IA no declara com a proposta no es poden acceptar.",
     "conserva el {0} % del texto": "conserva el {0} % del text",
     "La propuesta no usa estas secciones vuestras. Se conservarán al final salvo que las desmarquéis:": "La proposta no fa servir aquestes seccions vostres. Es conservaran al final llevat que les desmarqueu:",
     "Aplicar {0} sección(es) aceptada(s)": "Aplicar {0} secció/ns acceptada/es",
     "Descartar la propuesta": "Descartar la proposta",
     "Antes de los ciclos: la estructura": "Abans dels cicles: l'estructura",
-    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: añade las secciones que faltan como guía con [COMPLETAR] y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "Si l'esborrany està incomplet o en un altre ordre, aquest pas el posa en la forma que demana la convocatòria: afegeix les seccions que falten com a guia amb [COMPLETAR] i mou el que ja teniu, sense reescriure-ho. Accepteu o descarteu cada secció.",
+    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: redacta como propuesta las secciones que faltan y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "Si l'esborrany està incomplet o en un altre ordre, aquest pas el posa en la forma que demana la convocatòria: redacta com a proposta les seccions que falten i mou el que ja teniu, sense reescriure-ho. Accepteu o descarteu cada secció.",
     "Proponer estructura": "Proposar estructura",
     "Saltar este paso": "Saltar aquest pas",
     "{0} de {1} cambios aceptados por vosotros": "{0} de {1} canvis acceptats per vosaltres",
     "Con la nueva estructura la puntuación baja: revisad las secciones aceptadas.": "Amb la nova estructura la puntuació baixa: reviseu les seccions acceptades.",
     "Deshacer el ciclo 0": "Desfer el cicle 0",
     "Ciclo 0: la estructura": "Cicle 0: l'estructura",
-    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden y las que faltan como guía con [COMPLETAR], moviendo lo que ya tenéis sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Abans dels cicles, la IA proposa posar el projecte en la forma que demana la convocatòria: seccions en el seu ordre i les que falten com a guia amb [COMPLETAR], movent el que ja teniu sense reescriure-ho. Accepteu o descarteu cada secció; cap secció vostra no es perd sense que ho decidiu.",
+    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden, las que faltan redactadas como propuesta y lo que ya tenéis movido a su sitio sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Abans dels cicles, la IA proposa posar el projecte en la forma que demana la convocatòria: seccions en el seu ordre, les que falten redactades com a proposta i el que ja teniu mogut al seu lloc sense reescriure-ho. Accepteu o descarteu cada secció; cap secció vostra no es perd sense que ho decidiu.",
     "sin cambios": "sense canvis",
     "renombrada": "reanomenada",
     "cambiada": "canviada"
@@ -2001,7 +2010,7 @@ const I18N = {
     "v.dropProy": "Arrastatu proiektua hona edo sakatu aukeratzeko",
     "v.usarTexto": "Erabili testu hau",
     "v.apoyo": "Elkartearen datuak (hautazkoa)",
-    "v.apoyo.ayuda": "Urteko memoria, aurrekontua, inkestak… SubvencIAk hemen edo proiektuan dauden zifrak bakarrik erabiliko ditu; falta dena [COMPLETAR] gisa markatuko du.",
+    "v.apoyo.ayuda": "Urteko memoria, aurrekontua, inkestak… SubvencIAk elkartearen gertaerak eta datuak hemendik edo proiektutik bakarrik hartuko ditu; elkarteak erabaki dezakeena (saioak, plazak, egutegia…) proposatu egingo du, zuek berrikus dezazuen.",
     "v.dropApoyo": "Arrastatu beste dokumentu batzuk hona edo sakatu aukeratzeko",
     "v.perfil.ayuda": "Ikastaroko aplikazio guztietako bera: igo baduzue edo bete hemen eta deskargatu hurrengorako.",
     "v.rub": "Errubrika",
@@ -2009,7 +2018,7 @@ const I18N = {
     "v.mej": "Hobekuntza zikloka",
     "v.mej.lede": "Ziklo bakoitzean tarte handiena duen irizpidea aukeratzen da, haren atala bakarrik berridazten da eta berriro puntuatzen da. Puntuazioa igotzen bada, aldaketa geratzen da; bestela, desegin egiten da.",
     "v.fin": "Proiektu hobetua",
-    "v.fin.lede": "Osatu [COMPLETAR] gisa markatutakoa, berrikusi atal bakoitza eta deskargatu Word-en. Puntuazioa simulazio bat da: orientatu egiten du, baina ez du epaimahaiarena bermatzen.",
+    "v.fin.lede": "Berrikusi proposatutako zifrak, osatu [COMPLETAR] gisa markatutakoa eta deskargatu Word-en. Puntuazioa simulazio bat da: orientatu egiten du, baina ez du epaimahaiarena bermatzen.",
     "v.pie": "Laguntza tresna: puntuazioa simulazio bat da eta azken erabakia zuena da. Zuen datuak nabigatzaile honetan bakarrik gordetzen dira.",
     "v.enviar": "Bidali",
     "Convocatoria": "Deialdia",
@@ -2031,9 +2040,18 @@ const I18N = {
     "Cómo se puntúa": "Nola puntuatzen den",
     "Para cada criterio, la IA da un nivel de 0 a 4 según los elementos que mira la rúbrica, con una cita literal de vuestro proyecto. El código comprueba la cita (sin ella, el nivel no pasa de 1) y suma los puntos con los pesos de las bases.": "Irizpide bakoitzerako, AAk 0tik 4rako maila bat ematen du errubrikak begiratzen dituen elementuen arabera, zuen proiektuko aipu literal batekin. Kodeak aipua egiaztatzen du (gabe, maila ez da 1etik pasatzen) eta puntuak batzen ditu oinarrien pisuekin.",
     "El bucle de mejora": "Hobekuntza begizta",
-    "En cada ciclo: se elige el criterio con más margen, se formula una hipótesis, se reescribe solo su sección y se vuelve a puntuar. Si la puntuación sube, se conserva; si no, se deshace. Un criterio que falla dos veces seguidas se aparca.": "Ziklo bakoitzean: tarte handiena duen irizpidea aukeratzen da, hipotesi bat formulatzen da, haren atala bakarrik berridazten da eta berriro puntuatzen da. Puntuazioa igotzen bada, gordetzen da; bestela, desegin egiten da. Bi aldiz jarraian huts egiten duen irizpidea alde batera uzten da.",
-    "Nada inventado": "Ezer asmaturik ez",
-    "Un cambio con cifras que no están en las bases, el proyecto o vuestros documentos se rechaza. Lo que falta se marca con [COMPLETAR] para que lo rellenéis vosotros.": "Oinarrietan, proiektuan edo zuen dokumentuetan ez dauden zifrak dituen aldaketa baztertu egiten da. Falta dena [COMPLETAR] gisa markatzen da zuek bete dezazuen.",
+    "En cada ciclo: se elige el criterio con más margen, se formula una hipótesis, se reescribe solo su sección y se vuelve a puntuar. Si sube el nivel de ese criterio sin que otro baje dos niveles, se conserva; si no, se deshace. Un criterio que falla dos veces seguidas se aparca.": "Ziklo bakoitzean: tarte handiena duen irizpidea aukeratzen da, hipotesi bat formulatzen da, haren atala bakarrik berridazten da eta berriro puntuatzen da. Irizpide horren maila igotzen bada eta beste batek bi maila jaisten ez badu, gordetzen da; bestela, desegin egiten da. Bi aldiz jarraian huts egiten duen irizpidea alde batera uzten da.",
+    "Hechos y propuestas": "Gertaerak eta proposamenak",
+    "rechazado: dejaba {0} huecos [COMPLETAR] en la sección; hay que proponer contenido": "baztertua: {0} [COMPLETAR] hutsune uzten zituen atalean; edukia proposatu behar da",
+    "sube el criterio, pero empeora otros ({0}): se deshace": "irizpidea igotzen du, baina beste batzuk okertzen ditu ({0}): desegin egiten da",
+    "Cifras propuestas para revisar: {0}": "Berrikusteko proposatutako zifrak: {0}",
+    "{0} cifra(s) propuesta(s)": "{0} zifra proposatu",
+    "Cifras propuestas por la IA": "AAk proposatutako zifrak",
+    "Las cifras propuestas son decisiones de planificación que ha redactado la IA (sesiones, plazas, metas, desglose del presupuesto…). Comprobad que la asociación puede asumirlas o cambiadlas antes de presentar el proyecto.": "Proposatutako zifrak AAk idatzitako plangintza erabakiak dira (saioak, plazak, helburuak, aurrekontuaren banakapena…). Egiaztatu elkarteak bere gain har ditzakeela, edo aldatu proiektua aurkeztu aurretik.",
+    "Cifra": "Zifra",
+    "Qué es": "Zer den",
+    "Marcad cada requisito cuando hayáis comprobado que lo cumplís.": "Markatu betekizun bakoitza betetzen duzuela egiaztatu ondoren.",
+    "La IA redacta y propone lo que la asociación puede decidir (sesiones, plazas, calendario, metas, desglose del presupuesto) y declara cada cifra que propone, para que la reviséis. Los hechos (datos del territorio, resultados anteriores, acuerdos) solo salen de las bases, el proyecto o vuestros documentos: una cifra nueva no declarada se rechaza, y lo que de verdad falta se marca con [COMPLETAR], como mucho 2 por sección.": "AAk elkarteak erabaki dezakeena idatzi eta proposatzen du (saioak, plazak, egutegia, helburuak, aurrekontuaren banakapena) eta proposatzen duen zifra bakoitza adierazten du, zuek berrikus dezazuen. Gertaerak (lurraldeko datuak, aurreko emaitzak, akordioak) oinarrietatik, proiektutik edo zuen dokumentuetatik bakarrik ateratzen dira: adierazi gabeko zifra berria baztertu egiten da, eta benetan falta dena [COMPLETAR] gisa markatzen da, gehienez 2 atal bakoitzeko.",
     "Lo que no garantiza": "Zer ez duen bermatzen",
     "La puntuación es una simulación: orienta, pero no garantiza la del tribunal. Revisad siempre el proyecto y no prometáis nada que la asociación no pueda cumplir.": "Puntuazioa simulazio bat da: orientatu egiten du, baina ez du epaimahaiarena bermatzen. Berrikusi beti proiektua eta ez agindu elkarteak bete ezin duen ezer.",
     "Todo se guarda solo en este navegador. Al usar la IA, las bases, el proyecto y vuestros documentos salen hacia vuestro proveedor con correos, DNI, teléfonos e IBAN enmascarados.": "Dena nabigatzaile honetan bakarrik gordetzen da. AA erabiltzean, oinarriak, proiektua eta zuen dokumentuak zuen hornitzailera ateratzen dira, posta elektroniko, NAN, telefono eta IBANak ezkutatuta.",
@@ -2150,20 +2168,20 @@ const I18N = {
     "Comparando el proyecto con lo que pide la convocatoria…": "Proiektua deialdiak eskatzen duenarekin alderatzen…",
     "Puntuando la nueva estructura…": "Egitura berria puntuatzen…",
     "Propuesta de estructura": "Egitura proposamena",
-    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material no se pueden aceptar.": "Markatu onartzen dituzuen atalak. Onartzen ez duzuena lehen bezala geratzen da. Zuen materialean ez dauden zifrak dituzten atalak ezin dira onartu.",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material y que la IA no declara como propuesta no se pueden aceptar.": "Markatu onartzen dituzuen atalak. Onartzen ez duzuena lehen bezala geratzen da. Zuen materialean ez dauden eta AAk proposamen gisa adierazten ez dituen zifrak dituzten atalak ezin dira onartu.",
     "conserva el {0} % del texto": "testuaren % {0} gordetzen du",
     "La propuesta no usa estas secciones vuestras. Se conservarán al final salvo que las desmarquéis:": "Proposamenak ez ditu zuen atal hauek erabiltzen. Amaieran gordeko dira, markatzen ez badituzue izan ezik:",
     "Aplicar {0} sección(es) aceptada(s)": "Aplikatu onartutako {0} atal",
     "Descartar la propuesta": "Baztertu proposamena",
     "Antes de los ciclos: la estructura": "Zikloen aurretik: egitura",
-    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: añade las secciones que faltan como guía con [COMPLETAR] y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "Zirriborroa osatu gabe edo beste ordena batean badago, urrats honek deialdiak eskatzen duen forman jartzen du: falta diren atalak gehitzen ditu [COMPLETAR] gidarekin eta daukazuena mugitzen du, berridatzi gabe. Atal bakoitza onartu edo baztertzen duzue.",
+    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: redacta como propuesta las secciones que faltan y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "Zirriborroa osatu gabe edo beste ordena batean badago, urrats honek deialdiak eskatzen duen forman jartzen du: falta diren atalak proposamen gisa idazten ditu eta daukazuena mugitzen du, berridatzi gabe. Atal bakoitza onartu edo baztertzen duzue.",
     "Proponer estructura": "Proposatu egitura",
     "Saltar este paso": "Saltatu urrats hau",
     "{0} de {1} cambios aceptados por vosotros": "zuek onartutako {0} aldaketa, {1}etik",
     "Con la nueva estructura la puntuación baja: revisad las secciones aceptadas.": "Egitura berriarekin puntuazioa jaisten da: berrikusi onartutako atalak.",
     "Deshacer el ciclo 0": "Desegin 0. zikloa",
     "Ciclo 0: la estructura": "0. zikloa: egitura",
-    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden y las que faltan como guía con [COMPLETAR], moviendo lo que ya tenéis sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Zikloen aurretik, AAk proiektua deialdiak eskatzen duen forman jartzea proposatzen du: atalak beren ordenan eta falta direnak [COMPLETAR] gidarekin, daukazuena berridatzi gabe mugituz. Atal bakoitza onartu edo baztertzen duzue; zuen atalik ez da galtzen zuek erabaki gabe.",
+    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden, las que faltan redactadas como propuesta y lo que ya tenéis movido a su sitio sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Zikloen aurretik, AAk proiektua deialdiak eskatzen duen forman jartzea proposatzen du: atalak beren ordenan, falta direnak proposamen gisa idatzita eta daukazuena bere lekura eramanda, berridatzi gabe. Atal bakoitza onartu edo baztertzen duzue; zuen atalik ez da galtzen zuek erabaki gabe.",
     "sin cambios": "aldaketarik gabe",
     "renombrada": "izenez aldatua",
     "cambiada": "aldatua"
@@ -2392,7 +2410,7 @@ const I18N = {
     "v.dropProy": "Arrastra aquí o proxecto ou preme para escollelo",
     "v.usarTexto": "Usar este texto",
     "v.apoyo": "Datos da asociación (opcional)",
-    "v.apoyo.ayuda": "Memoria anual, orzamento, enquisas… SubvencIA só usará cifras que estean aquí ou no proxecto; o que falte marcarao con [COMPLETAR].",
+    "v.apoyo.ayuda": "Memoria anual, orzamento, enquisas… SubvencIA só tomará os feitos e datos da asociación de aquí ou do proxecto; o que a asociación pode decidir (sesións, prazas, calendario…) proporao para que o revisedes.",
     "v.dropApoyo": "Arrastra aquí outros documentos ou preme para escollelos",
     "v.perfil.ayuda": "O mesmo de todas as apps do curso: subídeo se o tedes ou enchédeo aquí e descargádeo para a seguinte.",
     "v.rub": "A rúbrica",
@@ -2400,7 +2418,7 @@ const I18N = {
     "v.mej": "Mellora por ciclos",
     "v.mej.lede": "En cada ciclo escóllese o criterio con máis marxe, reescríbese só a súa sección e vólvese puntuar. Se a puntuación sobe, o cambio queda; se non, desfaise.",
     "v.fin": "Proxecto mellorado",
-    "v.fin.lede": "Completade o marcado con [COMPLETAR], revisade cada sección e descargádeo en Word. A puntuación é unha simulación: orienta, pero non garante a do tribunal.",
+    "v.fin.lede": "Revisade as cifras propostas, completade o marcado con [COMPLETAR] e descargádeo en Word. A puntuación é unha simulación: orienta, pero non garante a do tribunal.",
     "v.pie": "Ferramenta de apoio: a puntuación é unha simulación e a decisión final é vosa. Os vosos datos gárdanse só neste navegador.",
     "v.enviar": "Enviar",
     "Convocatoria": "Convocatoria",
@@ -2422,9 +2440,18 @@ const I18N = {
     "Cómo se puntúa": "Como se puntúa",
     "Para cada criterio, la IA da un nivel de 0 a 4 según los elementos que mira la rúbrica, con una cita literal de vuestro proyecto. El código comprueba la cita (sin ella, el nivel no pasa de 1) y suma los puntos con los pesos de las bases.": "Para cada criterio, a IA dá un nivel de 0 a 4 segundo os elementos que mira a rúbrica, cunha cita literal do voso proxecto. O código comproba a cita (sen ela, o nivel non pasa de 1) e suma os puntos cos pesos das bases.",
     "El bucle de mejora": "O bucle de mellora",
-    "En cada ciclo: se elige el criterio con más margen, se formula una hipótesis, se reescribe solo su sección y se vuelve a puntuar. Si la puntuación sube, se conserva; si no, se deshace. Un criterio que falla dos veces seguidas se aparca.": "En cada ciclo: escóllese o criterio con máis marxe, formúlase unha hipótese, reescríbese só a súa sección e vólvese puntuar. Se a puntuación sobe, consérvase; se non, desfaise. Un criterio que falla dúas veces seguidas apárcase.",
-    "Nada inventado": "Nada inventado",
-    "Un cambio con cifras que no están en las bases, el proyecto o vuestros documentos se rechaza. Lo que falta se marca con [COMPLETAR] para que lo rellenéis vosotros.": "Un cambio con cifras que non están nas bases, no proxecto ou nos vosos documentos rexéitase. O que falta márcase con [COMPLETAR] para que o enchades vós.",
+    "En cada ciclo: se elige el criterio con más margen, se formula una hipótesis, se reescribe solo su sección y se vuelve a puntuar. Si sube el nivel de ese criterio sin que otro baje dos niveles, se conserva; si no, se deshace. Un criterio que falla dos veces seguidas se aparca.": "En cada ciclo: escóllese o criterio con máis marxe, formúlase unha hipótese, reescríbese só a súa sección e vólvese puntuar. Se sobe o nivel dese criterio sen que outro baixe dous niveis, consérvase; se non, desfaise. Un criterio que falla dúas veces seguidas apárcase.",
+    "Hechos y propuestas": "Feitos e propostas",
+    "rechazado: dejaba {0} huecos [COMPLETAR] en la sección; hay que proponer contenido": "rexeitado: deixaba {0} ocos [COMPLETAR] na sección; hai que propoñer contido",
+    "sube el criterio, pero empeora otros ({0}): se deshace": "sobe o criterio, pero empeora outros ({0}): desfaise",
+    "Cifras propuestas para revisar: {0}": "Cifras propostas para revisar: {0}",
+    "{0} cifra(s) propuesta(s)": "{0} cifra(s) proposta(s)",
+    "Cifras propuestas por la IA": "Cifras propostas pola IA",
+    "Las cifras propuestas son decisiones de planificación que ha redactado la IA (sesiones, plazas, metas, desglose del presupuesto…). Comprobad que la asociación puede asumirlas o cambiadlas antes de presentar el proyecto.": "As cifras propostas son decisións de planificación que redactou a IA (sesións, prazas, metas, desagregación do orzamento…). Comprobade que a asociación pode asumilas ou cambiádeas antes de presentar o proxecto.",
+    "Cifra": "Cifra",
+    "Qué es": "Que é",
+    "Marcad cada requisito cuando hayáis comprobado que lo cumplís.": "Marcade cada requisito cando comprobedes que o cumprides.",
+    "La IA redacta y propone lo que la asociación puede decidir (sesiones, plazas, calendario, metas, desglose del presupuesto) y declara cada cifra que propone, para que la reviséis. Los hechos (datos del territorio, resultados anteriores, acuerdos) solo salen de las bases, el proyecto o vuestros documentos: una cifra nueva no declarada se rechaza, y lo que de verdad falta se marca con [COMPLETAR], como mucho 2 por sección.": "A IA redacta e propón o que a asociación pode decidir (sesións, prazas, calendario, metas, desagregación do orzamento) e declara cada cifra que propón, para que a revisedes. Os feitos (datos do territorio, resultados anteriores, acordos) só saen das bases, do proxecto ou dos vosos documentos: unha cifra nova non declarada rexéitase, e o que falta de verdade márcase con [COMPLETAR], como moito 2 por sección.",
     "Lo que no garantiza": "O que non garante",
     "La puntuación es una simulación: orienta, pero no garantiza la del tribunal. Revisad siempre el proyecto y no prometáis nada que la asociación no pueda cumplir.": "A puntuación é unha simulación: orienta, pero non garante a do tribunal. Revisade sempre o proxecto e non prometades nada que a asociación non poida cumprir.",
     "Todo se guarda solo en este navegador. Al usar la IA, las bases, el proyecto y vuestros documentos salen hacia vuestro proveedor con correos, DNI, teléfonos e IBAN enmascarados.": "Todo se garda só neste navegador. Ao usar a IA, as bases, o proxecto e os vosos documentos saen cara ao voso provedor con correos, DNI, teléfonos e IBAN enmascarados.",
@@ -2541,20 +2568,20 @@ const I18N = {
     "Comparando el proyecto con lo que pide la convocatoria…": "Comparando o proxecto co que pide a convocatoria…",
     "Puntuando la nueva estructura…": "Puntuando a nova estrutura…",
     "Propuesta de estructura": "Proposta de estrutura",
-    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material no se pueden aceptar.": "Marcade as seccións que aceptades. O que non aceptedes queda como estaba. As seccións con cifras que non están no voso material non se poden aceptar.",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material y que la IA no declara como propuesta no se pueden aceptar.": "Marcade as seccións que aceptades. O que non aceptedes queda como estaba. As seccións con cifras que non están no voso material e que a IA non declara como proposta non se poden aceptar.",
     "conserva el {0} % del texto": "conserva o {0} % do texto",
     "La propuesta no usa estas secciones vuestras. Se conservarán al final salvo que las desmarquéis:": "A proposta non usa estas seccións vosas. Conservaranse ao final salvo que as desmarquedes:",
     "Aplicar {0} sección(es) aceptada(s)": "Aplicar {0} sección(s) aceptada(s)",
     "Descartar la propuesta": "Descartar a proposta",
     "Antes de los ciclos: la estructura": "Antes dos ciclos: a estrutura",
-    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: añade las secciones que faltan como guía con [COMPLETAR] y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "Se o borrador está incompleto ou noutra orde, este paso pono na forma que pide a convocatoria: engade as seccións que faltan como guía con [COMPLETAR] e move o que xa tedes, sen reescribilo. Aceptades ou descartades cada sección.",
+    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: redacta como propuesta las secciones que faltan y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "Se o borrador está incompleto ou noutra orde, este paso pono na forma que pide a convocatoria: redacta como proposta as seccións que faltan e move o que xa tedes, sen reescribilo. Aceptades ou descartades cada sección.",
     "Proponer estructura": "Propor estrutura",
     "Saltar este paso": "Saltar este paso",
     "{0} de {1} cambios aceptados por vosotros": "{0} de {1} cambios aceptados por vós",
     "Con la nueva estructura la puntuación baja: revisad las secciones aceptadas.": "Coa nova estrutura a puntuación baixa: revisade as seccións aceptadas.",
     "Deshacer el ciclo 0": "Desfacer o ciclo 0",
     "Ciclo 0: la estructura": "Ciclo 0: a estrutura",
-    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden y las que faltan como guía con [COMPLETAR], moviendo lo que ya tenéis sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Antes dos ciclos, a IA propón poñer o proxecto na forma que pide a convocatoria: seccións na súa orde e as que faltan como guía con [COMPLETAR], movendo o que xa tedes sen reescribilo. Aceptades ou descartades cada sección; ningunha sección vosa se perde sen que o decidades.",
+    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden, las que faltan redactadas como propuesta y lo que ya tenéis movido a su sitio sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Antes dos ciclos, a IA propón poñer o proxecto na forma que pide a convocatoria: seccións na súa orde, as que faltan redactadas como proposta e o que xa tedes movido ao seu sitio sen reescribilo. Aceptades ou descartades cada sección; ningunha sección vosa se perde sen que o decidades.",
     "sin cambios": "sen cambios",
     "renombrada": "renomeada",
     "cambiada": "cambiada"
@@ -2783,7 +2810,7 @@ const I18N = {
     "v.dropProy": "Drag the project here or click to choose it",
     "v.usarTexto": "Use this text",
     "v.apoyo": "Association data (optional)",
-    "v.apoyo.ayuda": "Annual report, budget, surveys… SubvencIA will only use figures that are here or in the project; anything missing will be marked [COMPLETAR].",
+    "v.apoyo.ayuda": "Annual report, budget, surveys… SubvencIA will only take the association's facts and data from here or from the project; what the association can decide (sessions, places, timeline…) it will propose for you to review.",
     "v.dropApoyo": "Drag other documents here or click to choose them",
     "v.perfil.ayuda": "The same one used in every app in the course: upload it if you have it, or fill it in here and download it for the next app.",
     "v.rub": "The rubric",
@@ -2791,7 +2818,7 @@ const I18N = {
     "v.mej": "Improvement in cycles",
     "v.mej.lede": "In each cycle the criterion with the most room for improvement is chosen, only its section is rewritten and it is scored again. If the score goes up, the change stays; if not, it is undone.",
     "v.fin": "Improved project",
-    "v.fin.lede": "Fill in what is marked [COMPLETAR], check each section and download it in Word. The score is a simulation: it is a guide, but it does not guarantee the panel's score.",
+    "v.fin.lede": "Review the proposed figures, fill in what is marked [COMPLETAR] and download it in Word. The score is a simulation: it is a guide, but it does not guarantee the panel's score.",
     "v.pie": "Support tool: the score is a simulation and the final decision is yours. Your data is stored only in this browser.",
     "v.enviar": "Send",
     "Convocatoria": "Call",
@@ -2813,9 +2840,18 @@ const I18N = {
     "Cómo se puntúa": "How it is scored",
     "Para cada criterio, la IA da un nivel de 0 a 4 según los elementos que mira la rúbrica, con una cita literal de vuestro proyecto. El código comprueba la cita (sin ella, el nivel no pasa de 1) y suma los puntos con los pesos de las bases.": "For each criterion, the AI gives a level from 0 to 4 based on the elements the rubric looks for, with a literal quote from your project. The code checks the quote (without it, the level cannot go above 1) and adds up the points using the weights in the rules.",
     "El bucle de mejora": "The improvement loop",
-    "En cada ciclo: se elige el criterio con más margen, se formula una hipótesis, se reescribe solo su sección y se vuelve a puntuar. Si la puntuación sube, se conserva; si no, se deshace. Un criterio que falla dos veces seguidas se aparca.": "In each cycle: the criterion with the most room is chosen, a hypothesis is formed, only its section is rewritten and it is scored again. If the score goes up, it is kept; if not, it is undone. A criterion that fails twice in a row is set aside.",
-    "Nada inventado": "Nothing made up",
-    "Un cambio con cifras que no están en las bases, el proyecto o vuestros documentos se rechaza. Lo que falta se marca con [COMPLETAR] para que lo rellenéis vosotros.": "A change with figures that are not in the rules, the project or your documents is rejected. Anything missing is marked [COMPLETAR] for you to fill in.",
+    "En cada ciclo: se elige el criterio con más margen, se formula una hipótesis, se reescribe solo su sección y se vuelve a puntuar. Si sube el nivel de ese criterio sin que otro baje dos niveles, se conserva; si no, se deshace. Un criterio que falla dos veces seguidas se aparca.": "In each cycle: the criterion with the most room is chosen, a hypothesis is formed, only its section is rewritten and it is scored again. If that criterion's level goes up and no other drops two levels, it is kept; if not, it is undone. A criterion that fails twice in a row is set aside.",
+    "Hechos y propuestas": "Facts and proposals",
+    "rechazado: dejaba {0} huecos [COMPLETAR] en la sección; hay que proponer contenido": "rejected: it left {0} [COMPLETAR] gaps in the section; content must be proposed",
+    "sube el criterio, pero empeora otros ({0}): se deshace": "the criterion goes up, but others get worse ({0}): undone",
+    "Cifras propuestas para revisar: {0}": "Proposed figures to review: {0}",
+    "{0} cifra(s) propuesta(s)": "{0} proposed figure(s)",
+    "Cifras propuestas por la IA": "Figures proposed by the AI",
+    "Las cifras propuestas son decisiones de planificación que ha redactado la IA (sesiones, plazas, metas, desglose del presupuesto…). Comprobad que la asociación puede asumirlas o cambiadlas antes de presentar el proyecto.": "The proposed figures are planning decisions drafted by the AI (sessions, places, targets, budget breakdown…). Check that the association can take them on, or change them, before submitting the project.",
+    "Cifra": "Figure",
+    "Qué es": "What it is",
+    "Marcad cada requisito cuando hayáis comprobado que lo cumplís.": "Tick each requirement once you have checked that you meet it.",
+    "La IA redacta y propone lo que la asociación puede decidir (sesiones, plazas, calendario, metas, desglose del presupuesto) y declara cada cifra que propone, para que la reviséis. Los hechos (datos del territorio, resultados anteriores, acuerdos) solo salen de las bases, el proyecto o vuestros documentos: una cifra nueva no declarada se rechaza, y lo que de verdad falta se marca con [COMPLETAR], como mucho 2 por sección.": "The AI drafts and proposes what the association can decide (sessions, places, timeline, targets, budget breakdown) and declares each figure it proposes, so that you can review it. Facts (local data, previous results, agreements) only come from the rules, the project or your documents: an undeclared new figure is rejected, and anything genuinely missing is marked [COMPLETAR], at most 2 per section.",
     "Lo que no garantiza": "What it does not guarantee",
     "La puntuación es una simulación: orienta, pero no garantiza la del tribunal. Revisad siempre el proyecto y no prometáis nada que la asociación no pueda cumplir.": "The score is a simulation: it is a guide, but it does not guarantee the panel's score. Always check the project and do not promise anything the association cannot deliver.",
     "Todo se guarda solo en este navegador. Al usar la IA, las bases, el proyecto y vuestros documentos salen hacia vuestro proveedor con correos, DNI, teléfonos e IBAN enmascarados.": "Everything is stored only in this browser. When the AI is used, the rules, the project and your documents go to your provider with emails, ID numbers, phone numbers and IBANs masked.",
@@ -2932,20 +2968,20 @@ const I18N = {
     "Comparando el proyecto con lo que pide la convocatoria…": "Comparing the project with what the call asks for…",
     "Puntuando la nueva estructura…": "Scoring the new structure…",
     "Propuesta de estructura": "Structure proposal",
-    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material no se pueden aceptar.": "Tick the sections you accept. Anything you do not accept stays as it was. Sections with figures that are not in your material cannot be accepted.",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material y que la IA no declara como propuesta no se pueden aceptar.": "Tick the sections you accept. Anything you do not accept stays as it was. Sections with figures that are not in your material and that the AI does not declare as a proposal cannot be accepted.",
     "conserva el {0} % del texto": "keeps {0} % of the text",
     "La propuesta no usa estas secciones vuestras. Se conservarán al final salvo que las desmarquéis:": "The proposal does not use these sections of yours. They will be kept at the end unless you untick them:",
     "Aplicar {0} sección(es) aceptada(s)": "Apply {0} accepted section(s)",
     "Descartar la propuesta": "Discard the proposal",
     "Antes de los ciclos: la estructura": "Before the cycles: the structure",
-    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: añade las secciones que faltan como guía con [COMPLETAR] y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "If the draft is incomplete or in a different order, this step puts it in the shape the call asks for: it adds the missing sections as a guide with [COMPLETAR] and moves what you already have, without rewriting it. You accept or discard each section.",
+    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: redacta como propuesta las secciones que faltan y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "If the draft is incomplete or in a different order, this step puts it in the shape the call asks for: it drafts the missing sections as a proposal and moves what you already have, without rewriting it. You accept or discard each section.",
     "Proponer estructura": "Propose a structure",
     "Saltar este paso": "Skip this step",
     "{0} de {1} cambios aceptados por vosotros": "{0} of {1} changes accepted by you",
     "Con la nueva estructura la puntuación baja: revisad las secciones aceptadas.": "With the new structure the score goes down: check the accepted sections.",
     "Deshacer el ciclo 0": "Undo cycle 0",
     "Ciclo 0: la estructura": "Cycle 0: the structure",
-    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden y las que faltan como guía con [COMPLETAR], moviendo lo que ya tenéis sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Before the cycles, the AI proposes putting the project in the shape the call asks for: sections in its order and the missing ones as a guide with [COMPLETAR], moving what you already have without rewriting it. You accept or discard each section; none of your sections is lost unless you decide so.",
+    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden, las que faltan redactadas como propuesta y lo que ya tenéis movido a su sitio sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Before the cycles, the AI proposes putting the project in the shape the call asks for: sections in its order, the missing ones drafted as a proposal and what you already have moved to its place without rewriting it. You accept or discard each section; none of your sections is lost unless you decide so.",
     "sin cambios": "unchanged",
     "renombrada": "renamed",
     "cambiada": "changed"
@@ -3174,7 +3210,7 @@ const I18N = {
     "v.dropProy": "Arraste o projeto para aqui ou clique para o escolher",
     "v.usarTexto": "Usar este texto",
     "v.apoyo": "Dados da associação (opcional)",
-    "v.apoyo.ayuda": "Relatório anual, orçamento, inquéritos… O SubvencIA só usará números que estejam aqui ou no projeto; o que faltar será marcado com [COMPLETAR].",
+    "v.apoyo.ayuda": "Relatório anual, orçamento, inquéritos… O SubvencIA só tirará os factos e dados da associação daqui ou do projeto; o que a associação pode decidir (sessões, vagas, calendário…) será proposto para que o revejam.",
     "v.dropApoyo": "Arraste outros documentos para aqui ou clique para os escolher",
     "v.perfil.ayuda": "O mesmo de todas as apps do curso: carreguem-no se o tiverem ou preencham-no aqui e transfiram-no para a seguinte.",
     "v.rub": "A grelha de avaliação",
@@ -3182,7 +3218,7 @@ const I18N = {
     "v.mej": "Melhoria por ciclos",
     "v.mej.lede": "Em cada ciclo escolhe-se o critério com mais margem, reescreve-se apenas a sua secção e volta-se a pontuar. Se a pontuação subir, a alteração fica; se não, é desfeita.",
     "v.fin": "Projeto melhorado",
-    "v.fin.lede": "Completem o que está marcado com [COMPLETAR], revejam cada secção e transfiram-no em Word. A pontuação é uma simulação: orienta, mas não garante a do júri.",
+    "v.fin.lede": "Revejam os números propostos, completem o que está marcado com [COMPLETAR] e transfiram-no em Word. A pontuação é uma simulação: orienta, mas não garante a do júri.",
     "v.pie": "Ferramenta de apoio: a pontuação é uma simulação e a decisão final é vossa. Os vossos dados ficam guardados apenas neste navegador.",
     "v.enviar": "Enviar",
     "Convocatoria": "Concurso",
@@ -3204,9 +3240,18 @@ const I18N = {
     "Cómo se puntúa": "Como se pontua",
     "Para cada criterio, la IA da un nivel de 0 a 4 según los elementos que mira la rúbrica, con una cita literal de vuestro proyecto. El código comprueba la cita (sin ella, el nivel no pasa de 1) y suma los puntos con los pesos de las bases.": "Para cada critério, a IA dá um nível de 0 a 4 segundo os elementos que a grelha procura, com uma citação literal do vosso projeto. O código verifica a citação (sem ela, o nível não passa de 1) e soma os pontos com os pesos do regulamento.",
     "El bucle de mejora": "O ciclo de melhoria",
-    "En cada ciclo: se elige el criterio con más margen, se formula una hipótesis, se reescribe solo su sección y se vuelve a puntuar. Si la puntuación sube, se conserva; si no, se deshace. Un criterio que falla dos veces seguidas se aparca.": "Em cada ciclo: escolhe-se o critério com mais margem, formula-se uma hipótese, reescreve-se apenas a sua secção e volta-se a pontuar. Se a pontuação subir, mantém-se; se não, é desfeita. Um critério que falhe duas vezes seguidas é posto de parte.",
-    "Nada inventado": "Nada inventado",
-    "Un cambio con cifras que no están en las bases, el proyecto o vuestros documentos se rechaza. Lo que falta se marca con [COMPLETAR] para que lo rellenéis vosotros.": "Uma alteração com números que não estão no regulamento, no projeto ou nos vossos documentos é rejeitada. O que falta é marcado com [COMPLETAR] para o preencherem.",
+    "En cada ciclo: se elige el criterio con más margen, se formula una hipótesis, se reescribe solo su sección y se vuelve a puntuar. Si sube el nivel de ese criterio sin que otro baje dos niveles, se conserva; si no, se deshace. Un criterio que falla dos veces seguidas se aparca.": "Em cada ciclo: escolhe-se o critério com mais margem, formula-se uma hipótese, reescreve-se apenas a sua secção e volta-se a pontuar. Se o nível desse critério subir sem que outro desça dois níveis, mantém-se; se não, é desfeita. Um critério que falhe duas vezes seguidas é posto de parte.",
+    "Hechos y propuestas": "Factos e propostas",
+    "rechazado: dejaba {0} huecos [COMPLETAR] en la sección; hay que proponer contenido": "rejeitado: deixava {0} lacunas [COMPLETAR] na secção; é preciso propor conteúdo",
+    "sube el criterio, pero empeora otros ({0}): se deshace": "o critério sobe, mas outros pioram ({0}): é desfeito",
+    "Cifras propuestas para revisar: {0}": "Números propostos para rever: {0}",
+    "{0} cifra(s) propuesta(s)": "{0} número(s) proposto(s)",
+    "Cifras propuestas por la IA": "Números propostos pela IA",
+    "Las cifras propuestas son decisiones de planificación que ha redactado la IA (sesiones, plazas, metas, desglose del presupuesto…). Comprobad que la asociación puede asumirlas o cambiadlas antes de presentar el proyecto.": "Os números propostos são decisões de planeamento redigidas pela IA (sessões, vagas, metas, desagregação do orçamento…). Confirmem que a associação as pode assumir ou alterem-nas antes de apresentar o projeto.",
+    "Cifra": "Número",
+    "Qué es": "O que é",
+    "Marcad cada requisito cuando hayáis comprobado que lo cumplís.": "Marquem cada requisito quando tiverem confirmado que o cumprem.",
+    "La IA redacta y propone lo que la asociación puede decidir (sesiones, plazas, calendario, metas, desglose del presupuesto) y declara cada cifra que propone, para que la reviséis. Los hechos (datos del territorio, resultados anteriores, acuerdos) solo salen de las bases, el proyecto o vuestros documentos: una cifra nueva no declarada se rechaza, y lo que de verdad falta se marca con [COMPLETAR], como mucho 2 por sección.": "A IA redige e propõe o que a associação pode decidir (sessões, vagas, calendário, metas, desagregação do orçamento) e declara cada número que propõe, para que o revejam. Os factos (dados do território, resultados anteriores, acordos) só saem do regulamento, do projeto ou dos vossos documentos: um número novo não declarado é rejeitado, e o que falta de facto é marcado com [COMPLETAR], no máximo 2 por secção.",
     "Lo que no garantiza": "O que não garante",
     "La puntuación es una simulación: orienta, pero no garantiza la del tribunal. Revisad siempre el proyecto y no prometáis nada que la asociación no pueda cumplir.": "A pontuação é uma simulação: orienta, mas não garante a do júri. Revejam sempre o projeto e não prometam nada que a associação não possa cumprir.",
     "Todo se guarda solo en este navegador. Al usar la IA, las bases, el proyecto y vuestros documentos salen hacia vuestro proveedor con correos, DNI, teléfonos e IBAN enmascarados.": "Tudo fica guardado apenas neste navegador. Ao usar a IA, o regulamento, o projeto e os vossos documentos seguem para o vosso fornecedor com e-mails, números de identificação, telefones e IBAN mascarados.",
@@ -3323,20 +3368,20 @@ const I18N = {
     "Comparando el proyecto con lo que pide la convocatoria…": "A comparar o projeto com o que o concurso pede…",
     "Puntuando la nueva estructura…": "A pontuar a nova estrutura…",
     "Propuesta de estructura": "Proposta de estrutura",
-    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material no se pueden aceptar.": "Marquem as secções que aceitam. O que não aceitarem fica como estava. As secções com números que não estão no vosso material não podem ser aceites.",
+    "Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material y que la IA no declara como propuesta no se pueden aceptar.": "Marquem as secções que aceitam. O que não aceitarem fica como estava. As secções com números que não estão no vosso material e que a IA não declara como proposta não podem ser aceites.",
     "conserva el {0} % del texto": "mantém {0} % do texto",
     "La propuesta no usa estas secciones vuestras. Se conservarán al final salvo que las desmarquéis:": "A proposta não usa estas secções vossas. Serão mantidas no fim, a não ser que as desmarquem:",
     "Aplicar {0} sección(es) aceptada(s)": "Aplicar {0} secção(ões) aceite(s)",
     "Descartar la propuesta": "Descartar a proposta",
     "Antes de los ciclos: la estructura": "Antes dos ciclos: a estrutura",
-    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: añade las secciones que faltan como guía con [COMPLETAR] y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "Se o rascunho estiver incompleto ou noutra ordem, este passo põe-no na forma que o concurso pede: acrescenta as secções em falta como guia com [COMPLETAR] e move o que já têm, sem o reescrever. Aceitam ou descartam cada secção.",
+    "Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: redacta como propuesta las secciones que faltan y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.": "Se o rascunho estiver incompleto ou noutra ordem, este passo põe-no na forma que o concurso pede: redige como proposta as secções em falta e move o que já têm, sem o reescrever. Aceitam ou descartam cada secção.",
     "Proponer estructura": "Propor estrutura",
     "Saltar este paso": "Saltar este passo",
     "{0} de {1} cambios aceptados por vosotros": "{0} de {1} alterações aceites por vós",
     "Con la nueva estructura la puntuación baja: revisad las secciones aceptadas.": "Com a nova estrutura a pontuação desce: revejam as secções aceites.",
     "Deshacer el ciclo 0": "Desfazer o ciclo 0",
     "Ciclo 0: la estructura": "Ciclo 0: a estrutura",
-    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden y las que faltan como guía con [COMPLETAR], moviendo lo que ya tenéis sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Antes dos ciclos, a IA propõe pôr o projeto na forma que o concurso pede: secções na sua ordem e as que faltam como guia com [COMPLETAR], movendo o que já têm sem o reescrever. Aceitam ou descartam cada secção; nenhuma secção vossa se perde sem que o decidam.",
+    "Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden, las que faltan redactadas como propuesta y lo que ya tenéis movido a su sitio sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.": "Antes dos ciclos, a IA propõe pôr o projeto na forma que o concurso pede: secções na sua ordem, as que faltam redigidas como proposta e o que já têm movido para o seu lugar sem o reescrever. Aceitam ou descartam cada secção; nenhuma secção vossa se perde sem que o decidam.",
     "sin cambios": "sem alterações",
     "renombrada": "renomeada",
     "cambiada": "alterada"
@@ -3618,9 +3663,9 @@ const GLOS = [
   ['¿Qué hace?', 'Lee la convocatoria, extrae cómo se puntuará (criterios, puntos y requisitos), evalúa vuestro proyecto y lo mejora sección a sección en ciclos medibles.'],
   ['La rúbrica', 'Cada criterio lleva sus puntos y la cita literal de las bases que los fija; el código comprueba que la cita existe. Revisadla y corregidla antes de mejorar.'],
   ['Cómo se puntúa', 'Para cada criterio, la IA da un nivel de 0 a 4 según los elementos que mira la rúbrica, con una cita literal de vuestro proyecto. El código comprueba la cita (sin ella, el nivel no pasa de 1) y suma los puntos con los pesos de las bases.'],
-  ['Ciclo 0: la estructura', 'Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden y las que faltan como guía con [COMPLETAR], moviendo lo que ya tenéis sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.'],
-  ['El bucle de mejora', 'En cada ciclo: se elige el criterio con más margen, se formula una hipótesis, se reescribe solo su sección y se vuelve a puntuar. Si la puntuación sube, se conserva; si no, se deshace. Un criterio que falla dos veces seguidas se aparca.'],
-  ['Nada inventado', 'Un cambio con cifras que no están en las bases, el proyecto o vuestros documentos se rechaza. Lo que falta se marca con [COMPLETAR] para que lo rellenéis vosotros.'],
+  ['Ciclo 0: la estructura', 'Antes de los ciclos, la IA propone poner el proyecto en la forma que pide la convocatoria: secciones en su orden, las que faltan redactadas como propuesta y lo que ya tenéis movido a su sitio sin reescribirlo. Aceptáis o descartáis cada sección; ninguna sección vuestra se pierde sin que lo decidáis.'],
+  ['El bucle de mejora', 'En cada ciclo: se elige el criterio con más margen, se formula una hipótesis, se reescribe solo su sección y se vuelve a puntuar. Si sube el nivel de ese criterio sin que otro baje dos niveles, se conserva; si no, se deshace. Un criterio que falla dos veces seguidas se aparca.'],
+  ['Hechos y propuestas', 'La IA redacta y propone lo que la asociación puede decidir (sesiones, plazas, calendario, metas, desglose del presupuesto) y declara cada cifra que propone, para que la reviséis. Los hechos (datos del territorio, resultados anteriores, acuerdos) solo salen de las bases, el proyecto o vuestros documentos: una cifra nueva no declarada se rechaza, y lo que de verdad falta se marca con [COMPLETAR], como mucho 2 por sección.'],
   ['Lo que no garantiza', 'La puntuación es una simulación: orienta, pero no garantiza la del tribunal. Revisad siempre el proyecto y no prometáis nada que la asociación no pueda cumplir.'],
   ['Privacidad', 'Todo se guarda solo en este navegador. Al usar la IA, las bases, el proyecto y vuestros documentos salen hacia vuestro proveedor con correos, DNI, teléfonos e IBAN enmascarados.'],
   ['Tu clave de IA', 'Funciona con OpenAI, Google Gemini o Anthropic Claude. Cada ciclo hace dos llamadas; 10 ciclos con un modelo económico cuestan céntimos.']
@@ -3777,12 +3822,23 @@ function eligeCriterio() {
   p.sort((a, b) => (b.max - b.pts) - (a.max - a.pts) || b.max - a.max);
   return p[0] ? S.rub.crits.find(k => k.id === p[0].id) : null;
 }
-const PROMPT_CICLO = (c, e, proy, bases, apoyo, perfil, previos) => `Mejora un PROYECTO para subir su puntuación en UN criterio de la convocatoria, cambiando UNA sola sección.
+/* Cómo ayudar sin inventar: la IA redacta y PROPONE lo que la asociación puede decidir (y declara cada cifra que propone, que el código
+   marca para revisar); los HECHOS solo salen del material; los trámites no van en la memoria. Así el proyecto no se llena de [COMPLETAR]. */
+const MAX_HUECOS = 2;
+const PAUTA = `CÓMO AYUDAR (la asociación necesita un proyecto casi listo para presentar, no una lista de huecos)
+Redacta tú el contenido. Distingue tres tipos de información:
+1) DECISIONES DE PLANIFICACIÓN, que la asociación puede tomar: objetivos específicos y metas; número de grupos, sesiones, plazas y horas; duración y calendario por meses dentro del periodo de ejecución; reparto de tareas; criterios de acceso y de priorización; cómo participan pacientes y familias; instrumentos y momentos de evaluación; desglose del presupuesto en unidades × coste unitario que cuadre con los importes que ya constan, y porcentajes calculados con ellos; medidas de igualdad, accesibilidad, voluntariado y continuidad. PROPÓNLAS con valores concretos, realistas y coherentes entre sí, con el presupuesto y con las bases, y declara en "propuestas" cada cifra nueva que propongas.
+2) HECHOS que no puedes conocer: datos epidemiológicos o del territorio, resultados de años anteriores, fechas de inscripción, nombres de centros o entidades colaboradoras, acuerdos firmados, financiación de terceros. Úsalos solo si están en el material. Si no están, redacta sin ese dato con lo que sí consta y, solo si es imprescindible para el criterio, escribe [COMPLETAR: qué dato y dónde conseguirlo], con la palabra COMPLETAR tal cual. Nunca presentes un hecho como propuesta.
+3) TRÁMITES Y DOCUMENTOS (estar al corriente con Hacienda y la Seguridad Social, estatutos, ayudas anteriores, plazo, formulario, extensión máxima): no van en el texto del proyecto, porque la app ya los lista aparte como requisitos. No escribas [COMPLETAR] para ellos.
+Como máximo ${MAX_HUECOS} [COMPLETAR] por sección. Si la sección ya tiene huecos, sustitúyelos por contenido propuesto (tipo 1) o por una redacción que no necesite el dato.`;
+const JSON_PROP = `"propuestas":[{"cifra":"cifra nueva tal como aparece en el texto (p. ej. «8 sesiones» o «40 €/hora»)","que":"qué es y cómo la has calculado o decidido"}]`;
+const PROMPT_CICLO = (c, e, proy, bases, apoyo, perfil, previos, req) => `Mejora un PROYECTO para subir su puntuación en UN criterio de la convocatoria, cambiando UNA sola sección.
 
 CRITERIO A MEJORAR: ${c.nombre} (${c.peso} puntos)
 Qué mira el tribunal: ${c.mira.join('; ') || '—'}
 Nivel actual: ${e ? e.nivel : 0} de 4. Le falta: ${e && e.falta ? e.falta : '—'}
 Lo que dicen las bases: ${bases || c.cita || '—'}
+Requisitos y límites de las bases: ${req || '—'}
 ${previos ? `\nINTENTOS ANTERIORES QUE NO FUNCIONARON (no los repitas):\n${previos}\n` : ''}
 PROYECTO ACTUAL (cada sección empieza por ###):
 ${proy}
@@ -3795,12 +3851,16 @@ REGLAS
 - Formula una hipótesis: qué cambio concreto subirá el nivel de este criterio y por qué.
 - Reescribe SOLO la sección que más afecta a este criterio. Si el proyecto no tiene ninguna sección adecuada, crea una nueva.
 - Conserva todo lo que ya está bien en esa sección. No acortes sin motivo.
-- No inventes cifras, fechas, importes, nombres, entidades ni resultados. Si hace falta un dato que no está, escribe [COMPLETAR: qué dato falta], con la palabra COMPLETAR tal cual.
 - No prometas nada que la asociación no pueda cumplir. Respeta los límites de extensión de las bases.
 
+${PAUTA}
+
 Devuelve SOLO este JSON:
-{"hipotesis":"una frase","seccion":"título EXACTO de la sección que reescribes, copiado del proyecto; o NUEVA: título, si creas una","texto":"texto completo nuevo de esa sección, sin el título"}
+{"hipotesis":"una frase","seccion":"título EXACTO de la sección que reescribes, copiado del proyecto; o NUEVA: título, si creas una","texto":"texto completo nuevo de esa sección, sin el título",${JSON_PROP}}
 ${INSTR_IDIOMA()}`;
+/* cifras nuevas: las declaradas como propuesta pasan con aviso; las no declaradas se rechazan (serían hechos inventados) */
+function propuestasDe(raw, texto) { return (Array.isArray(raw.propuestas) ? raw.propuestas : []).map(p => ({cifra: String(p?.cifra || '').trim(), que: String(p?.que || '').trim()})).filter(p => p.cifra && cifrasDe(p.cifra).size && String(texto).includes(p.cifra)); }
+function cifrasSinDeclarar(texto, mat, prop) { const dec = new Set(prop.flatMap(p => [...cifrasDe(p.cifra)])); return cifrasNuevas(texto, mat).filter(x => !dec.has(cifraNorm(x))); }
 function aplicaCambio(raw) {
   const hip = String(raw.hipotesis || '').trim(), tit = String(raw.seccion || '').trim(), nuevo = String(raw.texto || '').replace(/\r/g, '').trim();
   const secs = JSON.parse(JSON.stringify(S.secs)); let i, nueva = false;
@@ -3811,8 +3871,9 @@ function aplicaCambio(raw) {
   const antes = nueva ? '' : secs[i].x;
   if (!nuevo || norm(nuevo) === norm(antes)) return {hip, tit: secs[i].t, antes, despues: nuevo, err: {tipo: 'igual'}};
   if (!nueva && wc(nuevo) < wc(antes) * 0.5) return {hip, tit: secs[i].t, antes, despues: nuevo, err: {tipo: 'corta'}};
-  const cif = cifrasNuevas(nuevo, materialTx() + '\n' + textoProy()); if (cif.length) return {hip, tit: secs[i].t, antes, despues: nuevo, err: {tipo: 'cifras', val: cif.join(', ')}};
-  secs[i].x = nuevo; return {hip, tit: secs[i].t, antes, despues: nuevo, nueva, secs};
+  if (huecos(nuevo) > Math.max(huecos(antes), MAX_HUECOS)) return {hip, tit: secs[i].t, antes, despues: nuevo, err: {tipo: 'huecos', val: huecos(nuevo)}};
+  const prop = propuestasDe(raw, nuevo), cif = cifrasSinDeclarar(nuevo, materialTx() + '\n' + textoProy(), prop); if (cif.length) return {hip, tit: secs[i].t, antes, despues: nuevo, err: {tipo: 'cifras', val: cif.join(', ')}};
+  secs[i].x = nuevo; return {hip, tit: secs[i].t, antes, despues: nuevo, nueva, secs, prop: prop.map(p => ({...p, sec: secs[i].t}))};
 }
 async function ciclo() {
   const c = eligeCriterio(); if (!c) return 'sin';
@@ -3821,14 +3882,21 @@ async function ciclo() {
   const basesV = c.ok ? ventanas(basesTx(), [c.cita], 500, 1500) : '';
   const sc = scrub(proyParaIA(S.secs)), ap = scrub(apoyoTx().slice(0, 9000)), pf = scrub(JSON.stringify(perfilParaIA(S.perfil)));
   if (!(await pideEnvio('proy', sc.t, sc.n + ap.n))) return 'cancel';
-  const raw = await pide([{role: 'system', content: SYS}, {role: 'user', content: PROMPT_CICLO(c, e, sc.t, scrub(basesV).t, ap.t, pf.t, previos)}], 3500);
-  const r = aplicaCambio(raw), reg = {n, crit: c.id, nom: c.nombre, hip: r.hip, sec: r.tit, nueva: !!r.nueva, antes: r.antes || '', despues: r.despues || '', tA: antes, tD: antes};
+  const req = scrub(S.rub.req.map(x => x.texto).join(' · ')).t;
+  const raw = await pide([{role: 'system', content: SYS}, {role: 'user', content: PROMPT_CICLO(c, e, sc.t, scrub(basesV).t, ap.t, pf.t, previos, req)}], 5000);
+  const r = aplicaCambio(raw), reg = {n, crit: c.id, nom: c.nombre, hip: r.hip, sec: r.tit, nueva: !!r.nueva, antes: r.antes || '', despues: r.despues || '', tA: antes, tD: antes, prop: r.prop || []};
   if (r.err) { reg.dec = 'rech'; reg.mot = r.err; }
   else {
+    /* Decide el criterio del ciclo, no la suma: volver a puntuarlo todo mete el ruido de la IA en los demás criterios.
+       Se conserva si sube el nivel del criterio y ningún otro baja 2 niveles o más; los demás guardan su nivel anterior
+       salvo que su cita ya no esté en el proyecto. */
     const ev = await evalua(r.secs); if (!ev) return 'cancel';
-    const tD = puntua(ev).total; reg.tD = tD; reg.nivA = e ? e.nivel : 0; reg.nivD = ev.c[c.id] ? ev.c[c.id].nivel : 0;
-    if (tD > antes + 0.001) { reg.dec = 'ok'; S.secs = r.secs; S.ev = ev; S.vers.push({n, total: tD, tipo: 'ciclo'}); }
-    else { reg.dec = 'rev'; reg.mot = {tipo: 'nosube'}; }
+    const txN = textoProy(r.secs), nivA = e ? e.nivel : 0, nivD = ev.c[c.id] ? ev.c[c.id].nivel : 0;
+    const dana = S.rub.crits.filter(k => k.id !== c.id && (S.ev.c[k.id]?.nivel ?? 0) - (ev.c[k.id]?.nivel ?? 0) >= 2).map(k => k.nombre);
+    const evM = {c: {}}; S.rub.crits.forEach(k => { const v = S.ev.c[k.id]; evM.c[k.id] = k.id !== c.id && v && (!v.ok || esFiel(txN, v.evid)) ? v : ev.c[k.id]; });
+    const tD = puntua(evM).total; reg.tD = tD; reg.nivA = nivA; reg.nivD = nivD;
+    if (nivD > nivA && !dana.length) { reg.dec = 'ok'; S.secs = r.secs; S.ev = evM; S.vers.push({n, total: tD, tipo: 'ciclo'}); }
+    else { reg.dec = 'rev'; reg.mot = dana.length && nivD > nivA ? {tipo: 'dana', val: dana.join(', ')} : {tipo: 'nosube'}; }
   }
   S.fallos[c.id] = reg.dec === 'ok' ? 0 : (S.fallos[c.id] || 0) + 1;
   S.ciclos.push(reg); await guardaYa(); return reg.dec;
@@ -3874,13 +3942,15 @@ Perfil: ${perfil}
 REGLAS
 - Ordena y titula las secciones como pidan las bases; si no piden un modelo, sigue el orden de los criterios de la rúbrica. Numera los títulos.
 - Añade una sección por cada cosa que la rúbrica o los requisitos piden y el proyecto no tiene.
-- Lo que ya está escrito NO se reescribe: se mueve a su sección tal cual. Solo puedes añadir frases cortas para enlazar.
-- Las secciones nuevas son una guía para la asociación: qué tiene que poner, con [COMPLETAR: qué dato falta], con la palabra COMPLETAR tal cual. No inventes cifras, fechas, importes, nombres ni resultados.
-- No pierdas contenido: todo el texto actual debe acabar en alguna sección.
+- Lo que ya está escrito NO se reescribe: se mueve a su sección tal cual (los datos de la entidad, al apartado de la entidad). Puedes añadir a continuación lo que falte.
+- Las secciones nuevas o casi vacías se REDACTAN como propuesta completa, siguiendo CÓMO AYUDAR; no son una lista de instrucciones ni de huecos.
+- No pierdas contenido: todo el texto actual debe acabar en alguna sección, y no lo dupliques.
+
+${PAUTA}
 
 Devuelve SOLO este JSON:
 {"resumen":"una o dos frases: qué cambia en la estructura y por qué",
- "secciones":[{"titulo":"título numerado de la sección","origen":"título EXACTO de la sección actual de la que sale el texto, o NUEVA","texto":"texto completo de la sección, sin el título","motivo":"qué criterio o requisito de las bases atiende, en pocas palabras"}]}
+ "secciones":[{"titulo":"título numerado de la sección","origen":"título EXACTO de la sección actual de la que sale el texto, o NUEVA","texto":"texto completo de la sección, sin el título","motivo":"qué criterio o requisito de las bases atiende, en pocas palabras",${JSON_PROP}}]}
 ${INSTR_IDIOMA()}`;
 function procesaEstructura(raw) {
   const secs = S.secs, mat = materialTx() + '\n' + textoProy(), usados = new Set();
@@ -3891,10 +3961,14 @@ function procesaEstructura(raw) {
     const estado = !orig ? 'nueva' : igualTx && igualT ? 'igual' : igualTx ? 'renombrada' : 'cambio';
     const pal = orig ? [...new Set(norm(orig.x).split(' ').filter(w => w.length > 3))] : [], nt = new Set(norm(texto).split(' '));
     const conserva = pal.length ? Math.round(pal.filter(w => nt.has(w)).length / pal.length * 100) : null;
-    const cif = cifrasNuevas(texto, mat);
-    return {tit, texto, motivo: String(x.motivo || '').trim(), o, estado, conserva, cif, acepta: !cif.length && estado !== 'igual'};
+    const prop = propuestasDe(x, texto), cif = cifrasSinDeclarar(texto, mat, prop);
+    return {tit, texto, motivo: String(x.motivo || '').trim(), o, estado, conserva, cif, prop, acepta: !cif.length && estado !== 'igual'};
   }).filter(x => x.tit && (x.texto || x.o >= 0));
-  return {resumen: String(raw.resumen || '').trim(), items, huerf: secs.map((_, i) => i).filter(i => !usados.has(i)).map(i => ({i, conserva: true}))};
+  /* una sección vuestra que la propuesta no cita como origen pero cuyo texto ya está dentro de otra (≥ 80 % de sus palabras)
+     se propone desmarcada, para no duplicarla al final */
+  const todo = new Set(norm(items.map(x => x.texto).join(' ')).split(' '));
+  const dentro = i => { const pal = [...new Set(norm(secs[i].t + ' ' + secs[i].x).split(' ').filter(w => w.length > 3))]; return pal.length > 0 && pal.filter(w => todo.has(w)).length / pal.length >= 0.8; };
+  return {resumen: String(raw.resumen || '').trim(), items, huerf: secs.map((_, i) => i).filter(i => !usados.has(i)).map(i => ({i, conserva: !dentro(i)}))};
 }
 async function proponeEstructura() {
   if (busy || !S.ev || !listo()) return; busy = true; estado('estEstado', t('Comparando el proyecto con lo que pide la convocatoria…')); pintaMejora();
@@ -3922,7 +3996,7 @@ async function aplicaEstructura() {
     const ev = await evalua(out); if (!ev) return;
     const tA = puntua(S.ev).total, tD = puntua(ev).total;
     S.pre0 = {secs: S.secs, ev: S.ev}; S.secs = out; S.ev = ev; S.prop0 = null; S.c0 = 'hecho';
-    S.ciclos.push({n: 0, tipo: 'estructura', crit: '', nom: '', hip: P.resumen, sec: acept.map(x => x.tit).join(' · '), antes: '', despues: '', tA, tD, dec: 'ok', acept: acept.length, total: cambiables.length});
+    S.ciclos.push({n: 0, tipo: 'estructura', crit: '', nom: '', hip: P.resumen, sec: acept.map(x => x.tit).join(' · '), antes: '', despues: '', tA, tD, dec: 'ok', acept: acept.length, total: cambiables.length, prop: acept.flatMap(x => x.prop.map(p => ({...p, sec: x.tit})))});
     S.vers.push({n: 0, total: tD, tipo: 'estructura'}); ESTADO.estEstado = ''; await guardaYa();
   } catch (e) { estado('estEstado', e.message); toast(e.message, 8000); if (COLA) throw e; }
   finally { busy = false; if (step === 4) pintaMejora(); }
@@ -3938,15 +4012,15 @@ function tarjetaEstructura() {
   if (S.prop0) {
     const P = S.prop0, n = P.items.filter(x => x.acepta && x.estado !== 'igual').length;
     return `<div class="card fa-est"><h3 class="fa-h3"><svg class="i"><use href="#i-grid"/></svg> ${esc(t('Propuesta de estructura'))}</h3><p>${esc(P.resumen)}</p>
-      <p class="help" style="margin-top:0">${esc(t('Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material no se pueden aceptar.'))}</p>
-      <ol class="fa-est-l">${P.items.map((x, i) => { const og = x.o >= 0 ? S.secs[x.o] : null, bloq = x.cif.length > 0; return `<li class="fa-e-${x.estado}${bloq ? ' fa-e-bloq' : ''}"><div class="fa-e-h">${x.estado === 'igual' ? '<span class="fa-e-sp"></span>' : `<label class="fa-chk"><input type="checkbox" data-est="${i}"${x.acepta ? ' checked' : ''}${bloq ? ' disabled' : ''}> </label>`}<b>${esc(x.tit)}</b>${chip(x.estado === 'nueva' ? 'ok' : x.estado === 'igual' ? '' : 'aviso', t(ESTADO_EST[x.estado]))}${x.conserva != null && x.estado === 'cambio' ? chip('', t('conserva el {0} % del texto', x.conserva)) : ''}${huecos(x.texto) ? chip('aviso', t('{0} por completar', huecos(x.texto))) : ''}</div>
-        ${x.motivo ? `<small class="muted">${esc(x.motivo)}</small>` : ''}${bloq ? `<div class="aviso">${esc(t('Cifras que no están en vuestro material: {0}. Comprobadlas o quitadlas.', x.cif.join(', ')))}</div>` : ''}
+      <p class="help" style="margin-top:0">${esc(t('Marcad las secciones que aceptáis. Lo que no aceptéis se queda como estaba. Las secciones con cifras que no están en vuestro material y que la IA no declara como propuesta no se pueden aceptar.'))}</p>
+      <ol class="fa-est-l">${P.items.map((x, i) => { const og = x.o >= 0 ? S.secs[x.o] : null, bloq = x.cif.length > 0; return `<li class="fa-e-${x.estado}${bloq ? ' fa-e-bloq' : ''}"><div class="fa-e-h">${x.estado === 'igual' ? '<span class="fa-e-sp"></span>' : `<label class="fa-chk"><input type="checkbox" data-est="${i}"${x.acepta ? ' checked' : ''}${bloq ? ' disabled' : ''}> </label>`}<b>${esc(x.tit)}</b>${chip(x.estado === 'nueva' ? 'ok' : x.estado === 'igual' ? '' : 'aviso', t(ESTADO_EST[x.estado]))}${x.conserva != null && x.estado === 'cambio' ? chip('', t('conserva el {0} % del texto', x.conserva)) : ''}${huecos(x.texto) ? chip('aviso', t('{0} por completar', huecos(x.texto))) : ''}${x.prop?.length ? chip('', t('{0} cifra(s) propuesta(s)', x.prop.length)) : ''}</div>
+        ${x.motivo ? `<small class="muted">${esc(x.motivo)}</small>` : ''}${listaProp(x.prop)}${bloq ? `<div class="aviso">${esc(t('Cifras que no están en vuestro material: {0}. Comprobadlas o quitadlas.', x.cif.join(', ')))}</div>` : ''}
         ${x.estado === 'igual' ? '' : `<details${x.estado === 'nueva' ? ' open' : ''}><summary>${esc(t('Ver el cambio'))}</summary><div class="fa-dif">${og ? `<div><b>${esc(t('Antes'))} · ${esc(titSec(og))}</b><p>${esc(og.x)}</p></div>` : ''}<div><b>${esc(t('Después'))}</b><p>${esc(x.texto)}</p></div></div></details>`}</li>`; }).join('')}</ol>
       ${P.huerf.length ? `<div class="aviso">${esc(t('La propuesta no usa estas secciones vuestras. Se conservarán al final salvo que las desmarquéis:'))}<ul class="fa-ul" style="margin-top:6px">${P.huerf.map((h, k) => `<li><label class="fa-chk"><input type="checkbox" data-huerf="${k}"${h.conserva ? ' checked' : ''}> ${esc(titSec(S.secs[h.i]))}</label></li>`).join('')}</ul></div>` : ''}
       <div class="actions"><button class="btn btn-primary" id="btnEstOk" type="button"${busy ? ' disabled' : ''}><svg class="i"><use href="#i-check"/></svg>${esc(t('Aplicar {0} sección(es) aceptada(s)', n))}</button><button class="btn btn-ghost" id="btnEstNo" type="button"${busy ? ' disabled' : ''}>${esc(t('Descartar la propuesta'))}</button></div><p class="help" id="estEstado" role="status">${ESTADO.estEstado ? estadoHTML(ESTADO.estEstado) : ''}</p></div>`;
   }
   if (S.c0 || ciclosN().length) return '';
-  return `<div class="card fa-est"><h3 class="fa-h3"><svg class="i"><use href="#i-grid"/></svg> ${esc(t('Antes de los ciclos: la estructura'))}</h3><p>${esc(t('Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: añade las secciones que faltan como guía con [COMPLETAR] y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.'))}</p>
+  return `<div class="card fa-est"><h3 class="fa-h3"><svg class="i"><use href="#i-grid"/></svg> ${esc(t('Antes de los ciclos: la estructura'))}</h3><p>${esc(t('Si el borrador está incompleto o en otro orden, este paso lo pone en la forma que pide la convocatoria: redacta como propuesta las secciones que faltan y mueve lo que ya tenéis, sin reescribirlo. Aceptáis o descartáis cada sección.'))}</p>
     <div class="actions"><button class="btn btn-primary" id="btnEst" type="button"${busy ? ' disabled' : ''}><svg class="i"><use href="#i-grid"/></svg>${esc(t('Proponer estructura'))}</button><button class="btn btn-ghost" id="btnEstSalta" type="button"${busy ? ' disabled' : ''}>${esc(t('Saltar este paso'))}</button></div><p class="help" id="estEstado" role="status">${ESTADO.estEstado ? estadoHTML(ESTADO.estEstado) : ''}</p></div>`;
 }
 $('mejora').addEventListener('change', e => {
@@ -3963,7 +4037,16 @@ $('mejora').addEventListener('click', e => {
   else if (id === 'btnDeshaz0') deshazEstructura();
 });
 
-const motivoTx = x => x.tipo === 'estructura' ? t('{0} de {1} cambios aceptados por vosotros', x.acept, x.total) : x.dec === 'ok' ? t('conservado') : !x.mot ? '' : {nosube: t('no sube la puntuación: se deshace'), cifras: t('rechazado: cifras que no están en vuestro material ({0})', x.mot.val), igual: t('rechazado: no cambiaba nada'), corta: t('rechazado: recortaba demasiado la sección'), sinsec: t('rechazado: la sección «{0}» no existe', x.mot.val)}[x.mot.tipo] || '';
+const motivoTx = x => x.tipo === 'estructura' ? t('{0} de {1} cambios aceptados por vosotros', x.acept, x.total) : x.dec === 'ok' ? t('conservado') : !x.mot ? '' : {nosube: t('no sube la puntuación: se deshace'), cifras: t('rechazado: cifras que no están en vuestro material ({0})', x.mot.val), igual: t('rechazado: no cambiaba nada'), corta: t('rechazado: recortaba demasiado la sección'), sinsec: t('rechazado: la sección «{0}» no existe', x.mot.val), huecos: t('rechazado: dejaba {0} huecos [COMPLETAR] en la sección; hay que proponer contenido', x.mot.val), dana: t('sube el criterio, pero empeora otros ({0}): se deshace', x.mot.val)}[x.mot.tipo] || '';
+/* cifras que la IA ha propuesto (planificación) y que siguen en el proyecto: para que la asociación las revise */
+const listaProp = (ps, cl = 'aviso') => ps && ps.length ? `<div class="${cl}">⚠ ${esc(t('Cifras propuestas para revisar: {0}', ps.map(p => p.cifra + (p.que ? ' (' + p.que + ')' : '')).join(' · ')))}</div>` : '';
+function propuestasVivas() {
+  const vistas = new Set();
+  return S.ciclos.filter(c => c.dec === 'ok').flatMap(c => c.prop || []).filter(p => {
+    const s = S.secs.find(x => normTit(x.t) === normTit(p.sec)), k = normTit(p.sec) + '|' + p.cifra;
+    if (!s || !s.x.includes(p.cifra) || vistas.has(k)) return false; vistas.add(k); return true;
+  });
+}
 
 /* ── ejemplo sin clave: mismas funciones, respuestas de la IA precalculadas ── */
 async function aplicaEjemplo() {
@@ -4061,7 +4144,7 @@ function pintaMejora() {
     <div class="actions" style="margin:0"><button class="btn btn-primary${busy ? ' hidden' : ''}" id="btnMejora" type="button"><svg class="i"><use href="#i-play"/></svg>${esc(t('Mejorar'))}</button><button class="btn btn-ghost${busy ? '' : ' hidden'}" id="btnParar" type="button">${esc(t('Parar'))}</button><button class="btn btn-ghost" id="btnRepunt" type="button"${busy ? ' disabled' : ''}><svg class="i"><use href="#i-scale"/></svg>${esc(t('Volver a puntuar'))}</button></div></div>
     <p class="help">${esc(t('Cada ciclo hace 2 llamadas a la IA (unos {0} mil tokens). Podéis parar en cualquier momento: lo conseguido se guarda.', tok))}</p><p class="help" id="mejEstado" role="status" aria-live="polite">${ESTADO.mejEstado && (busy || !/…$/.test(ESTADO.mejEstado)) ? estadoHTML(ESTADO.mejEstado) : ''}</p></div>
   <div class="card"><h3 class="fa-h3"><svg class="i"><use href="#i-scale"/></svg> ${esc(t('Por criterio'))}</h3>${barras(S.ev)}</div>
-  ${S.ciclos.length ? `<div class="card"><h3 class="fa-h3"><svg class="i"><use href="#i-clock"/></svg> ${esc(t('Historial de ciclos'))}</h3><ol class="fa-ciclos">${S.ciclos.slice().reverse().map(c => `<li class="fa-c-${c.dec}"><div class="fa-c-h"><b>${esc(t('Ciclo {0}', c.n))} · ${esc(nomCiclo(c))}</b><span>${c.dec === 'rech' ? '✗' : c.dec === 'ok' ? '✓' : '↺'} ${c.dec === 'rech' ? '' : `${f1(c.tA)} → ${f1(c.tD)}`}</span></div><p>${esc(c.hip)}</p><small class="muted">${c.tipo === 'estructura' ? esc(motivoTx(c)) + (c.sec ? ': ' + esc(c.sec) : '') : esc(t('Sección: {0}', c.sec ? c.sec : t('Presentación'))) + (c.nueva ? ' (' + esc(t('nueva')) + ')' : '') + ' · ' + esc(motivoTx(c))}</small>${c.tipo === 'estructura' && c.tD < c.tA - 0.001 ? `<div class="aviso">${esc(t('Con la nueva estructura la puntuación baja: revisad las secciones aceptadas.'))}</div>` : ''}${c.tipo === 'estructura' && S.pre0 && !ciclosN().length && !S.esEjemplo ? `<div class="actions" style="margin-top:6px"><button class="btn btn-ghost btn-sm" id="btnDeshaz0" type="button"><svg class="i"><use href="#i-left"/></svg>${esc(t('Deshacer el ciclo 0'))}</button></div>` : ''}${c.despues ? `<details><summary>${esc(t('Ver el cambio'))}</summary><div class="fa-dif">${c.antes ? `<div><b>${esc(t('Antes'))}</b><p>${esc(c.antes)}</p></div>` : ''}<div><b>${esc(t('Después'))}</b><p>${esc(c.despues)}</p></div></div></details>` : ''}</li>`).join('')}</ol></div>` : ''}`;
+  ${S.ciclos.length ? `<div class="card"><h3 class="fa-h3"><svg class="i"><use href="#i-clock"/></svg> ${esc(t('Historial de ciclos'))}</h3><ol class="fa-ciclos">${S.ciclos.slice().reverse().map(c => `<li class="fa-c-${c.dec}"><div class="fa-c-h"><b>${esc(t('Ciclo {0}', c.n))} · ${esc(nomCiclo(c))}</b><span>${c.dec === 'rech' ? '✗' : c.dec === 'ok' ? '✓' : '↺'} ${c.dec === 'rech' ? '' : `${f1(c.tA)} → ${f1(c.tD)}`}</span></div><p>${esc(c.hip)}</p><small class="muted">${c.tipo === 'estructura' ? esc(motivoTx(c)) + (c.sec ? ': ' + esc(c.sec) : '') : esc(t('Sección: {0}', c.sec ? c.sec : t('Presentación'))) + (c.nueva ? ' (' + esc(t('nueva')) + ')' : '') + ' · ' + esc(motivoTx(c))}</small>${c.dec === 'ok' ? listaProp(c.prop) : ''}${c.tipo === 'estructura' && c.tD < c.tA - 0.001 ? `<div class="aviso">${esc(t('Con la nueva estructura la puntuación baja: revisad las secciones aceptadas.'))}</div>` : ''}${c.tipo === 'estructura' && S.pre0 && !ciclosN().length && !S.esEjemplo ? `<div class="actions" style="margin-top:6px"><button class="btn btn-ghost btn-sm" id="btnDeshaz0" type="button"><svg class="i"><use href="#i-left"/></svg>${esc(t('Deshacer el ciclo 0'))}</button></div>` : ''}${c.despues ? `<details><summary>${esc(t('Ver el cambio'))}</summary><div class="fa-dif">${c.antes ? `<div><b>${esc(t('Antes'))}</b><p>${esc(c.antes)}</p></div>` : ''}<div><b>${esc(t('Después'))}</b><p>${esc(c.despues)}</p></div></div></details>` : ''}</li>`).join('')}</ol></div>` : ''}`;
   $('selN').onchange = e => { S.conf.n = +e.target.value; guarda(); }; $('selObj').onchange = e => { S.conf.obj = +e.target.value; guarda(); pintaMejora(); };
   $('btnMejora').onclick = () => { if (S.esEjemplo) return toast(t('Esto es el ejemplo: sube vuestras bases y proyecto para mejorarlo.')); if (S.evVieja) return toast(t('Volved a puntuar antes de seguir.')); bucle(); pintaMejora(); };
   $('btnParar').onclick = () => { PARAR = true; estado('mejEstado', t('Parando al terminar este ciclo…')); };
@@ -4073,12 +4156,13 @@ function cambiosPorSec() { const m = {}; S.ciclos.filter(c => c.dec === 'ok').fo
 function pintaFinal() {
   const el = $('final');
   if (!S.ev) { el.innerHTML = `<div class="card"><p class="empty">${esc(t('Aún no hay puntuación. Puntúa y mejora el proyecto en el paso anterior.'))}</p></div>`; return; }
-  const P = puntua(S.ev), P0 = puntua(S.ev0), cm = cambiosPorSec(), hue = huecos(textoProy());
-  el.innerHTML = `<div class="card fa-cab"><div><p class="fa-kicker">${esc(S.rub.conv || t('Convocatoria'))}</p><h3 class="fa-h3">${esc(t('De {0} a {1} puntos de {2}', f1(P0.total), f1(P.total), f1(P.max)))}</h3><p class="fa-resumen">${hue ? chip('aviso', t('{0} dato(s) por completar', hue)) : chip('ok', t('Sin datos por completar'))} <span id="viejaChip">${S.evVieja ? chip('aviso', t('puntuación anterior a vuestros cambios')) : ''}</span></p></div>
+  const P = puntua(S.ev), P0 = puntua(S.ev0), cm = cambiosPorSec(), hue = huecos(textoProy()), pv = propuestasVivas();
+  el.innerHTML = `<div class="card fa-cab"><div><p class="fa-kicker">${esc(S.rub.conv || t('Convocatoria'))}</p><h3 class="fa-h3">${esc(t('De {0} a {1} puntos de {2}', f1(P0.total), f1(P.total), f1(P.max)))}</h3><p class="fa-resumen">${hue ? chip('aviso', t('{0} dato(s) por completar', hue)) : chip('ok', t('Sin datos por completar'))} ${pv.length ? chip('aviso', t('{0} cifra(s) propuesta(s)', pv.length)) : ''} <span id="viejaChip">${S.evVieja ? chip('aviso', t('puntuación anterior a vuestros cambios')) : ''}</span></p></div>
     <div class="actions" style="margin:0"><button class="btn btn-word" id="btnWordP" type="button"><svg class="i"><use href="#i-doc"/></svg>${esc(t('Proyecto (Word)'))}</button><button class="btn btn-ghost" id="btnWordI" type="button"><svg class="i"><use href="#i-doc"/></svg>${esc(t('Informe de ciclos (Word)'))}</button>${!S.esEjemplo && S.evVieja ? `<button class="btn btn-primary" id="btnRepunt2" type="button"><svg class="i"><use href="#i-scale"/></svg>${esc(t('Volver a puntuar'))}</button>` : ''}</div></div>
   <div class="card"><h3 class="fa-h3"><svg class="i"><use href="#i-scale"/></svg> ${esc(t('Antes y después'))}</h3><div class="table-wrap"><table><thead><tr><th>${esc(t('Criterio'))}</th><th>${esc(t('Inicial'))}</th><th>${esc(t('Final'))}</th><th>${esc(t('Máximo'))}</th></tr></thead><tbody>${P.por.map((p, i) => `<tr><td>${esc(S.rub.crits[i].nombre)}</td><td>${f1(P0.por[i]?.pts ?? 0)}</td><td><b>${f1(p.pts)}</b></td><td>${f1(p.max)}</td></tr>`).join('')}<tr><td><b>${esc(t('Total'))}</b></td><td>${f1(P0.total)}</td><td><b>${f1(P.total)}</b></td><td>${f1(P.max)}</td></tr></tbody></table></div></div>
   <div class="card"><h3 class="fa-h3"><svg class="i"><use href="#i-pencil"/></svg> ${esc(t('El proyecto, sección a sección'))}</h3><p class="help" style="margin-top:0">${esc(t('Podéis editar el texto aquí. Rellenad los [COMPLETAR] con datos reales; si no los tenéis, quitad la frase.'))}</p>
-    ${S.secs.map((s, i) => `<div class="fa-sec"><div class="fa-sec-h"><b>${esc(titSec(s))}</b>${cm[normTit(s.t)] ? chip('ok', t('mejorada en el ciclo {0}', cm[normTit(s.t)])) : ''}${huecos(s.x) ? chip('aviso', t('{0} por completar', huecos(s.x))) : ''}</div><textarea rows="${Math.min(14, Math.max(3, Math.ceil(s.x.length / 90)))}" data-sx="${i}" aria-label="${esc(titSec(s))}">${esc(s.x)}</textarea></div>`).join('')}</div>`;
+    ${S.secs.map((s, i) => `<div class="fa-sec"><div class="fa-sec-h"><b>${esc(titSec(s))}</b>${cm[normTit(s.t)] ? chip('ok', t('mejorada en el ciclo {0}', cm[normTit(s.t)])) : ''}${huecos(s.x) ? chip('aviso', t('{0} por completar', huecos(s.x))) : ''}</div><textarea rows="${Math.min(14, Math.max(3, Math.ceil(s.x.length / 90)))}" data-sx="${i}" aria-label="${esc(titSec(s))}">${esc(s.x)}</textarea>${listaProp(pv.filter(p => normTit(p.sec) === normTit(s.t)))}</div>`).join('')}
+    ${pv.length ? `<p class="help">${esc(t('Las cifras propuestas son decisiones de planificación que ha redactado la IA (sesiones, plazas, metas, desglose del presupuesto…). Comprobad que la asociación puede asumirlas o cambiadlas antes de presentar el proyecto.'))}</p>` : ''}</div>`;
   $('btnWordP').onclick = wordProyecto; $('btnWordI').onclick = wordInforme; if ($('btnRepunt2')) $('btnRepunt2').onclick = () => puntuaInicial().catch(() => {});
 }
 $('final').addEventListener('input', e => { const x = e.target.closest('[data-sx]'); if (!x) return; S.secs[+x.dataset.sx].x = x.value; S.evVieja = true; S.esEjemplo = false; if ($('viejaChip')) $('viejaChip').innerHTML = chip('aviso', t('puntuación anterior a vuestros cambios')); guarda(); });
@@ -4096,7 +4180,9 @@ async function wordInforme() {
   L.push('', `## ${t('Rúbrica')}`, `| ${t('Criterio')} | ${t('Puntos')} | ${t('Qué mira el tribunal')} | ${t('Cita de las bases')} |`, '|---|---|---|---|', ...R.crits.map(c => `| ${celda(c.nombre)} | ${f1(c.peso)} | ${celda(c.mira.join('; '))} | ${c.mano ? t('añadido a mano') : (c.ok ? '✓ ' : '⚠ ') + celda(c.cita)} |`));
   L.push('', `## ${t('Puntuación por criterio')}`, `| ${t('Criterio')} | ${t('Inicial')} | ${t('Final')} | ${t('Máximo')} |`, '|---|---|---|---|', ...P.por.map((p, i) => `| ${celda(R.crits[i].nombre)} | ${f1(P0.por[i]?.pts ?? 0)} | ${f1(p.pts)} | ${f1(p.max)} |`), `| **${t('Total')}** | ${f1(P0.total)} | **${f1(P.total)}** | ${f1(P.max)} |`);
   if (S.ciclos.length) { L.push('', `## ${t('Historial de ciclos')}`, `| ${t('Ciclo')} | ${t('Criterio')} | ${t('Sección')} | ${t('Antes')} | ${t('Después')} | ${t('Decisión')} |`, '|---|---|---|---|---|---|', ...S.ciclos.map(c => `| ${c.n} | ${celda(nomCiclo(c))} | ${celda(c.sec || t('Presentación'))} | ${f1(c.tA)} | ${c.dec === 'rech' ? '—' : f1(c.tD)} | ${celda(motivoTx(c))} |`)); L.push('', `### ${t('Hipótesis')}`, ...S.ciclos.map(c => `- **${t('Ciclo {0}', c.n)} · ${nomCiclo(c)}:** ${c.hip}`)); }
-  if (R.req.length) L.push('', `## ${t('Requisitos que hay que cumplir')}`, ...R.req.map(r => `- ${r.ok ? '✓' : '⚠'} ${r.texto}`));
+  const pv = propuestasVivas();
+  if (pv.length) L.push('', `## ${t('Cifras propuestas por la IA')}`, t('Las cifras propuestas son decisiones de planificación que ha redactado la IA (sesiones, plazas, metas, desglose del presupuesto…). Comprobad que la asociación puede asumirlas o cambiadlas antes de presentar el proyecto.'), `| ${t('Sección')} | ${t('Cifra')} | ${t('Qué es')} |`, '|---|---|---|', ...pv.map(p => `| ${celda(p.sec)} | ${celda(p.cifra)} | ${celda(p.que)} |`));
+  if (R.req.length) L.push('', `## ${t('Requisitos que hay que cumplir')}`, t('Marcad cada requisito cuando hayáis comprobado que lo cumplís.'), ...R.req.map(r => `- ☐ ${r.texto}${r.ok ? '' : ' (⚠ ' + t('Cita no encontrada en las bases: comprobadlo.') + ')'}`));
   if (R.dudas.length) L.push('', `## ${t('Dudas para consultar al organismo')}`, ...R.dudas.map(d => `- ${d}`));
   try { dl('informe-ciclos.docx', await wordDeMarkdown(L.join('\n'), {titulo: t('Informe de ciclos'), subtitulo: [S.perfil.nombre, R.conv].filter(Boolean).join(' · '), pie: t('Generado con {0}. La puntuación la suma el código con los pesos de las bases; los niveles los propone la IA y es una simulación.', APP_NAME)})); } catch (e) { toast(e.message, 7000); }
 }
